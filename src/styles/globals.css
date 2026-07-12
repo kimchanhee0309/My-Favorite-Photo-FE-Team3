@@ -1,4 +1,4 @@
-@tailwind utilities;
+@import "tailwindcss";
 
 /* 폰트 파일이 있으면 public/fonts에 넣고 경로만 맞춰줘 */
 /* 없으면 이 블록은 제거해도 됨 */
@@ -10,7 +10,7 @@
   font-display: swap;
 }
 
-:root {
+@theme {
   --color-black: #0f0f0f;
   --color-gray-500: #161616;
   --color-gray-400: #5a5a5a;
@@ -19,7 +19,7 @@
   --color-gray-100: #eeeeee;
   --color-white: #ffffff;
 
-  --coror-main: #efff04;
+  --color-main: #efff04;
   --color-red: #ff483d;
   --color-blue: #29c9f9;
   --color-purple: #a77eff;
