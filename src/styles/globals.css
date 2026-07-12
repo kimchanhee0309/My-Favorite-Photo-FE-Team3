@@ -1,0 +1,336 @@
+@tailwind utilities;
+
+/* 폰트 파일이 있으면 public/fonts에 넣고 경로만 맞춰줘 */
+/* 없으면 이 블록은 제거해도 됨 */
+@font-face {
+  font-family: "BskinRobbins";
+  src: url("/fonts/BaskinRobbins.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-black: #0f0f0f;
+  --color-gray-500: #161616;
+  --color-gray-400: #5a5a5a;
+  --color-gray-300: #a4a4a4;
+  --color-gray-200: #dddddd;
+  --color-gray-100: #eeeeee;
+  --color-white: #ffffff;
+
+  --coror-main: #efff04;
+  --color-red: #ff483d;
+  --color-blue: #29c9f9;
+  --color-purple: #a77eff;
+  --color-pink: #ff2a6a;
+
+  --layout-max: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 360px;
+  background: var(--color-black);
+}
+
+body {
+  margin: 0;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: "Noto Sans KR", sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ========== TYPEGRAPHY ========== */
+
+@layer utilities {
+  .typo-brand-62 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 62px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .typo-brand-48 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .typo-brand-46 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .typo-brand-40 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .typo-brand-24 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .typo-brand-18 {
+    font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  .type-40-bold {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+
+  .typo-32-bold {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  .typo-28-bold {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .typo-24-regular {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-22-bold {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-20-bold {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .typo-20-regular {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .typo-18-bold {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-18-regular {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-18-light {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-16-bold {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-16-regular {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-16-light {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .typo-14-bold {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .typo-14-regular {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .typo-14-light {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .typo-12-bold {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-12-regular {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-12-light {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-10-regular {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  .typo-10-light {
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+}
+
+/* ========== RESPONSIVE UTILITIES ========== */
+
+@layer utilities {
+  .layout-container {
+    width: 100%;
+    max-width: var(--layout-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  @media (min-width: 744px) {
+    .layout-container {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .layout-container {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .display-mobile-only {
+    display: block;
+  }
+
+  .display-tablet-only {
+    display: none;
+  }
+
+  .display-desktop-only {
+    display: none;
+  }
+
+  .display-tablet-up {
+    display: none;
+  }
+
+  .display-desktop-up {
+    display: none;
+  }
+
+  @media (min-width: 744px) {
+    .display-mobile-only {
+      display: none;
+    }
+
+    .display-tablet-only {
+      display: block;
+    }
+
+    .display-tablet-up {
+      display: block;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .display-tablet-only {
+      display: none;
+    }
+
+    .display-desktop-only {
+      display: block;
+    }
+
+    .display-desktop-up {
+      display: block;
+    }
+  }
+}
