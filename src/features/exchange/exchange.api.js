@@ -29,3 +29,9 @@ export function rejectExchange(exchangeId) {
     method: "PATCH",
   });
 }
+
+export function cancelExchange(exchangeId) {
+  return apiClient(`/exchanges/${exchangeId}/cancel`, {
+    method: "PATCH",
+  });
+}
