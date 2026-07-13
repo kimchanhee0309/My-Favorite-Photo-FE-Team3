@@ -42,11 +42,12 @@ export default function PhotoCard({ grade, size = "L", state, ...props }) {
     <div
       className={`flex flex-col border border-gray-400 rounded-0.5 border-bg-gray-500 ${config.container}`}>
       <Image
-        src=""
+        src="/default.jpg"
         width={config.image.width}
         height={config.image.height}
         alt="포토카드"
-        className="bg-amber-50"
+        style={{ width: config.image.width, height: config.image.height }}
+        className="bg-amber-50 object-cover"
       />
       <div className="flex flex-col gap-2.5">
         <p className={config.title}>카드 제목</p>
