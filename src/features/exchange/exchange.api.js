@@ -14,6 +14,10 @@ export function getReceivedExchanges() {
   return apiClient("/exchanges/received");
 }
 
+export function getSentExchanges() {
+  return apiClient("/exchanges/sent");
+}
+
 export function acceptExchange(exchangeId) {
   return apiClient(`/exchanges/${exchangeId}/accept`, {
     method: "PATCH",
