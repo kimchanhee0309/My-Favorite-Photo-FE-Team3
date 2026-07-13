@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     screens: {
       mobile: "375px",
-      tabler: "744px",
+      tablet: "744px",
       desktop: "1200px",
     },
     extend: {
