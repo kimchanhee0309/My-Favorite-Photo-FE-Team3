@@ -1,3 +1,4 @@
+import "dotenv/config";
 import githubLabelSync from "github-label-sync";
 
 githubLabelSync({
