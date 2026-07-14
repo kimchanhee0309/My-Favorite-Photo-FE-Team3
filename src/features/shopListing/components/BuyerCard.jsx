@@ -1,18 +1,19 @@
 import CardInfo from './CardInfo';
 import { PrimaryButton, Stepper } from '@/common/components';
+
 export default function BuyerCard({
   grade,
   genre,
   nickname,
   description,
-  price,
-  remaining,
-  total,
+  pricePerUnit,
+  remainingQuantity,
   quantity,
+  purchaseQuantity,
   onQuantityChange,
   onBuy,
 }) {
-  const totalPrice = price * quantity;
+  const totalPrice = pricePerUnit * purchaseQuantity;
 
   return (
     <div className="flex flex-col gap-[40px] lg:gap-[80px]">
@@ -22,9 +23,9 @@ export default function BuyerCard({
           genre={genre}
           nickname={nickname}
           description={description}
-          price={price}
-          remaining={remaining}
-          total={total}
+          pricePerUnit={pricePerUnit}
+          remainingQuantity={remainingQuantity}
+          quantity={quantity}
           className="w-[345px] md:w-[342px] lg:w-[440px]"
         />
 
@@ -36,9 +37,9 @@ export default function BuyerCard({
               구매수량
             </span>
             <Stepper
-              value={quantity}
+              value={purchaseQuantity}
               min={1}
-              max={remaining}
+              max={remainingQuantity}
               onChange={onQuantityChange}
             />
           </div>
@@ -52,7 +53,7 @@ export default function BuyerCard({
               </span>
               <span className="typo-18-regular lg:typo-20-regular text-gray-300">
                 {' '}
-                ({quantity}장)
+                ({purchaseQuantity}장)
               </span>
             </span>
           </div>
