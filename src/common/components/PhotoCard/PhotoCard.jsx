@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const SIZE_CONFIG = {
   L: {
@@ -59,21 +60,17 @@ const genreText = {
   ETC: "기타",
 };
 
-export default function PhotoCard({ size = "L", card, showStatusBadge }) {
+export default function PhotoCard({ size = "L", card }) {
   const config = SIZE_CONFIG[size];
 
   return (
-    <div
-      className={`flex flex-col border border-gray-400 rounded-0.5 border-bg-gray-500 ${config.container}`}>
+    <Link
+      href="/"
+      className={`flex flex-col border border-gray-400 rounded-0.5 border-bg-gray-500 ${config.container} cursor-pointer`}>
       <div className="relative">
         {card.status === "SOLD_OUT" && (
           <div className=" absolute inset-0 bg-black/70 flex items-center justify-center">
-            <Image
-              src="/soldout.svg"
-              width={config.soldOutIcon.width}
-              height={config.soldOutIcon.height}
-              alt="품절"
-            />
+            <Image src="/soldout.svg" fill alt="품절" />
           </div>
         )}
         {saleMethodText[card.saleMethod] && (
@@ -116,9 +113,11 @@ export default function PhotoCard({ size = "L", card, showStatusBadge }) {
           </p>
         </div>
         <div className="flex justify-between">
-          <p className={`${config.labelLight} text-gray-300`}>수량</p>
+          <p className={`${config.labelLight} text-gray-300`}>
+            {card.quantityLabel}
+          </p>
           <p className={`${config.valueRegular} text-white`}>
-            {card.remainingQuantity}
+            {card.quantityText}
           </p>
         </div>
       </div>
@@ -131,6 +130,6 @@ export default function PhotoCard({ size = "L", card, showStatusBadge }) {
           className="self-center"
         />
       )}
-    </div>
+    </Link>
   );
 }

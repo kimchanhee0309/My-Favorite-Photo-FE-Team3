@@ -12,6 +12,8 @@ export default function page() {
     status: "ON_SALE",
     imageUrl: "/default.jpg",
     saleMethod: "EXCHANGE",
+    quantityText: "3 / 5",
+    quantityLabel: "잔여",
   };
   return <PhotoCard card={mockCard} />;
 }
