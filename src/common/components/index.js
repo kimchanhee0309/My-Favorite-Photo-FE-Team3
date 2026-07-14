@@ -1,7 +1,7 @@
-export { default as PrimaryButton } from "./Button/PrimaryButton";
-export { default as SecondaryButton } from "./Button/SecondaryButton";
-export { default as Input } from "./Input/Input";
-export { default as SearchInput } from "./Input/SearchInput";
+export { default as PrimaryButton } from "./button/Primarybutton";
+export { default as SecondaryButton } from "./button/Secondarybutton";
+export { default as Input } from "./input/Input";
+export { default as SearchInput } from "./input/SearchInput";
 
 // 완성되면 이 파일 담당자(문치호)에게 알려주세요 - 아래 형식으로 한 줄씩 추가합니다.
 // export { default as Stepper } from './Stepper/Stepper';
