@@ -1,5 +1,31 @@
 import { apiClient } from "@/common/api/client";
 
+function createQueryString(params = {}) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, value);
+    }
+  });
+
+  const queryString = searchParams.toString();
+
+  return queryString ? `?${queryString}` : "";
+}
+
+export function getShopListings(params = {}) {
+  const queryString = createQueryString(params);
+
+  return apliClient(`/shop-listings${queryString}`);
+}
+
+export function getMyShopListings(params = {}) {
+  const queryString = createQueryString(params);
+
+  return apiClient(`/shop-listings/me${queryString}`);
+}
+
 export function createShopListing(data) {
   return apiClient("/shop-listings", {
     method: "POST",
