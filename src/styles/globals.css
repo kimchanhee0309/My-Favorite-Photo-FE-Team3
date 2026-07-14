@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* 폰트 파일이 있으면 public/fonts에 넣고 경로만 맞춰줘 */
-/* 없으면 이 블록은 제거해도 됨 */
 @font-face {
   font-family: "BaskinRobbins";
   src: url("/fonts/BaskinRobbins.woff2") format("woff2");
