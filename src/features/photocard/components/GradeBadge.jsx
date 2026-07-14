@@ -1,4 +1,4 @@
-import GradeDetail from './gradeDetail';
+import GradeDetail from './GradeDetail';
 
 export default function GradeBadge({ grade, genre, nickname, className = '' }) {
   return (
