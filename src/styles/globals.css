@@ -26,6 +26,9 @@
   --layout-max: 1200px;
 
   --font-sans: var(--font-noto-sans-kr), sans-serif;
+
+  --breakpoint-md: 744px;
+  --breakpoint-lg: 1480px;
 }
 
 * {
