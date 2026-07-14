@@ -45,7 +45,7 @@ export default function SelectInput({
       {label && (
         <label
           htmlFor={selectId}
-          className="typo-16-regular lg:typo-18-regular text-white">
+          className="typo-16-regular lg:typo-20-regular text-white">
           {label}
         </label>
       )}

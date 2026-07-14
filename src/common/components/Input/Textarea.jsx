@@ -18,7 +18,7 @@ export default function Textarea({
       {label && (
         <label
           htmlFor={textareaId}
-          className="typo-16-regular lg:typo-18-regular text-white">
+          className="typo-16-regular lg:typo-20-regular text-white">
           {label}
         </label>
       )}

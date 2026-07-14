@@ -42,7 +42,7 @@ export default function ImageUpload({
   return (
     <div className="flex flex-col gap-[10px]">
       {label && (
-        <label className="typo-16-regular lg:typo-18-regular text-white">
+        <label className="typo-16-regular lg:typo-20-regular text-white">
           {label}
         </label>
       )}
