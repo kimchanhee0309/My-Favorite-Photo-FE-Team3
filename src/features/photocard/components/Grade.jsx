@@ -14,15 +14,18 @@ const GRADE_LABELS = {
   legendary: "LEGENDARY",
 };
 
-const SIZE_STYLES = `
-  h-[30px] px-2.5 py-1.5 gap-1.25 border typo-12-light
-  min-[744px]:h-[32px] min-[744px]:px-2.5 min-[744px]:py-1.5 min-[744px]:gap-1.25 min-[744px]:typo-14-light
-  min-[1200px]:h-[40px] min-[1200px]:px-5 min-[1200px]:py-2 min-[1200px]:gap-2.5 min-[1200px]:typo-16-light
-  `;
+const BASE_SIZE_STYLES =
+  "h-[30px] px-2.5 py-1.5 gap-[5px] border typo-12-light";
+const TABLET_SIZE_STYLES =
+  "md:h-[32px] md:px-2.5 md:py-1.5 md:gap-[5px] md:typo-14-light";
+const DESKTOP_SIZE_STYLES =
+  "lg:h-[40px] lg:px-5 lg:py-2 lg:gap-2.5 lg:typo-16-light";
 
-export default function Grade({ type, count = 0 }) {
-  const currentStyle = GRADE_STYLES[type] || GRADE_STYLES.common;
-  const currentLabel = GRADE_LABELS[type] || type;
+const SIZE_STYLES = `${BASE_SIZE_STYLES} ${TABLET_SIZE_STYLES} ${DESKTOP_SIZE_STYLES}`;
+
+export default function Grade({ type = "common", count = 0 }) {
+  const currentStyle = GRADE_STYLES[type];
+  const currentLabel = GRADE_LABELS[type];
 
   return (
     <div
