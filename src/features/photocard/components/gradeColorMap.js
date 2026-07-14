@@ -1,6 +1,6 @@
 export const gradeColorMap = {
   COMMON: 'text-main border-main',
   RARE: 'text-blue border-blue',
-  'SUPER RARE': 'text-purple border-purple',
+  SUPER_RARE: 'text-purple border-purple',
   LEGENDARY: 'text-pink border-pink',
 };
