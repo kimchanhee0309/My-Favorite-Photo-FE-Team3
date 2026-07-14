@@ -38,6 +38,27 @@ const SIZE_CONFIG = {
   },
 };
 
+const gradeColor = {
+  COMMON: "text-main",
+  RARE: "text-blue",
+  SUPER_RARE: "text-purple",
+  LEGENDARY: "text-pink",
+};
+
+const saleMethodText = {
+  SALE: "판매 중",
+  EXCHANGE: "교환 제시 대기 중",
+};
+
+const genreText = {
+  LANDSCAPE: "풍경",
+  PORTRAIT: "인물",
+  TRAVEL: "여행",
+  ANIMAL: "동물",
+  OBJECT: "사물",
+  ETC: "기타",
+};
+
 export default function PhotoCard({ size = "L", card, showStatusBadge }) {
   const config = SIZE_CONFIG[size];
 
@@ -46,13 +67,18 @@ export default function PhotoCard({ size = "L", card, showStatusBadge }) {
       className={`flex flex-col border border-gray-400 rounded-0.5 border-bg-gray-500 ${config.container}`}>
       <div className="relative">
         {card.status === "SOLD_OUT" && (
-          <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+          <div className=" absolute inset-0 bg-black/70 flex items-center justify-center">
             <Image
               src="/soldout.svg"
               width={config.soldOutIcon.width}
               height={config.soldOutIcon.height}
               alt="품절"
             />
+          </div>
+        )}
+        {saleMethodText[card.saleMethod] && (
+          <div className="absolute left-2 top-2 bg-black/50 px-2.5">
+            {saleMethodText[card.saleMethod]}
           </div>
         )}
         <Image
@@ -70,10 +96,12 @@ export default function PhotoCard({ size = "L", card, showStatusBadge }) {
         <div
           className={`flex justify-between border-b border-gray-400 ${config.divider}`}>
           <div className="flex gap-2.5">
-            <p className={`${config.labelLight} `}>{card.grade}</p>
+            <p className={`${config.labelLight} ${gradeColor[card.grade]}`}>
+              {card.grade}
+            </p>
             <p className={`text-gray-400 ${config.labelRegular}`}>|</p>
             <p className={`text-gray-300 ${config.labelRegular}`}>
-              {card.genre}
+              {genreText[card.genre]}
             </p>
           </div>
           <p

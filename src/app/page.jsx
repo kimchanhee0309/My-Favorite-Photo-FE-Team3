@@ -9,8 +9,9 @@ export default function page() {
     pricePerUnit: 5,
     quantity: 5,
     remainingQuantity: 3,
-    status: "SOLD_OUT",
+    status: "ON_SALE",
     imageUrl: "/default.jpg",
+    saleMethod: "EXCHANGE",
   };
   return <PhotoCard card={mockCard} />;
 }
