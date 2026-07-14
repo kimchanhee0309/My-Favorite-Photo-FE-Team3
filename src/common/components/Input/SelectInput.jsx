@@ -79,8 +79,8 @@ export default function SelectInput({
 
         {isOpen && (
           <ul
-            className="absolute left-0 top-[calc(100%+4px)] z-50 max-h-[240px] w-full overflow-y-auto 
-            rounded-sm border border-gray-200 bg-black shadow-lg scrollbar-hide">
+            className="absolute left-0 top-[calc(100%+4px)] z-50 max-h-[360px] w-full overflow-y-auto 
+            rounded-sm border border-gray-200 bg-black shadow-lg">
             {options.map((option, index) => (
               <li
                 key={index}
