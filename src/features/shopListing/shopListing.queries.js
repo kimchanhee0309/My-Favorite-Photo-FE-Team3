@@ -33,7 +33,7 @@ export function useShopListings(params) {
 export function useMyShopListings(params) {
   return useQuery({
     queryKey: SHOP_LISTING_QUERY_KEYS.myList(params),
-    queryFn: () => getMyShopListings(parms),
+    queryFn: () => getMyShopListings(params),
   });
 }
 
