@@ -53,7 +53,7 @@ export default function Dropdown({
     }
   } else if (variant === "text") {
     triggerClasses += "inline-flex items-center gap-[10px] ";
-    textClasses += "text-gray-200  ";
+    textClasses += "text-gray-200 ";
     if (size === "L") textClasses += "typo-16-bold";
     else if (size === "M") textClasses += "typo-14-bold";
   } else if (variant === "icon") {
