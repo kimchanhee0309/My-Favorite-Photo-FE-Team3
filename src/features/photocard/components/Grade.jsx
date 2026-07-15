@@ -23,7 +23,7 @@ const DESKTOP_SIZE_STYLES =
 
 const SIZE_STYLES = `${BASE_SIZE_STYLES} ${TABLET_SIZE_STYLES} ${DESKTOP_SIZE_STYLES}`;
 
-export default function Grade({ grade = "common", quantity = 0 }) {
+export default function Grade({ grade = "COMMON", quantity = 0 }) {
   const normalizedGrade = grade.toUpperCase();
 
   const currentStyle = GRADE_STYLES[normalizedGrade];
