@@ -1,10 +1,5 @@
 import Image from "next/image";
-import React from "react";
-import {
-  cardStyle,
-  saleTypeColor,
-  saleTypeText,
-} from "./PhotoCard.constants";
+import { cardStyle, saleTypeColor, saleTypeText } from "./PhotoCard.constants";
 
 export default function PhotoCardImage({ card }) {
   return (
