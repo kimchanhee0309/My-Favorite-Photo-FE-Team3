@@ -25,7 +25,7 @@ export default function BottomSheetFilter({ filterOptions }) {
   };
 
   return (
-    <div className="flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2.5 py-4 h-120">
+    <div className="flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120">
       <header className="flex items-center justify-center relative">
         <h2 className="text-[16px] text-gray-400 font-medium">필터</h2>
         <button className="absolute right-1">
@@ -55,7 +55,7 @@ export default function BottomSheetFilter({ filterOptions }) {
           </li>
         ))}
       </ul>
-      <ul className="flex flex-col">
+      <ul className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
         {filterOptions[selectedTab].map((item) => (
           <li key={item.name}>
             <button
@@ -70,7 +70,7 @@ export default function BottomSheetFilter({ filterOptions }) {
           </li>
         ))}
       </ul>
-      <footer className="flex px-2 gap-3 w-full justify-between mt-auto mb-10">
+      <footer className="flex px-3 gap-3 w-full justify-between mt-auto mb-6">
         <button className="px-3.75 py-3.75">
           <Image src="/reset.svg" width={24} height={25} alt="" />
         </button>
