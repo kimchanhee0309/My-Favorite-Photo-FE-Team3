@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useId, useState } from 'react';
+import Image from "next/image";
+import { useId, useState } from "react";
 
 export default function Input({
-  type = 'text',
+  type = "text",
   label,
   error,
   disabled,
-  className = '',
+  className = "",
   id,
   ...props
 }) {
@@ -16,16 +16,15 @@ export default function Input({
   const inputId = id ?? generatedId;
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const isPassword = type === 'password';
-  const inputType = isPassword && isPasswordVisible ? 'text' : type;
+  const isPassword = type === "password";
+  const inputType = isPassword && isPasswordVisible ? "text" : type;
 
   return (
     <div className="flex flex-col gap-[10px]">
       {label && (
         <label
           htmlFor={inputId}
-          className="typo-16-regular lg:typo-18-regular text-white"
-        >
+          className="typo-16-regular lg:typo-20-regular text-white">
           {label}
         </label>
       )}
@@ -33,10 +32,9 @@ export default function Input({
       <div
         className={`flex h-[55px] w-[345px] items-center gap-[10px] rounded-sm border bg-black px-5
           py-[18px] transition-colors md:w-[440px] lg:h-[60px] lg:w-[520px]
-          ${error ? 'border-red' : 'border-gray-200'}
-          ${disabled ? 'opacity-40' : ''}
-          ${className}`}
-      >
+          ${error ? "border-red" : "border-gray-200"}
+          ${disabled ? "opacity-40" : ""}
+          ${className}`}>
         <input
           id={inputId}
           type={inputType}
@@ -51,10 +49,11 @@ export default function Input({
             onClick={() => setIsPasswordVisible((prev) => !prev)}
             disabled={disabled}
             className="shrink-0 text-gray-200"
-            aria-label={isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
-          >
+            aria-label={
+              isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 보기"
+            }>
             <Image
-              src={isPasswordVisible ? '/visible.png' : '/invisible.png'}
+              src={isPasswordVisible ? "/visible.png" : "/invisible.png"}
               alt=""
               width={24}
               height={24}

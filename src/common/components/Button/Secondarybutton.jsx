@@ -59,7 +59,7 @@ export default function SecondaryButton({
   return (
     <button
       disabled={disabled}
-      className={`flex items-center justify-center rounded-sm transition-colors
+      className={`flex items-center justify-center rounded-xs transition-colors
         ${fontClass} ${borderClass}
         bg-black border-gray-100 text-white
         disabled:text-gray-300 disabled:border-gray-400
