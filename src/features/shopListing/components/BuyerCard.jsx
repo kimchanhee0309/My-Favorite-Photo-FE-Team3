@@ -17,7 +17,7 @@ export default function BuyerCard({
 
   return (
     <div className="flex flex-col gap-[40px] lg:gap-[80px]">
-      <div className="flex flex-col items-start gap-[30px]">
+      <div className="flex w-[345px] flex-col items-start gap-[30px] md:w-[342px] lg:w-[440px]">
         <CardInfo
           grade={grade}
           genre={genre}
@@ -26,7 +26,7 @@ export default function BuyerCard({
           pricePerUnit={pricePerUnit}
           remainingQuantity={remainingQuantity}
           quantity={quantity}
-          className="w-[345px] md:w-[342px] lg:w-[440px]"
+          className="w-full"
         />
 
         <div className="h-px w-full bg-gray-400" />
