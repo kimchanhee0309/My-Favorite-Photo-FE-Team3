@@ -49,13 +49,13 @@ export default function Dropdown({
       textClasses += "typo-14-regular";
     } else if (size === "S") {
       triggerClasses += "w-[130px] h-[35px] px-[15px] py-[10px]";
-      textClasses += "text-[12px] font-normal";
+      textClasses += "typo-12-regular";
     }
   } else if (variant === "text") {
     triggerClasses += "inline-flex items-center gap-[10px] ";
-    textClasses += "text-gray-200 font-bold ";
-    if (size === "L") textClasses += "text-[16px]";
-    else if (size === "M") textClasses += "text-[14px]";
+    textClasses += "text-gray-200  ";
+    if (size === "L") textClasses += "typo-16-bold";
+    else if (size === "M") textClasses += "typo-14-bold";
   } else if (variant === "icon") {
     triggerClasses +=
       "flex items-center justify-center w-[35px] h-[35px] border border-gray-200 rounded-xs bg-black";
