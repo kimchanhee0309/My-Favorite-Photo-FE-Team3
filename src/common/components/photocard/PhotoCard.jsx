@@ -6,7 +6,7 @@ import PhotoCardImage from "./PhotoCardImage";
 export default function PhotoCard({ card }) {
   return (
     <div
-      className={`flex flex-col border border-gray-400 rounded-0.5 border-bg-gray-500 ${cardStyle.container}`}>
+      className={`flex flex-col border border-gray-400 rounded-0.5 bg-gray-500 ${cardStyle.container}`}>
       <PhotoCardImage card={card} />
 
       <div className="flex flex-col gap-2.5">
