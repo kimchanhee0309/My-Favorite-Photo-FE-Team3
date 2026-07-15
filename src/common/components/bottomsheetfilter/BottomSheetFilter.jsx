@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { PrimaryButton } from "..";
 import { useState } from "react";
-import { tabText } from "./BottomSheetFilter.constants";
+import { optionTextMap, tabText } from "./BottomSheetFilter.constants";
+import { gradeColor } from "../photocard/PhotoCard.constants";
 
 export default function BottomSheetFilter({ filterOptions }) {
   const [selectedTab, setSelectedTab] = useState(Object.keys(filterOptions)[0]);
@@ -36,12 +37,17 @@ export default function BottomSheetFilter({ filterOptions }) {
         ))}
       </ul>
       <ul className="flex flex-col">
-        <li>
-          <button className="px-8 py-4 flex justify-between w-full">
-            <span>요소이름</span>
-            <span>개수</span>
-          </button>
-        </li>
+        {filterOptions[selectedTab].map((item) => (
+          <li key={item.name}>
+            <button className="px-8 py-4 flex justify-between w-full">
+              <span
+                className={`${selectedTab === "grade" && gradeColor[item.name]} typo-14-regular`}>
+                {optionTextMap[selectedTab]?.[item.name] ?? item.name}
+              </span>
+              <span>{item.count}개</span>
+            </button>
+          </li>
+        ))}
       </ul>
       <footer className="flex px-2 gap-3 w-full justify-between mt-auto mb-10">
         <button className="px-3.75 py-3.75">
