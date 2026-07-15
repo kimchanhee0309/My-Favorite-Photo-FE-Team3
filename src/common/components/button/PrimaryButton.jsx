@@ -61,7 +61,7 @@ export default function PrimaryButton({
   return (
     <button
       disabled={disabled}
-      className={`flex items-center justify-center rounded-sm transition-colors
+      className={`flex items-center justify-center rounded-xs transition-colors
         ${fontClass} ${borderClass}
         ${disabled
           ? 'bg-gray-400 border-gray-400 text-gray-300'

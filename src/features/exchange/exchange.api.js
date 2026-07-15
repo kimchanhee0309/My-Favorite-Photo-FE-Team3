@@ -1,5 +1,18 @@
 import { apiClient } from "@/common/api/client";
 
+function createQueryString(params = {}) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      searchParams.set(key, value);
+    }
+  });
+
+  const queryString = searchParams.toString();
+  return queryString ? `?${queryString}` : "";
+}
+
 export function createExchangeOffer(shopListingId, data) {
   return apiClient(`/shop-listings/${shopListingId}/exchanges`, {
     method: "POST",
@@ -10,12 +23,15 @@ export function createExchangeOffer(shopListingId, data) {
   });
 }
 
-export function getReceivedExchanges() {
-  return apiClient("/exchanges/received");
+export function getReceivedExchanges(params = {}) {
+  const queryString = createQueryString(params);
+
+  return apiClient(`/exchanges/received${queryString}`);
 }
 
-export function getSentExchanges() {
-  return apiClient("/exchanges/sent");
+export function getSentExchanges(params = {}) {
+  const queryString = createQueryString(params);
+  return apiClient(`/exchanges/sent${queryString}`);
 }
 
 export function acceptExchange(exchangeId) {
