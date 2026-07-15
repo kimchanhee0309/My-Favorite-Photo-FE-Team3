@@ -2,8 +2,12 @@
 
 import Image from "next/image";
 import { PrimaryButton } from "..";
+import { useState } from "react";
+import { tabText } from "./BottomSheetFilter.constants";
 
-export default function BottomSheetFilter() {
+export default function BottomSheetFilter({ filterOptions }) {
+  const [selectedTab, setSelectedTab] = useState(Object.keys(filterOptions)[0]);
+
   return (
     <div className="flex flex-col w-full border-none rounded-t-2xl bg-gray-500 px-2.5 py-4 h-120">
       <header className="flex items-center justify-center relative">
@@ -13,15 +17,23 @@ export default function BottomSheetFilter() {
         </button>
       </header>
       <ul className="flex px-6 gap-6">
-        <li>
-          <button className="px-4 py-4">등급</button>
-        </li>
-        <li>
-          <button className="px-4 py-4">장르</button>
-        </li>
-        <li>
-          <button className="px-4 py-4">매진 여부</button>
-        </li>
+        {Object.keys(filterOptions).map((tabName) => (
+          <li key={tabName}>
+            {selectedTab !== tabName ? (
+              <button
+                className="px-4 py-4 typo-14-regular text-gray-400 "
+                onClick={() => setSelectedTab(tabName)}>
+                {tabText[tabName]}
+              </button>
+            ) : (
+              <button
+                className="px-4 py-4 text-[14px] font-medium text-white border-b border-white"
+                onClick={() => setSelectedTab(tabName)}>
+                {tabText[tabName]}
+              </button>
+            )}
+          </li>
+        ))}
       </ul>
       <ul className="flex flex-col">
         <li>
