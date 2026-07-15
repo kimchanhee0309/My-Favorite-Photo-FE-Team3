@@ -15,3 +15,9 @@ export const optionTextMap = {
   genre: genreText,
   status: statusText,
 };
+
+export const INITIAL_SELECTED_OPTIONS = {
+  grade: [],
+  genre: [],
+  status: [],
+};

@@ -3,16 +3,18 @@
 import Image from "next/image";
 import { PrimaryButton } from "..";
 import { useState } from "react";
-import { optionTextMap, tabText } from "./BottomSheetFilter.constants";
+import {
+  INITIAL_SELECTED_OPTIONS,
+  optionTextMap,
+  tabText,
+} from "./BottomSheetFilter.constants";
 import { gradeColor } from "../photocard/PhotoCard.constants";
 
 export default function BottomSheetFilter({ filterOptions }) {
   const [selectedTab, setSelectedTab] = useState(Object.keys(filterOptions)[0]);
-  const [selectedOptions, setSelectedOptions] = useState({
-    grade: [],
-    genre: [],
-    status: [],
-  });
+  const [selectedOptions, setSelectedOptions] = useState(
+    INITIAL_SELECTED_OPTIONS,
+  );
 
   const toggleOption = (itemName) => {
     setSelectedOptions((prev) => {
@@ -71,7 +73,9 @@ export default function BottomSheetFilter({ filterOptions }) {
         ))}
       </ul>
       <footer className="flex px-3 gap-3 w-full justify-between mt-auto mb-6">
-        <button className="px-3.75 py-3.75">
+        <button
+          className="px-3.75 py-3.75"
+          onClick={() => setSelectedOptions(INITIAL_SELECTED_OPTIONS)}>
           <Image src="/reset.svg" width={24} height={25} alt="" />
         </button>
         <PrimaryButton thickness="thin" size="S" className="flex-1 py-4.25">
