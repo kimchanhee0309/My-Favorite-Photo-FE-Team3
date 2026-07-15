@@ -6,6 +6,8 @@ export const tabText = {
   status: "매진여부",
 };
 
+export const TAB_ORDER = ["grade", "genre", "status"];
+
 export const statusText = {
   ON_SALE: "판매중",
   SOLD_OUT: "품절",

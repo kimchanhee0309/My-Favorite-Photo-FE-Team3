@@ -7,11 +7,13 @@ import {
   INITIAL_SELECTED_OPTIONS,
   optionTextMap,
   tabText,
+  TAB_ORDER,
 } from "./BottomSheetFilter.constants";
 import { gradeColor } from "../photocard/PhotoCard.constants";
 
 export default function BottomSheetFilter({ filterOptions }) {
-  const [selectedTab, setSelectedTab] = useState(Object.keys(filterOptions)[0]);
+  const orderedTabs = TAB_ORDER.filter((tab) => tab in filterOptions);
+  const [selectedTab, setSelectedTab] = useState("grade");
   const [selectedOptions, setSelectedOptions] = useState(
     INITIAL_SELECTED_OPTIONS,
   );
@@ -22,7 +24,7 @@ export default function BottomSheetFilter({ filterOptions }) {
       const nextList = currentList.includes(itemName)
         ? currentList.filter((name) => name !== itemName)
         : [...currentList, itemName];
-      return { ...prev, [selectedTab]: nextList };
+      return { ...INITIAL_SELECTED_OPTIONS, [selectedTab]: nextList };
     });
   };
 
@@ -35,7 +37,7 @@ export default function BottomSheetFilter({ filterOptions }) {
         </button>
       </header>
       <ul className="flex px-6 gap-6">
-        {Object.keys(filterOptions).map((tabName) => (
+        {orderedTabs.map((tabName) => (
           <li key={tabName}>
             {selectedTab !== tabName ? (
               <button
