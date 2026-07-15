@@ -1,7 +1,12 @@
-import Image from 'next/image';
-import GradeBadge from '@/features/photocard/components/GradeBadge';
+import Image from "next/image";
+import GradeBadge from "@/features/photocard/components/GradeBadge";
 
-export default function ExchangeInfo({ grade, genre, description, className = '' }) {
+export default function ExchangeInfo({
+  grade,
+  genre,
+  description,
+  className = "",
+}) {
   return (
     <div className={`flex flex-col items-start gap-[30px] ${className}`}>
       <div className="flex w-full flex-col gap-[10px]">
@@ -20,8 +25,9 @@ export default function ExchangeInfo({ grade, genre, description, className = ''
         <div className="h-[2px] w-full bg-gray-100" />
       </div>
 
-      <div className="flex w-full flex-col items-start gap-[10px]">
+      <div className="flex w-full flex-col items-start gap-[30px]">
         <GradeBadge grade={grade} genre={genre} className="w-full" />
+        <div className="h-px w-full bg-gray-400" />
         <p className="typo-16-regular lg:typo-18-regular text-gray-200">
           {description}
         </p>
