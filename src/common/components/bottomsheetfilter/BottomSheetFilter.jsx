@@ -8,9 +8,24 @@ import { gradeColor } from "../photocard/PhotoCard.constants";
 
 export default function BottomSheetFilter({ filterOptions }) {
   const [selectedTab, setSelectedTab] = useState(Object.keys(filterOptions)[0]);
+  const [selectedOptions, setSelectedOptions] = useState({
+    grade: [],
+    genre: [],
+    status: [],
+  });
+
+  const toggleOption = (itemName) => {
+    setSelectedOptions((prev) => {
+      const currentList = prev[selectedTab];
+      const nextList = currentList.includes(itemName)
+        ? currentList.filter((name) => name !== itemName)
+        : [...currentList, itemName];
+      return { ...prev, [selectedTab]: nextList };
+    });
+  };
 
   return (
-    <div className="flex flex-col w-full border-none rounded-t-2xl bg-gray-500 px-2.5 py-4 h-120">
+    <div className="flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2.5 py-4 h-120">
       <header className="flex items-center justify-center relative">
         <h2 className="text-[16px] text-gray-400 font-medium">필터</h2>
         <button className="absolute right-1">
@@ -24,13 +39,17 @@ export default function BottomSheetFilter({ filterOptions }) {
               <button
                 className="px-4 py-4 typo-14-regular text-gray-400 "
                 onClick={() => setSelectedTab(tabName)}>
-                {tabText[tabName]}
+                {tabText[tabName]}{" "}
+                {!!selectedOptions[tabName].length &&
+                  selectedOptions[tabName].length}
               </button>
             ) : (
               <button
                 className="px-4 py-4 text-[14px] font-medium text-white border-b border-white"
                 onClick={() => setSelectedTab(tabName)}>
-                {tabText[tabName]}
+                {tabText[tabName]}{" "}
+                {!!selectedOptions[tabName].length &&
+                  selectedOptions[tabName].length}
               </button>
             )}
           </li>
@@ -39,7 +58,9 @@ export default function BottomSheetFilter({ filterOptions }) {
       <ul className="flex flex-col">
         {filterOptions[selectedTab].map((item) => (
           <li key={item.name}>
-            <button className="px-8 py-4 flex justify-between w-full">
+            <button
+              className={`px-8 py-4 flex justify-between w-full ${selectedOptions[selectedTab].includes(item.name) && "bg-gray-500"}`}
+              onClick={() => toggleOption(item.name)}>
               <span
                 className={`${selectedTab === "grade" && gradeColor[item.name]} typo-14-regular`}>
                 {optionTextMap[selectedTab]?.[item.name] ?? item.name}
