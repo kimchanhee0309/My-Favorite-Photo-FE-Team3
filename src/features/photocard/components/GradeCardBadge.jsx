@@ -12,7 +12,7 @@ export default function GradeCardBadge({
     <div
       className={`flex flex-col gap-[5px] lg:flex-row lg:items-center lg:gap-2.5 ${className}`}>
       <div className="flex items-center gap-2.5">
-        <GradeCard grade={grade} size={{ base: "S", lg: "L" }} />
+        <GradeCard grade={grade} size={{ base: "S", md: "L" }} />
         <span className="typo-10-regular md:typo-16-regular text-gray-400">
           |
         </span>
