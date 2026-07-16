@@ -60,19 +60,30 @@ export default function BottomSheetFilter({ filterOptions }) {
         ))}
       </ul>
       <ul className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
-        {filterOptions[selectedTab].map((item) => (
-          <li key={item.name}>
-            <button
-              className={`px-8 py-4 flex justify-between w-full ${selectedOptions[selectedTab].includes(item.name) && "bg-gray-500"}`}
-              onClick={() => toggleOption(item.name)}>
-              <span
-                className={`${selectedTab === "grade" && gradeColor[item.name]} typo-14-regular`}>
-                {optionTextMap[selectedTab]?.[item.name] ?? item.name}
-              </span>
-              <span>{item.count}개</span>
-            </button>
-          </li>
-        ))}
+        {filterOptions[selectedTab].map((item) => {
+          const isSelected = selectedOptions[selectedTab].includes(item.name);
+          const selectedTextClass = isSelected ? "text-white" : "text-gray-400";
+
+          return (
+            <li key={item.name}>
+              <button
+                className={`px-8 py-4 flex justify-between w-full ${isSelected && "bg-gray-500"}`}
+                onClick={() => toggleOption(item.name)}>
+                <span
+                  className={`typo-14-regular ${
+                    selectedTab === "grade"
+                      ? gradeColor[item.name]
+                      : selectedTextClass
+                  }`}>
+                  {optionTextMap[selectedTab]?.[item.name] ?? item.name}
+                </span>
+                <span className={`typo-14-regular ${selectedTextClass}`}>
+                  {item.count}개
+                </span>
+              </button>
+            </li>
+          );
+        })}
       </ul>
       <footer className="flex px-3 gap-3 w-full justify-between mt-auto mb-6">
         <button
