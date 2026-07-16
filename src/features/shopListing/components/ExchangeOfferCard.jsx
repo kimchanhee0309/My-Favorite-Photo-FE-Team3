@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import GradeCardBadge from '@/features/photocard/components/GradeCardBadge';
+import Image from "next/image";
+import GradeCardBadge from "@/features/photocard/components/GradeCardBadge";
 
 export default function ExchangeOfferCard({
   imageUrl,
@@ -8,8 +8,8 @@ export default function ExchangeOfferCard({
   genre,
   minPrice,
   nickname,
-  description,
-  className = '',
+   message,
+  className = "",
 }) {
   return (
     <div className={`flex flex-col ${className}`}>
@@ -37,7 +37,7 @@ export default function ExchangeOfferCard({
       <div className="mt-[10px] h-px w-full bg-gray-400 md:mt-[20px]" />
 
       <p className="typo-10-regular md:typo-16-regular mt-[10px] text-white md:mt-[20px]">
-        {description}
+        {message}
       </p>
     </div>
   );
