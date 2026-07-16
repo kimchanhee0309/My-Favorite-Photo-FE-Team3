@@ -17,7 +17,7 @@ function createQueryString(params = {}) {
 export function getShopListings(params = {}) {
   const queryString = createQueryString(params);
 
-  return apliClient(`/shop-listings${queryString}`);
+  return apiClient(`/shop-listings${queryString}`);
 }
 
 export function getMyShopListings(params = {}) {
