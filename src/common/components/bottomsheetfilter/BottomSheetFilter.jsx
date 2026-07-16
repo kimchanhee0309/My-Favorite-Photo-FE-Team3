@@ -11,7 +11,11 @@ import {
 } from "./BottomSheetFilter.constants";
 import { gradeColor } from "../photocard/PhotoCard.constants";
 
-export default function BottomSheetFilter({ filterOptions }) {
+export default function BottomSheetFilter({
+  filterOptions,
+  onClose,
+  onFilter,
+}) {
   const orderedTabs = TAB_ORDER.filter((tab) => tab in filterOptions);
   const [selectedTab, setSelectedTab] = useState("grade");
   const [selectedOptions, setSelectedOptions] = useState(
@@ -49,7 +53,7 @@ export default function BottomSheetFilter({ filterOptions }) {
     <div className="flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120">
       <header className="flex items-center justify-center relative">
         <h2 className="text-[16px] text-gray-400 font-medium">필터</h2>
-        <button className="absolute right-1">
+        <button className="absolute right-1" onClick={onClose}>
           <Image src="/close.svg" width={13} height={13} alt="" />
         </button>
       </header>
@@ -108,7 +112,11 @@ export default function BottomSheetFilter({ filterOptions }) {
           onClick={() => setSelectedOptions(INITIAL_SELECTED_OPTIONS)}>
           <Image src="/reset.svg" width={24} height={25} alt="" />
         </button>
-        <PrimaryButton thickness="thin" size="S" className="flex-1 py-4.25">
+        <PrimaryButton
+          thickness="thin"
+          size="S"
+          className="flex-1 py-4.25"
+          onClick={() => onFilter(selectedTab, selectedOptions[selectedTab])}>
           {getSelectedCount()}개 포토보기
         </PrimaryButton>
       </footer>
