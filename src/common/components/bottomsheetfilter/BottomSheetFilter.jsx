@@ -28,6 +28,23 @@ export default function BottomSheetFilter({ filterOptions }) {
     });
   };
 
+  const getSelectedCount = () => {
+    if (selectedOptions[selectedTab].length === 0) {
+      return Object.values(filterOptions).reduce((acc, cur) => {
+        const innerSum = cur.reduce((innerAcc, innercur) => {
+          return innerAcc + innercur.count;
+        }, 0);
+        return acc + innerSum;
+      }, 0);
+    }
+
+    return filterOptions[selectedTab].reduce((acc, cur) => {
+      return selectedOptions[selectedTab].includes(cur.name)
+        ? acc + cur.count
+        : acc;
+    }, 0);
+  };
+
   return (
     <div className="flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120">
       <header className="flex items-center justify-center relative">
@@ -92,7 +109,7 @@ export default function BottomSheetFilter({ filterOptions }) {
           <Image src="/reset.svg" width={24} height={25} alt="" />
         </button>
         <PrimaryButton thickness="thin" size="S" className="flex-1 py-4.25">
-          n개 포토보기
+          {getSelectedCount()}개 포토보기
         </PrimaryButton>
       </footer>
     </div>
