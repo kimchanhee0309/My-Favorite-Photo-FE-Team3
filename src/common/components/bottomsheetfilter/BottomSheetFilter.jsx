@@ -61,8 +61,8 @@ export default function BottomSheetFilter({
         }
       }}>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/80" />
-        <Drawer.Content className="fixed bottom-0 left-0 right-0 flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120">
+        <Drawer.Overlay className="fixed inset-0 bg-black/80 z-50" />
+        <Drawer.Content className="fixed bottom-0 left-0 right-0 flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120 z-50">
           <header className="flex items-center justify-center relative">
             <h2 className="text-[16px] text-gray-400 font-medium">필터</h2>
             <button
