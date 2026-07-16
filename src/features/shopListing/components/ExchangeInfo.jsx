@@ -1,5 +1,5 @@
 import Image from "next/image";
-import GradeBadge from "@/features/photocard/components/GradeBadge";
+import GradeBadge from "@/features/photocard/components/GradeDetailBadge";
 
 export default function ExchangeInfo({
   grade,

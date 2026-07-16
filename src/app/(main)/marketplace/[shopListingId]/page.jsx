@@ -5,7 +5,7 @@ import Image from "next/image";
 import BuyerCard from "@/features/shopListing/components/BuyerCard";
 import SellerCard from "@/features/shopListing/components/SellerCard";
 import { PrimaryButton } from "@/common/components";
-import GradeBadge from "@/features/photocard/components/GradeBadge";
+import GradeBadge from "@/features/photocard/components/GradeDetailBadge";
 
 export default function MarketplaceDetailPage() {
   const [purchaseQuantity, setPurchaseQuantity] = useState(1);
