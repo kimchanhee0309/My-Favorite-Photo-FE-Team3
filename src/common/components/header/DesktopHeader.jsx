@@ -23,7 +23,9 @@ export default function DesktopHeader({
                 alt="최애의 포토 로고"
                 width={139}
                 height={25}
-                className="object-contain md:w-27.75 md:h-[20.001px] lg:w-[138.945px] lg:h-[25.202px]"
+                quality={100}
+                className="object-contain md:w-27.75 md:h-[20px] lg:w-[139px] lg:h-[25px]"
+                priority
               />
             </Link>
           </div>
