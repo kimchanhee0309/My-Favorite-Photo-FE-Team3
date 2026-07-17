@@ -1,21 +1,21 @@
 import Image from "next/image";
 import { cardStyle, saleTypeColor, saleTypeText } from "./PhotoCard.constants";
 
-export default function PhotoCardImage({ card }) {
+export default function PhotoCardImage({ imageUrl, status, saleType }) {
   return (
     <div className={cardStyle.image}>
-      {card.status === "SOLD_OUT" && (
+      {status === "SOLD_OUT" && (
         <div className="z-10 absolute inset-0 bg-black/70 flex items-center justify-center">
           <Image src="/soldout.svg" fill alt="품절" />
         </div>
       )}
-      {saleTypeText[card.saleType] && card.status !== "SOLD_OUT" && (
+      {saleTypeText[saleType] && status !== "SOLD_OUT" && (
         <div
-          className={`absolute bg-black/50 z-10 ${cardStyle.badge} ${saleTypeColor[card.saleType]}`}>
-          {saleTypeText[card.saleType]}
+          className={`absolute bg-black/50 z-10 ${cardStyle.badge} ${saleTypeColor[saleType]}`}>
+          {saleTypeText[saleType]}
         </div>
       )}
-      <Image src={card.imageUrl} fill alt="포토카드" className="object-cover" />
+      <Image src={imageUrl} fill alt="포토카드" className="object-cover" />
     </div>
   );
 }
