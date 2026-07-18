@@ -3,7 +3,6 @@ export const cardStyle = {
     "p-2 gap-3 w-42.5 md:p-5 md:gap-6 md:w-85 lg:p-10 lg:gap-6 lg:w-110",
   divider: "pb-3 md:pb-4",
   dividerRow: "flex justify-between whitespace-nowrap",
-  dividerRowWithPurchase: "flex flex-col gap-1 lg:flex-row lg:items-center lg:justify-between",
   title: "typo-14-bold md:typo-22-bold",
   labelLight: "typo-10-light md:typo-16-light",
   labelRegular: "typo-10-regular md:typo-16-regular",
