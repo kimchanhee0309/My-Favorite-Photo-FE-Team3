@@ -2,6 +2,7 @@
 
 import OriginCard from "@/common/components/photocard/OriginCard";
 import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const dummyOnSaleData = {
   imageUrl: "/default.png",
@@ -37,16 +38,22 @@ const soldOutCards = Array.from({ length: 15 }, (_, i) => ({
   id: `soldout-${i}`,
 }));
 
-// const dummyCardData = [...onSaleCards, ...soldOutCards].sort(
-//   () => Math.random() - 0.5,
-// );
-
 export default function MarketPlaceContent() {
   const [visibleCount, setVisibleCount] = useState(15);
   const [dummyCardData, setDummyCardData] = useState([
     ...onSaleCards,
     ...soldOutCards,
   ]);
+  const hasNextpage = visibleCount < dummyCardData.length;
+
+  const { ref } = useInView({
+    threshold: 1,
+    onChange: (inView) => {
+      if (inView && hasNextpage) {
+        setVisibleCount((prev) => prev + 15);
+      }
+    },
+  });
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -56,9 +63,16 @@ export default function MarketPlaceContent() {
   }, []);
   return (
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 lg:grid-cols-[repeat(3,max-content)] lg:gap-5">
-      {dummyCardData.slice(0, visibleCount).map((card) => (
-        <OriginCard key={card.id} {...card} />
-      ))}
+      {dummyCardData.slice(0, visibleCount).map((card, idx, arr) => {
+        const isLastItem = arr.length - 1 === idx;
+        return isLastItem ? (
+          <div ref={ref} key={card.id}>
+            <OriginCard {...card} />
+          </div>
+        ) : (
+          <OriginCard key={card.id} {...card} />
+        );
+      })}
     </div>
   );
 }
