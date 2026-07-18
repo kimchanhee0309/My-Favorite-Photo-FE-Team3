@@ -1,7 +1,12 @@
 "use client";
 
+import { ModalProvider } from "./ModalProvider";
 import QueryProvider from "./QueryProvider";
 
 export default function AppProviders({ children }) {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <QueryProvider>
+      <ModalProvider>{children}</ModalProvider>
+    </QueryProvider>
+  );
 }
