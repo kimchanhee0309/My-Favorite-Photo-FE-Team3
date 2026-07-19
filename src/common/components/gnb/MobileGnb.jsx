@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HamburgerIcon, BackIcon, BellIcon } from "./Icons";
 
-export default function MobileHeader({
+export default function MobileGnb({
   currentState,
   pageTitle,
   hasUnreadNotification,
@@ -12,13 +12,13 @@ export default function MobileHeader({
   onBack,
 }) {
   return (
-    <header className="w-full h-20 bg-black text-gray-200 sticky top-0 z-40 select-none block md:hidden">
-      <div className="layout-container h-full flex items-center justify-between relative">
+    <header className="sticky top-0 z-40 block h-20 w-full bg-black text-gray-200 select-none md:hidden">
+      <div className="layout-container relative flex h-full items-center justify-between">
         {(currentState === "login" || currentState === "logout") && (
           <>
             <button
               onClick={onMenuOpen}
-              className="absolute left-5 cursor-pointer w-5.5 h-5.5 flex items-center justify-center"
+              className="absolute left-5 flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
               aria-label="메뉴 열기"
               type="button">
               <HamburgerIcon />
@@ -32,21 +32,21 @@ export default function MobileHeader({
                   width={84}
                   height={16}
                   quality={100}
-                  className="object-contain w-[83px] h-[15px]"
+                  className="h-[15px] w-[83px] object-contain"
                   priority
                 />
               </Link>
             </div>
 
-            <div className="absolute right-5 flex items-center h-full">
+            <div className="absolute right-5 flex h-full items-center">
               {currentState === "login" ? (
                 <button
-                  className="cursor-pointer relative w-5.5 h-5.5 flex items-center justify-center"
+                  className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
                   aria-label="알림 확인"
                   type="button">
                   <BellIcon />
                   {hasUnreadNotification && (
-                    <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-red" />
+                    <span className="bg-red absolute top-0 right-0 h-2 w-2 rounded-full" />
                   )}
                 </button>
               ) : (
@@ -64,7 +64,7 @@ export default function MobileHeader({
           <>
             <button
               onClick={onBack}
-              className="absolute left-5 cursor-pointer w-5.5 h-5.5 flex items-center justify-center"
+              className="absolute left-5 flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
               aria-label="뒤로 가기"
               type="button">
               <BackIcon />
@@ -72,13 +72,13 @@ export default function MobileHeader({
 
             <div className="mx-auto block">
               {pageTitle && (
-                <h1 className="font-[BaskinRobbins] text-[20px] leading-normal font-normal text-white text-center tracking-[-0.6px]">
+                <h1 className="text-center font-[BaskinRobbins] text-[20px] leading-normal font-normal tracking-[-0.6px] text-white">
                   {pageTitle}
                 </h1>
               )}
             </div>
 
-            <div className="absolute right-5 w-5.5 h-5.5" />
+            <div className="absolute right-5 h-5.5 w-5.5" />
           </>
         )}
       </div>

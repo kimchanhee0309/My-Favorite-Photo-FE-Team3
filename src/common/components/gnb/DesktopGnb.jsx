@@ -5,7 +5,7 @@ import Image from "next/image";
 import { BellIcon } from "./Icons";
 import DesktopUserMenu from "./DesktopUserMenu";
 
-export default function DesktopHeader({
+export default function DesktopGnb({
   currentState,
   user,
   menuItems,
@@ -13,9 +13,9 @@ export default function DesktopHeader({
   onLogout,
 }) {
   return (
-    <header className="w-full h-20 bg-black text-gray-200 sticky top-0 z-40 select-none hidden md:block md:h-17.5 lg:h-20">
+    <header className="sticky top-0 z-40 hidden h-20 w-full bg-black text-gray-200 select-none md:block md:h-17.5 lg:h-20">
       <div className="relative h-full">
-        <div className="absolute flex items-center justify-between md:top-5.75 md:left-10 md:right-10 lg:top-6.75 lg:left-55 lg:right-55">
+        <div className="absolute flex items-center justify-between md:top-5.75 md:right-10 md:left-10 lg:top-6.75 lg:right-55 lg:left-55">
           <div className="flex items-center">
             <Link href="/" className="flex items-center justify-center">
               <Image
@@ -24,7 +24,7 @@ export default function DesktopHeader({
                 width={139}
                 height={25}
                 quality={100}
-                className="object-contain md:w-27.75 md:h-[20px] lg:w-[139px] lg:h-[25px]"
+                className="object-contain md:h-[20px] md:w-27.75 lg:h-[25px] lg:w-[139px]"
                 priority
               />
             </Link>
@@ -34,31 +34,31 @@ export default function DesktopHeader({
             {currentState === "login" ? (
               <div className="flex items-center justify-center gap-7.5">
                 <div className="flex items-center gap-7.5">
-                  <div className="text-gray-200 typo-14-bold">
+                  <div className="typo-14-bold text-gray-200">
                     {user.points.toLocaleString()}P
                   </div>
 
                   <button
-                    className="cursor-pointer relative w-5.5 h-5.5 flex items-center justify-center text-white hover:opacity-85 transition"
+                    className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center text-white transition hover:opacity-85"
                     aria-label="알림 확인"
                     type="button">
                     <BellIcon />
                     {hasUnreadNotification && (
-                      <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500" />
+                      <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
                     )}
                   </button>
 
                   <DesktopUserMenu user={user} menuItems={menuItems} />
                 </div>
 
-                <span className="select-none typo-14-regular text-center text-gray-400">
+                <span className="typo-14-regular text-center text-gray-400 select-none">
                   |
                 </span>
 
                 <button
                   onClick={onLogout}
                   type="button"
-                  className="typo-14-regular text-right text-gray-400 hover:text-white transition cursor-pointer">
+                  className="typo-14-regular cursor-pointer text-right text-gray-400 transition hover:text-white">
                   로그아웃
                 </button>
               </div>

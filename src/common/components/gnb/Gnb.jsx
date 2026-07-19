@@ -2,12 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import MobileHeader from "./MobileHeader";
-import DesktopHeader from "./DesktopHeader";
+import MobileGnb from "./MobileGnb";
+import DesktopGnb from "./DesktopGnb";
 import MobileMenuDrawer from "./MobileMenuDrawer";
 import { TITLE_MAP, MENU_ITEMS } from "./constants";
 
-export default function Header({}) {
+export default function Gnb({}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -28,7 +28,7 @@ export default function Header({}) {
 
   return (
     <>
-      <MobileHeader
+      <MobileGnb
         currentState={currentState}
         pageTitle={pageTitle}
         hasUnreadNotification={hasUnreadNotification}
@@ -36,7 +36,7 @@ export default function Header({}) {
         onBack={() => router.back()}
       />
 
-      <DesktopHeader
+      <DesktopGnb
         currentState={currentState}
         user={user}
         menuItems={MENU_ITEMS}
