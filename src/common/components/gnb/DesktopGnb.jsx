@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { BellIcon } from "./Icons";
 import DesktopUserMenu from "./DesktopUserMenu";
+import NotificationList from "@/features/notification/components/NotificationList";
+import { useState } from "react";
 
 export default function DesktopGnb({
   currentState,
@@ -12,6 +14,8 @@ export default function DesktopGnb({
   hasUnreadNotification,
   onLogout,
 }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-40 hidden h-20 w-full bg-black text-gray-200 select-none md:block md:h-17.5 lg:h-20">
       <div className="relative h-full">
@@ -24,7 +28,7 @@ export default function DesktopGnb({
                 width={139}
                 height={25}
                 quality={100}
-                className="object-contain md:h-[20px] md:w-27.75 lg:h-[25px] lg:w-[139px]"
+                className="object-contain md:h-5 md:w-27.75 lg:h-[25px] lg:w-[139px]"
                 priority
               />
             </Link>
@@ -38,15 +42,35 @@ export default function DesktopGnb({
                     {user.points.toLocaleString()}P
                   </div>
 
-                  <button
-                    className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center text-white transition hover:opacity-85"
-                    aria-label="알림 확인"
-                    type="button">
-                    <BellIcon />
-                    {hasUnreadNotification && (
-                      <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
+                  <div className="relative flex items-center">
+                    <button
+                      className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center text-white transition hover:opacity-85"
+                      onClick={() => setIsDropdownOpen((prev) => !prev)}
+                      aria-label="알림 확인"
+                      type="button">
+                      <BellIcon />
+                      {hasUnreadNotification && (
+                        <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
+                      )}
+                    </button>
+
+                    {isDropdownOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setIsDropdownOpen(false)}
+                        />
+                        <div className="absolute top-6 right-0 z-50 overflow-hidden">
+                          <NotificationList
+                            onItemClick={(item) => {
+                              setIsDropdownOpen(false);
+                              console.log("선택된 알림:", item);
+                            }}
+                          />
+                        </div>
+                      </>
                     )}
-                  </button>
+                  </div>
 
                   <DesktopUserMenu user={user} menuItems={menuItems} />
                 </div>
