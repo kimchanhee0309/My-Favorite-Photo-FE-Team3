@@ -6,6 +6,7 @@ import MobileGnb from "./MobileGnb";
 import DesktopGnb from "./DesktopGnb";
 import MobileMenuDrawer from "./MobileMenuDrawer";
 import { TITLE_MAP, MENU_ITEMS } from "./constants";
+import { DUMMY_NOTIFICATIONS } from "@/features/notification/constants.js";
 
 export default function Gnb({}) {
   const router = useRouter();
@@ -14,7 +15,9 @@ export default function Gnb({}) {
   const [currentState, setCurrentState] = useState("login");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   //TODO 알림 기능 구현 후 백엔드 연동시 임시 상태 및 더미데이터 삭제
-  const [hasUnreadNotification, setHasUnreadNotification] = useState(false);
+  const hasUnreadNotification = DUMMY_NOTIFICATIONS.some(
+    (noti) => !noti.isRead,
+  );
   const pageTitle = TITLE_MAP[pathname];
 
   //TODO 유저 정보 API 연동 후 더미 데이터 삭제
