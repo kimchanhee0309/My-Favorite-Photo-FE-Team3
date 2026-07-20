@@ -48,7 +48,10 @@ export function updateShopListing(shopListingId, data) {
   return apiClient(`/shop-listings/${shopListingId}`, {
     method: "PATCH",
     body: JSON.stringify({
-      pricePerUnit: data.pricePerUnit ? Number(data.pricePerUnit) : undefined,
+      pricePerUnit:
+        data.pricePerUnit !== undefined && data.pricePerUnit !== ""
+          ? Number(data.pricePerUnit)
+          : undefined,
       wishGrade: data.wishGrade || undefined,
       wishGenre: data.wishGenre || undefined,
       wishDescription: data.wishDescription || undefined,
