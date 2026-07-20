@@ -1,17 +1,22 @@
 import Image from "next/image";
 import { cardStyle, saleTypeColor, saleTypeText } from "./PhotoCard.constants";
 
-export default function PhotoCardImage({ imageUrl, status, saleType }) {
+export default function PhotoCardImage({
+  imageUrl,
+  status,
+  saleType,
+  style = cardStyle,
+}) {
   return (
-    <div className={cardStyle.image}>
+    <div className={style.image}>
       {status === "SOLD_OUT" && (
-        <div className="z-10 absolute inset-0 bg-black/70 flex items-center justify-center">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/70">
           <Image src="/soldout.svg" fill alt="품절" />
         </div>
       )}
       {saleTypeText[saleType] && status !== "SOLD_OUT" && (
         <div
-          className={`absolute bg-black/50 z-10 ${cardStyle.badge} ${saleTypeColor[saleType]}`}>
+          className={`absolute z-10 bg-black/50 ${style.badge} ${saleTypeColor[saleType]}`}>
           {saleTypeText[saleType]}
         </div>
       )}
