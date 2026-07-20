@@ -15,7 +15,7 @@ export default function Modal({ isOpen, onClose, children }) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
       onClick={handleBackdropClick}>
       {/*Dialog*/}
-      <div className="relative flex h-auto max-h-[90vh] min-h-[271px] w-[90vw] flex-col overflow-y-auto rounded-xs bg-gray-500 p-[15px] md:w-[400px] lg:min-h-[352px] lg:w-[560px] lg:max-w-[1160px] lg:p-[30px]">
+      <div className="relative flex h-fit max-h-[calc(100vh-32px)] w-fit max-w-[calc(100vw-32px)] flex-col overflow-auto rounded-xs bg-gray-500 p-[15px] lg:p-[30px]">
         <button
           onClick={onClose}
           className="absolute top-[15px] right-[15px] cursor-pointer text-gray-300 transition-colors hover:text-white lg:top-[30px] lg:right-[30px]"
