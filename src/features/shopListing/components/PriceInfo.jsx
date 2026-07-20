@@ -4,17 +4,17 @@ export default function PriceInfo({ pricePerUnit, remainingQuantity, quantity, c
       <div className="flex items-center justify-between">
         <span className="typo-18-regular lg:typo-20-regular text-gray-300">가격</span>
         <span className="typo-20-bold lg:typo-24-regular lg:font-bold text-white">
-          {pricePerUnit}P
+          {pricePerUnit} P
         </span>
       </div>
       <div className="flex items-center justify-between">
         <span className="typo-18-regular lg:typo-20-regular text-gray-300">잔여</span>
         <span>
           <span className="typo-20-bold lg:typo-24-regular lg:font-bold text-white">
-            {remainingQuantity}
-          </span>
+            {remainingQuantity} 
+          </span>{' '}
           <span className="typo-20-regular lg:typo-24-regular text-gray-300">
-            /{quantity}
+            / {quantity}
           </span>
         </span>
       </div>

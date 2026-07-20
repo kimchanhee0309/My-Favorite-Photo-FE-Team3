@@ -1,28 +1,39 @@
 import Image from "next/image";
 import { cardStyle } from "./PhotoCard.constants";
-import PhotoCardHeader from "./PhotoCardHeader";
 import PhotoCardImage from "./PhotoCardImage";
+import PhotoCardInfo from "./PhotoCardInfo";
 
-export default function PhotoCard({ card }) {
+export default function SoldOutCard({
+  imageUrl,
+  title,
+  grade,
+  genre,
+  description,
+  pricePerUnit,
+  remainingQuantity,
+}) {
   return (
     <div
       className={`flex flex-col border border-gray-400 rounded-0.5 bg-gray-500 ${cardStyle.container}`}>
-      <PhotoCardImage card={card} />
+      <PhotoCardImage imageUrl={imageUrl} status="SOLD_OUT" />
 
       <div className="flex flex-col gap-2.5">
-        <PhotoCardHeader card={card} />
+        <PhotoCardInfo
+          title={title}
+          grade={grade}
+          genre={genre}
+          description={description}
+        />
         <div className="flex justify-between">
           <p className={`${cardStyle.labelLight} text-gray-300`}>가격</p>
           <p className={`${cardStyle.valueRegular} text-white`}>
-            {card.pricePerUnit} P
+            {pricePerUnit} P
           </p>
         </div>
         <div className="flex justify-between">
-          <p className={`${cardStyle.labelLight} text-gray-300`}>
-            {card.quantityLabel}
-          </p>
+          <p className={`${cardStyle.labelLight} text-gray-300`}>잔여</p>
           <p className={`${cardStyle.valueRegular} text-white`}>
-            {card.quantityText}
+            {remainingQuantity}
           </p>
         </div>
       </div>

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+
+@source inline("{,md:,lg:}typo-{14,16,18,20}-bold");
+
 @font-face {
   font-family: "BaskinRobbins";
   src: url("/fonts/BaskinRobbins-R.otf") format("opentype");
@@ -31,7 +34,7 @@
   --color-purple: #a77eff;
   --color-pink: #ff2a6a;
 
-  --layout-max: 1200px;
+  --layout-max: 1480px;
 
   --font-sans: var(--font-noto-sans-kr), sans-serif;
 
@@ -124,7 +127,15 @@ a {
   letter-spacing: -0.03em;
 }
 
-@utility type-40-bold {
+@utility typo-brand-16 {
+  font-family: "BaskinRobbins", "Noto Sans KR", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+@utility typo-40-bold {
   font-size: 40px;
   font-weight: 700;
   line-height: 1.25;
@@ -286,7 +297,7 @@ a {
     padding-right: 32px;
   }
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1480px) {
     padding-left: 0;
     padding-right: 0;
   }
@@ -307,7 +318,7 @@ a {
     display: block;
   }
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1480px) {
     display: none;
   }
 }
@@ -315,7 +326,7 @@ a {
 @utility display-desktop-only {
   display: none;
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1480px) {
     display: block;
   }
 }
@@ -331,7 +342,7 @@ a {
 @utility display-desktop-up {
   display: none;
 
-  @media (min-width: 1200px) {
+  @media (min-width: 1480px) {
     display: block;
   }
 }

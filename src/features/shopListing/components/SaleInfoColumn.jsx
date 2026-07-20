@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import GradeBadge from '@/features/photocard/components/GradeBadge';
-import Stepper from '@/common/components/Stepper/Stepper';
+import GradeBadge from "@/features/photocard/components/GradeDetailBadge";
+import Stepper from "@/common/components/Stepper/Stepper";
 
 export default function SaleInfoColumn({
   grade,
@@ -12,11 +12,17 @@ export default function SaleInfoColumn({
   onQuantityChange,
   price,
   onPriceChange,
-  className = '',
+  className = "",
 }) {
   return (
-    <div className={`flex w-[345px] flex-col items-start gap-[30px] md:w-[342px] lg:w-[440px] ${className}`}>
-      <GradeBadge grade={grade} genre={genre} nickname={nickname} className="w-full" />
+    <div
+      className={`flex w-[345px] flex-col items-start gap-[30px] md:w-[342px] lg:w-[440px] ${className}`}>
+      <GradeBadge
+        grade={grade}
+        genre={genre}
+        nickname={nickname}
+        className="w-full"
+      />
 
       <div className="h-px w-full bg-gray-400" />
 

@@ -31,7 +31,9 @@ export default function MobileHeader({
                   alt="최애의 포토 로고"
                   width={84}
                   height={16}
-                  className="object-contain w-[83.37px] h-[15.12px]"
+                  quality={100}
+                  className="object-contain w-[83px] h-[15px]"
+                  priority
                 />
               </Link>
             </div>
