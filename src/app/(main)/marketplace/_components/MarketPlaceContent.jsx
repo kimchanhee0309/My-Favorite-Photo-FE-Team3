@@ -1,5 +1,6 @@
 "use client";
 
+import { PrimaryButton } from "@/common/components";
 import OriginCard from "@/common/components/photocard/OriginCard";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -73,6 +74,11 @@ export default function MarketPlaceContent() {
           <OriginCard key={card.id} {...card} />
         );
       })}
+      <PrimaryButton
+        size="S"
+        className="fixed inset-x-0 bottom-3.75 z-50 mx-auto w-86 py-4.25 md:hidden">
+        나의 포토카드 판매하기
+      </PrimaryButton>
     </div>
   );
 }
