@@ -12,7 +12,8 @@ export default function ListingHero({
   onDelist,
 }) {
   return (
-    <div className="mt-[26px] flex flex-col items-center gap-20 md:mt-[48px] md:flex-row md:items-start md:justify-center lg:mt-[70px]">
+<div className="mt-[26px] flex flex-col items-center gap-20 md:mt-[48px] md:flex-row md:items-start md:justify-center md:gap-[20px] lg:gap-[80px] lg:mt-[70px]">
+
       <div className="relative h-[259px] w-[345px] md:h-[257px] md:w-[342px] lg:h-[720px] lg:w-[960px]">
         <Image
           src={listing.imageUrl}
