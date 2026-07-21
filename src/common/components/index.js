@@ -10,4 +10,4 @@ export { default as Textarea } from "./input/Textarea";
 export { default as ImageUpload } from "./input/ImageUpload";
 // export { default as BottomSheetFilter } from './BottomSheetFilter/BottomSheetFilter';
 // export { default as Modal } from './Modal';
-export { default as Title } from "./Title";
+export { default as Title } from "./title/Title";
