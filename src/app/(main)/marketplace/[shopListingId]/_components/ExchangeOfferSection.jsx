@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import ExchangeCard from "@/features/shopListing/components/ExchangeCard";
+import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 
 export default function ExchangeOfferSection({
   offers,
@@ -7,6 +11,14 @@ export default function ExchangeOfferSection({
   onReject,
   onCancel,
 }) {
+  const [cancelTarget, setCancelTarget] = useState(null);
+
+  const handleConfirmCancel = () => {
+    if (!cancelTarget) return;
+    onCancel(cancelTarget.id);
+    setCancelTarget(null);
+  };
+
   return (
     <div className="mt-[120px] w-[345px] self-center md:w-[704px] lg:w-[1480px]">
       <div className="flex flex-col gap-4">
@@ -16,7 +28,7 @@ export default function ExchangeOfferSection({
         <div className="h-[2px] w-full bg-gray-100" />
       </div>
 
-      <div className="mt-[46px] flex flex-wrap gap-[5px] md:mt-[48px] md:gap-[20px] lg:mt-[70px] lg:gap-[80px]">
+      <div className="mt-[46px] grid grid-cols-2 gap-[5px] md:mt-[48px] md:gap-[20px] lg:mt-[70px] lg:grid-cols-3 lg:gap-[80px]">
         {offers.map((offer) => (
           <ExchangeCard
             key={offer.id}
@@ -24,10 +36,28 @@ export default function ExchangeOfferSection({
             isOwner={isOwner}
             onAccept={() => onAccept(offer.id)}
             onReject={() => onReject(offer.id)}
-            onCancel={() => onCancel(offer.id)}
+            onCancel={() => setCancelTarget(offer)}
           />
         ))}
       </div>
+
+      <ConfirmModal
+        title="교환 제시 취소"
+        message={
+          cancelTarget && (
+            <>
+              <span className="whitespace-nowrap">
+                [{cancelTarget.grade} | {cancelTarget.name}]
+              </span>
+              <br className="lg:hidden" /> 교환 제시를 취소하시겠습니까?
+            </>
+          )
+        }
+        confirmLabel="취소하기"
+        isOpen={!!cancelTarget}
+        onClose={() => setCancelTarget(null)}
+        onConfirm={handleConfirmCancel}
+      />
     </div>
   );
 }

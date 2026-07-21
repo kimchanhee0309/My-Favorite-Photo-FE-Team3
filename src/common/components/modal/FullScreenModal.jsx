@@ -11,7 +11,7 @@ export default function FullScreenModal({ open, onClose, title, children }) {
         <button type="button" onClick={onClose} aria-label="뒤로가기">
           <Image src="/back.png" alt="" width={22} height={22} />
         </button>
-        <h2 className="typo-20-regular absolute left-1/2 -translate-x-1/2 text-white">
+        <h2 className="typo-20-regular tracking-[-0.6px] font-['BaskinRobbins'] absolute left-1/2 -translate-x-1/2 text-white">
           {title}
         </h2>
       </div>

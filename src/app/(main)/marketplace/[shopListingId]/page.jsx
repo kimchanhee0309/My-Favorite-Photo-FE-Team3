@@ -1,13 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import ListingHero from "./_components/ListingHero";
 import ExchangeWishSection from "./_components/ExchangeWishSection";
 import ExchangeOfferSection from "./_components/ExchangeOfferSection";
+import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
+import ExchangePhotocardModal from "@/features/exchange/components/ExchangePhotocardModal";
+import { usePurchaseShopListing } from "@/features/shopListing/shopListing.queries";
 
 export default function MarketplaceDetailPage() {
   const [purchaseQuantity, setPurchaseQuantity] = useState(1);
-  const isOwner = true;
+  const isOwner = false;
+  const { shopListingId } = useParams();
+  const router = useRouter();
+  const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
+  const [isPurchaseConfirmOpen, setIsPurchaseConfirmOpen] = useState(false);
+
+  const { mutate: purchaseShopListing, isPending: isPurchasePending } =
+    usePurchaseShopListing(shopListingId);
 
   const listing = {
     name: "인디쵸",
@@ -24,7 +35,7 @@ export default function MarketplaceDetailPage() {
     wishDescription: "아름다운 사람으로 부탁합니다.",
   };
 
-  const exchangeOffers = [
+  const [exchangeOffers, setExchangeOffers] = useState([
     {
       id: 1,
       imageUrl: "/cho.jpeg",
@@ -56,19 +67,46 @@ export default function MarketplaceDetailPage() {
       nickname: isOwner ? "nickname" : "proposer",
       message: "눈 오는 풍경 사진이랑 교환하고 싶어요!",
     },
-  ];
+  ]);
 
+  const buildPurchaseResultUrl = (status) => {
+    const query = new URLSearchParams({
+      status,
+      grade: listing.grade,
+      name: listing.name,
+      quantity: String(purchaseQuantity),
+    });
+    return `/marketplace/${shopListingId}/purchase-result?${query.toString()}`;
+  };
+
+  const handlePurchase = () => {
+    purchaseShopListing(
+      { quantity: purchaseQuantity },
+      {
+        onSuccess: () => {
+          setIsPurchaseConfirmOpen(false);
+          router.push(buildPurchaseResultUrl("success"));
+        },
+        onError: () => {
+          setIsPurchaseConfirmOpen(false);
+          router.push(buildPurchaseResultUrl("error"));
+        },
+      },
+    );
+  };
   return (
     <div className="layout-container flex flex-col py-10">
-      <p className="md:typo-brand-16 lg:typo-brand-24 hidden text-gray-300 md:mb-10 md:block md:font-normal lg:mb-[60px]">
-        마켓플레이스
-      </p>
+      <div className="flex w-[345px] flex-col self-center md:w-[704px] lg:w-[1480px]">
+        <p className="md:typo-brand-16 lg:typo-brand-24 hidden text-gray-300 md:mb-10 md:block md:font-normal lg:mb-[60px]">
+          마켓플레이스
+        </p>
 
-      <div className="flex flex-col gap-2.5 md:gap-5">
-        <h1 className="typo-24-regular md:typo-32-bold lg:typo-40-bold font-bold text-white">
-          {listing.name}
-        </h1>
-        <div className="h-[2px] w-full bg-gray-100" />
+        <div className="flex flex-col gap-2.5 md:gap-5">
+          <h1 className="typo-24-regular md:typo-32-bold lg:typo-40-bold font-bold text-white">
+            {listing.name}
+          </h1>
+          <div className="h-[2px] w-full bg-gray-100" />
+        </div>
       </div>
 
       <ListingHero
@@ -76,7 +114,7 @@ export default function MarketplaceDetailPage() {
         isOwner={isOwner}
         purchaseQuantity={purchaseQuantity}
         onQuantityChange={setPurchaseQuantity}
-        onBuy={() => alert("구매하기")}
+        onBuy={() => setIsPurchaseConfirmOpen(true)}
         onEdit={() => alert("수정하기")}
         onDelist={() => alert("판매 내리기")}
       />
@@ -84,7 +122,7 @@ export default function MarketplaceDetailPage() {
       {!isOwner && (
         <ExchangeWishSection
           listing={listing}
-          onExchange={() => alert("포토카드 교환하기")}
+          onExchange={() => setIsExchangeModalOpen(true)}
         />
       )}
 
@@ -92,7 +130,9 @@ export default function MarketplaceDetailPage() {
         <ExchangeOfferSection
           offers={exchangeOffers}
           isOwner={isOwner}
-          onCancel={(id) => alert(`취소 ${id}`)}
+          onCancel={(id) =>
+            setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
+          }
         />
       )}
 
@@ -104,6 +144,30 @@ export default function MarketplaceDetailPage() {
           onReject={(id) => alert(`거절 ${id}`)}
         />
       )}
+
+      <ExchangePhotocardModal
+        shopListingId={shopListingId}
+        isOpen={isExchangeModalOpen}
+        onClose={() => setIsExchangeModalOpen(false)}
+      />
+
+      <ConfirmModal
+        title="포토카드 구매"
+        message={
+          <>
+            <span className="whitespace-nowrap">
+              [{listing.grade} | {listing.name}]
+            </span>
+            <br className="lg:hidden" /> {purchaseQuantity}장을
+            구매하시겠습니까?
+          </>
+        }
+        confirmLabel="구매하기"
+        isOpen={isPurchaseConfirmOpen}
+        onClose={() => setIsPurchaseConfirmOpen(false)}
+        onConfirm={handlePurchase}
+        isPending={isPurchasePending}
+      />
     </div>
   );
 }
