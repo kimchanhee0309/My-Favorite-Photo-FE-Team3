@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import {
   createShopListing,
   deleteShopListing,
@@ -105,5 +110,31 @@ export function usePurchaseShopListing(shopListingId) {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
+  });
+}
+
+export function useInfiniteShopListings(params = {}) {
+  return useInfiniteQuery({
+    queryKey: ["shopListings", "infinite", params],
+    queryFn: ({ pageParam }) =>
+      getShopListings({
+        ...params,
+        cursor: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.data?.nextCursor ?? undefined,
+  });
+}
+
+export function useInfiniteMyShopListings(params = {}) {
+  return useInfiniteQuery({
+    queryKey: ["shopListings", "my", "infinite", params],
+    queryFn: ({ pageParam }) =>
+      getMyShopListings({
+        ...params,
+        cursor: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.data?.nextCursor ?? undefined,
   });
 }
