@@ -5,9 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import ListingHero from "./_components/ListingHero";
 import ExchangeWishSection from "./_components/ExchangeWishSection";
 import ExchangeOfferSection from "./_components/ExchangeOfferSection";
-import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import ExchangePhotocardModal from "@/features/exchange/components/ExchangePhotocardModal";
-import { usePurchaseShopListing } from "@/features/shopListing/shopListing.queries";
+import EditListingModal from "@/features/shopListing/components/EditListingModal";
+import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
+import {
+  usePurchaseShopListing,
+  useDeleteShopListing,
+} from "@/features/shopListing/shopListing.queries";
 
 export default function MarketplaceDetailPage() {
   const [purchaseQuantity, setPurchaseQuantity] = useState(1);
@@ -16,9 +20,13 @@ export default function MarketplaceDetailPage() {
   const router = useRouter();
   const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
   const [isPurchaseConfirmOpen, setIsPurchaseConfirmOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDelistConfirmOpen, setIsDelistConfirmOpen] = useState(false);
 
   const { mutate: purchaseShopListing, isPending: isPurchasePending } =
     usePurchaseShopListing(shopListingId);
+  const { mutate: deleteShopListing, isPending: isDelistPending } =
+    useDeleteShopListing();
 
   const listing = {
     name: "인디쵸",
@@ -91,9 +99,19 @@ export default function MarketplaceDetailPage() {
           setIsPurchaseConfirmOpen(false);
           router.push(buildPurchaseResultUrl("error"));
         },
-      },
+      }
     );
   };
+
+  const handleDelist = () => {
+    deleteShopListing(shopListingId, {
+      onSuccess: () => {
+        setIsDelistConfirmOpen(false);
+        router.push("/my-sales");
+      },
+    });
+  };
+
   return (
     <div className="layout-container flex flex-col py-10">
       <div className="flex w-[345px] flex-col self-center md:w-[704px] lg:w-[1480px]">
@@ -115,8 +133,8 @@ export default function MarketplaceDetailPage() {
         purchaseQuantity={purchaseQuantity}
         onQuantityChange={setPurchaseQuantity}
         onBuy={() => setIsPurchaseConfirmOpen(true)}
-        onEdit={() => alert("수정하기")}
-        onDelist={() => alert("판매 내리기")}
+        onEdit={() => setIsEditModalOpen(true)}
+        onDelist={() => setIsDelistConfirmOpen(true)}
       />
 
       {!isOwner && (
@@ -126,24 +144,20 @@ export default function MarketplaceDetailPage() {
         />
       )}
 
-      {!isOwner && (
-        <ExchangeOfferSection
-          offers={exchangeOffers}
-          isOwner={isOwner}
-          onCancel={(id) =>
-            setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
-          }
-        />
-      )}
-
-      {isOwner && (
-        <ExchangeOfferSection
-          offers={exchangeOffers}
-          isOwner={isOwner}
-          onAccept={(id) => alert(`승인 ${id}`)}
-          onReject={(id) => alert(`거절 ${id}`)}
-        />
-      )}
+      <ExchangeOfferSection
+        shopListingId={shopListingId}
+        offers={exchangeOffers}
+        isOwner={isOwner}
+        onAccept={(id) =>
+          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
+        }
+        onReject={(id) =>
+          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
+        }
+        onCancel={(id) =>
+          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
+        }
+      />
 
       <ExchangePhotocardModal
         shopListingId={shopListingId}
@@ -158,8 +172,7 @@ export default function MarketplaceDetailPage() {
             <span className="whitespace-nowrap">
               [{listing.grade} | {listing.name}]
             </span>
-            <br className="lg:hidden" /> {purchaseQuantity}장을
-            구매하시겠습니까?
+            <br className="lg:hidden" /> {purchaseQuantity}장을 구매하시겠습니까?
           </>
         }
         confirmLabel="구매하기"
@@ -167,6 +180,24 @@ export default function MarketplaceDetailPage() {
         onClose={() => setIsPurchaseConfirmOpen(false)}
         onConfirm={handlePurchase}
         isPending={isPurchasePending}
+      />
+
+      <ConfirmModal
+        title="포토카드 판매 내리기"
+        message="정말로 판매를 종료하시겠습니까?"
+        confirmLabel="판매 내리기"
+        isOpen={isDelistConfirmOpen}
+        onClose={() => setIsDelistConfirmOpen(false)}
+        onConfirm={handleDelist}
+        isPending={isDelistPending}
+      />
+
+      <EditListingModal
+        shopListingId={shopListingId}
+        listing={listing}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={() => alert("수정되었습니다")}
       />
     </div>
   );

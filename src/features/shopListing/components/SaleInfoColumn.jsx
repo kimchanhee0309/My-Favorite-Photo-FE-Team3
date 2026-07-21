@@ -1,7 +1,7 @@
 "use client";
 
 import GradeBadge from "@/features/photocard/components/GradeDetailBadge";
-import Stepper from "@/common/components/Stepper/Stepper";
+import Stepper from "@/common/components/stepper/Stepper";
 
 export default function SaleInfoColumn({
   grade,

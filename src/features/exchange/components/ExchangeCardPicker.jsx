@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import SearchInput from "@/common/components/input/SearchInput";
-import Dropdown from "@/common/components/dropdown/Dropdown";
+import { Dropdown } from "@/common/components";
 import MyCard from "@/common/components/photocard/MyCard";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
 import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
@@ -13,10 +13,46 @@ const GENRE_OPTIONS = Object.keys(genreLabelMap);
 
 // TODO: ownership.api.js가 비어있어 임시 mock 데이터 사용. 실제 "내 소유 포토카드 목록" API 연결 필요.
 const MOCK_MY_PHOTOCARDS = [
-  { id: 1, imageUrl: "/cho.jpeg", title: "스페인 여행", description: "최애의포토", grade: "RARE", genre: "TRAVEL", minPrice: 400, quantity: 2 },
-  { id: 2, imageUrl: "/cho.jpeg", title: "우리집 앞마당", description: "최애의포토", grade: "COMMON", genre: "LANDSCAPE", minPrice: 100, quantity: 1 },
-  { id: 3, imageUrl: "/cho.jpeg", title: "How Far I'll Go", description: "최애의포토", grade: "SUPER_RARE", genre: "LANDSCAPE", minPrice: 700, quantity: 1 },
-  { id: 4, imageUrl: "/cho.jpeg", title: "겨울 왕국", description: "최애의포토", grade: "LEGENDARY", genre: "LANDSCAPE", minPrice: 900, quantity: 3 },
+  {
+    id: 1,
+    imageUrl: "/cho.jpeg",
+    title: "스페인 여행",
+    description: "최애의포토",
+    grade: "RARE",
+    genre: "TRAVEL",
+    minPrice: 400,
+    quantity: 2,
+  },
+  {
+    id: 2,
+    imageUrl: "/cho.jpeg",
+    title: "우리집 앞마당",
+    description: "최애의포토",
+    grade: "COMMON",
+    genre: "LANDSCAPE",
+    minPrice: 100,
+    quantity: 1,
+  },
+  {
+    id: 3,
+    imageUrl: "/cho.jpeg",
+    title: "How Far I'll Go",
+    description: "최애의포토",
+    grade: "SUPER_RARE",
+    genre: "LANDSCAPE",
+    minPrice: 700,
+    quantity: 1,
+  },
+  {
+    id: 4,
+    imageUrl: "/cho.jpeg",
+    title: "겨울 왕국",
+    description: "최애의포토",
+    grade: "LEGENDARY",
+    genre: "LANDSCAPE",
+    minPrice: 900,
+    quantity: 3,
+  },
 ];
 
 export default function ExchangeCardPicker({ onSelectCard }) {
@@ -28,8 +64,10 @@ export default function ExchangeCardPicker({ onSelectCard }) {
   const filteredCards = useMemo(() => {
     return MOCK_MY_PHOTOCARDS.filter((card) => {
       const matchesKeyword = card.title.includes(keyword.trim());
-      const matchesGrade = gradeFilter.length === 0 || gradeFilter.includes(card.grade);
-      const matchesGenre = genreFilter.length === 0 || genreFilter.includes(card.genre);
+      const matchesGrade =
+        gradeFilter.length === 0 || gradeFilter.includes(card.grade);
+      const matchesGenre =
+        genreFilter.length === 0 || genreFilter.includes(card.genre);
       return matchesKeyword && matchesGrade && matchesGenre;
     });
   }, [keyword, gradeFilter, genreFilter]);
@@ -72,29 +110,30 @@ export default function ExchangeCardPicker({ onSelectCard }) {
         </h2>
       </div>
 
-      {/* 데스크탑/태블릿 검색+필터 */}
       <div className="hidden items-center gap-2.5 md:flex">
-        <SearchInput
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="검색"
-        />
-        <Dropdown
-          variant="sort"
-          options={GRADE_OPTIONS}
-          value={gradeFilter[0] ?? null}
-          placeholder="등급"
-          onChange={(v) => setGradeFilter(v ? [v] : [])}
-          className="border-none! border-transparent!"
-        />
-        <Dropdown
-          variant="sort"
-          options={Object.values(genreLabelMap)}
-          value={genreFilter[0] ? genreLabelMap[genreFilter[0]] : null}
-          placeholder="장르"
-          onChange={handleGenreChange}
-          className="border-none! border-transparent!"
-        />
+        <div className="hidden items-center md:flex">
+          <SearchInput
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="검색"
+          />
+          <Dropdown
+            variant="text"
+            options={GRADE_OPTIONS}
+            value={gradeFilter[0] ?? null}
+            placeholder="등급"
+            onChange={(v) => setGradeFilter(v ? [v] : [])}
+            className="ml-[25px] lg:ml-[60px]"
+          />
+          <Dropdown
+            variant="text"
+            options={Object.values(genreLabelMap)}
+            value={genreFilter[0] ? genreLabelMap[genreFilter[0]] : null}
+            placeholder="장르"
+            onChange={handleGenreChange}
+            className="ml-[20px] lg:ml-[45px]"
+          />
+        </div>
       </div>
 
       {/* 모바일 검색+필터 */}
