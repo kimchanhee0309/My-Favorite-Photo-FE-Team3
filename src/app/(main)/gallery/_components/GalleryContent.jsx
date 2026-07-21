@@ -45,7 +45,7 @@ export default function GalleryContent() {
           <MyCard key={card.id} {...card} />
         );
       })}
-      <PrimaryButton className="fixed inset-x-0 bottom-10 z-50 mx-auto w-86 py-4.25 md:hidden">
+      <PrimaryButton className="fixed inset-x-0 bottom-10 z-10 mx-auto w-86 py-4.25 md:hidden">
         포토카드 생성하기
       </PrimaryButton>
     </div>
