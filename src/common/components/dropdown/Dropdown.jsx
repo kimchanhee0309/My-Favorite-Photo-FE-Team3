@@ -93,7 +93,7 @@ export default function Dropdown({
             <li
               key={index}
               onClick={() => handleSelect(option)}
-              className="typo-14-regular lg:typo-16-regular w-full cursor-pointer text-left text-white transition-colors hover:text-gray-200">
+              className={`${TEXT_STYLES[variant]} w-full cursor-pointer text-left text-white transition-colors hover:text-gray-200`}>
               {option}
             </li>
           ))}
