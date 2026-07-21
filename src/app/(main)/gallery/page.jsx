@@ -1,4 +1,3 @@
-import React from "react";
 import GalleryContent from "./_components/GalleryContent";
 import GalleryHeader from "./_components/GalleryHeader";
 
