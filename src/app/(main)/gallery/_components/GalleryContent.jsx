@@ -25,7 +25,7 @@ export default function GalleryContent() {
   const hasNextpage = visibleCount < MyCards.length;
 
   const { ref } = useInView({
-    threshold: 1,
+    threshold: 0.5,
     onChange: (inView) => {
       if (inView && hasNextpage) {
         setVisibleCount((prev) => prev + 15);
@@ -34,7 +34,7 @@ export default function GalleryContent() {
   });
 
   return (
-    <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:gap-5 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
+    <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mb-27.5 md:gap-5 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       {MyCards.slice(0, visibleCount).map((card, idx, arr) => {
         const isLastItem = arr.length - 1 === idx;
         return isLastItem ? (

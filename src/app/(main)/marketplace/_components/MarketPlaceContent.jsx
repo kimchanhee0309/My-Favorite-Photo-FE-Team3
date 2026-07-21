@@ -1,7 +1,9 @@
 "use client";
 
 import { PrimaryButton } from "@/common/components";
+import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -45,16 +47,28 @@ export default function MarketPlaceContent() {
     ...onSaleCards,
     ...soldOutCards,
   ]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const hasNextpage = visibleCount < dummyCardData.length;
+  const isLogin = false;
+  const router = useRouter();
 
   const { ref } = useInView({
-    threshold: 1,
+    threshold: 0.5,
     onChange: (inView) => {
       if (inView && hasNextpage) {
         setVisibleCount((prev) => prev + 15);
       }
     },
   });
+
+  const cardClick = (card) => {
+    if (card.status === "SOLD_OUT") return;
+    if (!isLogin) {
+      setIsModalOpen(true);
+      return;
+    }
+    router.push(`/marketplace/${card.id}`);
+  };
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -63,15 +77,38 @@ export default function MarketPlaceContent() {
     );
   }, []);
   return (
-    <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mt-5 md:gap-5 lg:mt-15 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
+    <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mt-5 md:mb-27.5 md:gap-5 lg:mt-15 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => router.push("/login")}
+        title="로그인이 필요합니다"
+        message={
+          <>
+            로그인 하시겠습니까?
+            <br />
+            다양한 서비스를 편리하게 이용하실 수 있습니다.
+          </>
+        }
+        confirmLabel="확인"
+      />
       {dummyCardData.slice(0, visibleCount).map((card, idx, arr) => {
         const isLastItem = arr.length - 1 === idx;
         return isLastItem ? (
-          <div ref={ref} key={card.id}>
+          <div
+            ref={ref}
+            key={card.id}
+            onClick={() => cardClick(card)}
+            className={`${card.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
             <OriginCard {...card} />
           </div>
         ) : (
-          <OriginCard key={card.id} {...card} />
+          <div
+            key={card.id}
+            onClick={() => cardClick(card)}
+            className={`${card.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
+            <OriginCard {...card} />
+          </div>
         );
       })}
       <PrimaryButton
