@@ -70,7 +70,7 @@ export default function MobileGnb({
                     </button>
                   ) : (
                     <Link
-                      href="/로그인"
+                      href="/login"
                       className="text-[14px] font-medium text-gray-200">
                       로그인
                     </Link>
