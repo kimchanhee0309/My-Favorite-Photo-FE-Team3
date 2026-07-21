@@ -1,9 +1,11 @@
-import MySaleContent from "./_components/MySaleContent";
+import MySalesContent from "./_components/MySalesContent";
+import MySalesHeader from "./_components/MySalesHeader";
 
-export default function page() {
+export default function MySales() {
   return (
     <div>
-      <MySaleContent />
+      <MySalesHeader />
+      <MySalesContent />
     </div>
   );
 }

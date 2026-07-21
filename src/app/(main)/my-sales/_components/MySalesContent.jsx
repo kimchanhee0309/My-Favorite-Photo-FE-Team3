@@ -55,7 +55,7 @@ const soldOutCards = Array.from({ length: 10 }, (_, i) => ({
   id: `soldout-${i}`,
 }));
 
-export default function MySaleContent() {
+export default function MySalesContent() {
   const [visibleCount, setVisibleCount] = useState(15);
   const [dummyCardData, setDummyCardData] = useState([
     ...onSaleCards,
