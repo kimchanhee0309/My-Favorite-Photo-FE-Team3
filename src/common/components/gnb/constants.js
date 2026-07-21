@@ -9,5 +9,6 @@ export const TITLE_MAP = {
   "/gallery/create": "포토카드 생성",
   "/my-sales": "나의 포토카드 판매하기",
   "/marketplace": "마켓플레이스",
+  
   //TODO 빠진 경로 잇기
 };
