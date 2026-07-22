@@ -5,11 +5,13 @@ import { PrimaryButton, SearchInput, Dropdown } from "@/common/components";
 import Grade from "@/features/photocard/components/Grade";
 import Title from "@/common/components/title/Title";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
+import { useRouter } from "next/navigation";
 
 export default function GalleryHeader() {
   const [search, setSearch] = useState("");
   const [grade, setGrade] = useState("");
   const [genre, setGenre] = useState("");
+  const router = useRouter();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -54,7 +56,8 @@ export default function GalleryHeader() {
             <PrimaryButton
               thickness="thin"
               size={{ base: "S", md: "M", lg: "L" }}
-              className="h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px]">
+              className="h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px]"
+              onClick={() => router.push("/gallery/create")}>
               포토카드 생성하기
             </PrimaryButton>
           }>
