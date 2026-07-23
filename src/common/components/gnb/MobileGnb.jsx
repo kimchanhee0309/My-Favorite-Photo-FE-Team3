@@ -27,6 +27,10 @@ export default function MobileGnb({
     router.back();
   };
 
+  const handleCloseNotification = () => {
+    router.replace(pathname, { scroll: false });
+  };
+
   return (
     <>
       <header className="sticky top-0 z-40 block h-20 w-full bg-black text-gray-200 select-none md:hidden">
@@ -103,7 +107,10 @@ export default function MobileGnb({
         </div>
       </header>
 
-      <MobileNotificationOverlay isOpen={isNotificationOpen} />
+      <MobileNotificationOverlay
+        isOpen={isNotificationOpen}
+        onClose={handleCloseNotification}
+      />
     </>
   );
 }
