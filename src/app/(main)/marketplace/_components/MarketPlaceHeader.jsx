@@ -40,6 +40,7 @@ export default function MarketplaceHeader() {
 
   const handleFilterApply = (tabName, selectedList) => {
     const selectedValue = selectedList[0] || "";
+    console.log(selectedValue);
 
     if (tabName === "grade") setGrade(selectedValue);
     if (tabName === "genre") setGenre(selectedValue);
