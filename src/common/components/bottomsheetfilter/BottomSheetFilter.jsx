@@ -27,15 +27,16 @@ export default function BottomSheetFilter({
   const toggleOption = (itemName) => {
     setSelectedOptions((prev) => {
       const currentList = prev[selectedTab];
-      const nextList = currentList.includes(itemName)
-        ? currentList.filter((name) => name !== itemName)
-        : [...currentList, itemName];
-      return { ...INITIAL_SELECTED_OPTIONS, [selectedTab]: nextList };
+      const nextList = currentList.includes(itemName) ? [] : [itemName];
+      return { ...prev, [selectedTab]: nextList };
     });
   };
 
   const getSelectedCount = () => {
-    if (selectedOptions[selectedTab].length === 0) {
+    const hasSelection = Object.values(selectedOptions).some(
+      (list) => list.length > 0,
+    );
+    if (!hasSelection) {
       return Object.values(filterOptions).reduce((acc, cur) => {
         const innerSum = cur.reduce((innerAcc, innercur) => {
           return innerAcc + innercur.count;
@@ -44,10 +45,13 @@ export default function BottomSheetFilter({
       }, 0);
     }
 
-    return filterOptions[selectedTab].reduce((acc, cur) => {
-      return selectedOptions[selectedTab].includes(cur.name)
-        ? acc + cur.count
-        : acc;
+    return Object.keys(filterOptions).reduce((acc, tab) => {
+      const tabSum = filterOptions[tab].reduce((innerAcc, item) => {
+        return selectedOptions[tab]?.includes(item.name)
+          ? innerAcc + item.count
+          : innerAcc;
+      }, 0);
+      return acc + tabSum;
     }, 0);
   };
 
@@ -61,10 +65,10 @@ export default function BottomSheetFilter({
         }
       }}>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/80 z-50" />
-        <Drawer.Content className="fixed bottom-0 left-0 right-0 flex flex-col w-full border-none rounded-t-2xl bg-[#1B1B1B] px-2 py-4 h-120 z-50">
-          <header className="flex items-center justify-center relative">
-            <h2 className="text-[16px] text-gray-400 font-medium">필터</h2>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/80" />
+        <Drawer.Content className="fixed right-0 bottom-0 left-0 z-50 flex h-120 w-full flex-col rounded-t-2xl border-none bg-[#1B1B1B] px-2 py-4">
+          <header className="relative flex items-center justify-center">
+            <h2 className="text-[16px] font-medium text-gray-400">필터</h2>
             <button
               className="absolute right-1"
               onClick={() => {
@@ -74,30 +78,32 @@ export default function BottomSheetFilter({
               <Image src="/close.svg" width={13} height={13} alt="" />
             </button>
           </header>
-          <ul className="flex px-6 gap-6">
+          <ul className="flex gap-6 px-6">
             {orderedTabs.map((tabName) => (
               <li key={tabName}>
                 {selectedTab !== tabName ? (
                   <button
-                    className="px-4 py-4 typo-14-regular text-gray-400 "
+                    className="typo-14-regular px-4 py-4 text-gray-400"
                     onClick={() => setSelectedTab(tabName)}>
                     {tabText[tabName]}{" "}
-                    {!!selectedOptions[tabName].length &&
-                      selectedOptions[tabName].length}
+                    {selectedOptions[tabName].length
+                      ? selectedOptions[tabName].length
+                      : ""}
                   </button>
                 ) : (
                   <button
-                    className="px-4 py-4 text-[14px] font-medium text-white border-b border-white"
+                    className="border-b border-white px-4 py-4 text-[14px] font-medium text-white"
                     onClick={() => setSelectedTab(tabName)}>
                     {tabText[tabName]}{" "}
-                    {!!selectedOptions[tabName].length &&
-                      selectedOptions[tabName].length}
+                    {selectedOptions[tabName].length
+                      ? selectedOptions[tabName].length
+                      : ""}
                   </button>
                 )}
               </li>
             ))}
           </ul>
-          <ul className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+          <ul className="flex flex-1 flex-col overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:bg-transparent">
             {filterOptions[selectedTab].map((item) => {
               const isSelected = selectedOptions[selectedTab].includes(
                 item.name,
@@ -109,7 +115,7 @@ export default function BottomSheetFilter({
               return (
                 <li key={item.name}>
                   <button
-                    className={`px-8 py-4 flex justify-between w-full ${isSelected && "bg-gray-500"}`}
+                    className={`flex w-full justify-between px-8 py-4 ${isSelected && "bg-gray-500"}`}
                     onClick={() => toggleOption(item.name)}>
                     <span
                       className={`typo-14-regular ${
@@ -127,7 +133,7 @@ export default function BottomSheetFilter({
               );
             })}
           </ul>
-          <footer className="flex px-3 gap-3 w-full justify-between mt-auto mb-6">
+          <footer className="mt-auto mb-6 flex w-full justify-between gap-3 px-3">
             <button
               className="px-3.75 py-3.75"
               onClick={() => setSelectedOptions(INITIAL_SELECTED_OPTIONS)}>
@@ -137,9 +143,7 @@ export default function BottomSheetFilter({
               thickness="thin"
               size="S"
               className="flex-1 py-4.25"
-              onClick={() =>
-                onFilter(selectedTab, selectedOptions[selectedTab])
-              }>
+              onClick={() => onFilter(selectedOptions)}>
               {getSelectedCount()}개 포토보기
             </PrimaryButton>
           </footer>
