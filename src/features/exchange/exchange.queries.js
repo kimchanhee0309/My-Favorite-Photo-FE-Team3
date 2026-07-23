@@ -30,17 +30,28 @@ export function useReceivedExchanges(params) {
   });
 }
 
-export function useCreateExchangeOffer(shopListingId) {
+export function useCreateExchangeOffer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data) => createExchangeOffer(shopListingId, data),
-    onSuccess: () => {
+    mutationFn: ({ shopListingId, data }) =>
+      createExchangeOffer(shopListingId, data),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: SHOP_LISTING_QUERY_KEYS.detail(shopListingId),
+        queryKey: SHOP_LISTING_QUERY_KEYS.detail(variables.shopListingId),
       });
-      queryClient.invalidateQueries({ queryKey: EXCHANGE_QUERY_KEYS.all });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+
+      queryClient.invalidateQueries({
+        queryKey: SHOP_LISTING_QUERY_KEYS.exchanges(variables.shopListingId),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: EXCHANGE_QUERY_KEYS.all,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
     },
   });
 }
@@ -79,14 +90,25 @@ export function useRejectExchange(shopListingId) {
   });
 }
 
-export function useCancelExchange() {
+export function useCancelExchange(shopListingId) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: cancelExchange,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: EXCHANGE_QUERY_KEYS.all });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({
+        queryKey: EXCHANGE_QUERY_KEYS.all,
+      });
+
+      if (shopListingId) {
+        queryClient.invalidateQueries({
+          queryKey: SHOP_LISTING_QUERY_KEYS.detail(shopListingId),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: SHOP_LISTING_QUERY_KEYS.exchanges(shopListingId),
+        });
+      }
     },
   });
 }
