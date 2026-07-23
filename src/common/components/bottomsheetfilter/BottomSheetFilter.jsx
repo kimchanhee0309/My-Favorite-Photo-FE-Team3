@@ -85,13 +85,19 @@ export default function BottomSheetFilter({
                   <button
                     className="typo-14-regular px-4 py-4 text-gray-400"
                     onClick={() => setSelectedTab(tabName)}>
-                    {tabText[tabName]}
+                    {tabText[tabName]}{" "}
+                    {selectedOptions[tabName].length
+                      ? selectedOptions[tabName].length
+                      : ""}
                   </button>
                 ) : (
                   <button
                     className="border-b border-white px-4 py-4 text-[14px] font-medium text-white"
                     onClick={() => setSelectedTab(tabName)}>
-                    {tabText[tabName]}
+                    {tabText[tabName]}{" "}
+                    {selectedOptions[tabName].length
+                      ? selectedOptions[tabName].length
+                      : ""}
                   </button>
                 )}
               </li>
