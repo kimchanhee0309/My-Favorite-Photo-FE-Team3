@@ -6,7 +6,7 @@ import Input from "@/common/components/input/Input";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState({ email: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,10 +35,13 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="contents">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-[10px]">
-          <label className="typo-16-regular lg:typo-18-regular text-white">
+          <label
+            htmlFor="email"
+            className="typo-16-regular lg:typo-18-regular text-white">
             이메일
           </label>
           <Input
+            id="email"
             name="email"
             type="email"
             placeholder="이메일을 입력해 주세요"
@@ -49,10 +52,13 @@ export default function LoginForm() {
         </div>
 
         <div className="flex flex-col gap-[10px]">
-          <label className="typo-16-regular lg:typo-18-regular text-white">
+          <label
+            htmlFor="password"
+            className="typo-16-regular lg:typo-18-regular text-white">
             비밀번호
           </label>
           <Input
+            id="password"
             name="password"
             type="password"
             placeholder="비밀번호를 입력해 주세요"
