@@ -28,12 +28,15 @@ export default function BottomSheetFilter({
     setSelectedOptions((prev) => {
       const currentList = prev[selectedTab];
       const nextList = currentList.includes(itemName) ? [] : [itemName];
-      return { ...INITIAL_SELECTED_OPTIONS, [selectedTab]: nextList };
+      return { ...prev, [selectedTab]: nextList };
     });
   };
 
   const getSelectedCount = () => {
-    if (selectedOptions[selectedTab].length === 0) {
+    const hasSelection = Object.values(selectedOptions).some(
+      (list) => list.length > 0,
+    );
+    if (!hasSelection) {
       return Object.values(filterOptions).reduce((acc, cur) => {
         const innerSum = cur.reduce((innerAcc, innercur) => {
           return innerAcc + innercur.count;
@@ -42,10 +45,13 @@ export default function BottomSheetFilter({
       }, 0);
     }
 
-    return filterOptions[selectedTab].reduce((acc, cur) => {
-      return selectedOptions[selectedTab].includes(cur.name)
-        ? acc + cur.count
-        : acc;
+    return Object.keys(filterOptions).reduce((acc, tab) => {
+      const tabSum = filterOptions[tab].reduce((innerAcc, item) => {
+        return selectedOptions[tab]?.includes(item.name)
+          ? innerAcc + item.count
+          : innerAcc;
+      }, 0);
+      return acc + tabSum;
     }, 0);
   };
 
@@ -131,9 +137,7 @@ export default function BottomSheetFilter({
               thickness="thin"
               size="S"
               className="flex-1 py-4.25"
-              onClick={() =>
-                onFilter(selectedTab, selectedOptions[selectedTab])
-              }>
+              onClick={() => onFilter(selectedOptions)}>
               {getSelectedCount()}개 포토보기
             </PrimaryButton>
           </footer>
