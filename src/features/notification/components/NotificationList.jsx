@@ -18,7 +18,7 @@ export default function NotificationList({ onItemClick, variant = "desktop" }) {
           {notificationItems.map((item) => (
             <li
               key={item.id}
-              onClick={() => onItemClick?.(item)}
+              onClick={() => onItemClick?.(item.targetUrl)}
               className={`flex w-full shrink-0 cursor-pointer flex-col items-start justify-center rounded-t-xs border-b border-gray-400 p-5 transition-colors ${
                 item.isRead ? "" : "bg-white/5"
               }`}>

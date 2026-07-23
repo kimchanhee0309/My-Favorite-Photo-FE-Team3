@@ -7,7 +7,6 @@ const ModalContext = createContext(null);
 
 export function ModalProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-
   const [modalContent, setModalContent] = useState(null);
 
   const openModal = (content) => {
@@ -17,7 +16,7 @@ export function ModalProvider({ children }) {
 
   const closeModal = () => {
     setIsOpen(false);
-    setTimeout(() => setModalContent(null), 200);
+    setModalContent(null);
   };
 
   const contextValue = {
