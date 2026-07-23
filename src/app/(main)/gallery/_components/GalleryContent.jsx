@@ -2,6 +2,7 @@
 
 import { PrimaryButton } from "@/common/components";
 import MyCard from "@/common/components/photocard/MyCard";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -23,6 +24,7 @@ const MyCards = Array.from({ length: 30 }, (_, i) => ({
 export default function GalleryContent() {
   const [visibleCount, setVisibleCount] = useState(15);
   const hasNextpage = visibleCount < MyCards.length;
+  const router = useRouter();
 
   const { ref } = useInView({
     threshold: 0.5,
@@ -45,7 +47,9 @@ export default function GalleryContent() {
           <MyCard key={card.id} {...card} />
         );
       })}
-      <PrimaryButton className="fixed inset-x-0 bottom-10 z-10 mx-auto w-86 py-4.25 md:hidden">
+      <PrimaryButton
+        className="fixed inset-x-0 bottom-10 z-10 mx-auto w-86 py-4.25 md:hidden"
+        onClick={() => router.push("/gallery/create")}>
         포토카드 생성하기
       </PrimaryButton>
     </div>
