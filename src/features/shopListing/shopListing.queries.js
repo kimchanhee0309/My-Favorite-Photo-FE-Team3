@@ -18,7 +18,9 @@ import {
 export const SHOP_LISTING_QUERY_KEYS = {
   all: ["shopListings"],
   list: (params) => ["shopListings", "list", params],
+  infiniteList: (params) => ["shopListings", "infinite", params],
   myList: (params) => ["shopListings", "me", params],
+  infiniteMyList: (params) => ["shopListings", "me", "infinite", params],
   detail: (shopListingId) => ["shopListings", "detail", shopListingId],
   exchanges: (shopListingId) => [
     "shopListings",
@@ -50,11 +52,11 @@ export function useShopListing(shopListingId) {
   });
 }
 
-export function useShopListingExchanges(shopListingId) {
+export function useShopListingExchanges(shopListingId, options = {}) {
   return useQuery({
     queryKey: SHOP_LISTING_QUERY_KEYS.exchanges(shopListingId),
     queryFn: () => getShopListingExchanges(shopListingId),
-    enabled: Boolean(shopListingId),
+    enabled: Boolean(shopListingId) && (options.enabled ?? true),
   });
 }
 
@@ -115,7 +117,7 @@ export function usePurchaseShopListing(shopListingId) {
 
 export function useInfiniteShopListings(params = {}) {
   return useInfiniteQuery({
-    queryKey: ["shopListings", "infinite", params],
+    queryKey: SHOP_LISTING_QUERY_KEYS.infiniteList(params),
     queryFn: ({ pageParam }) =>
       getShopListings({
         ...params,
@@ -128,7 +130,7 @@ export function useInfiniteShopListings(params = {}) {
 
 export function useInfiniteMyShopListings(params = {}) {
   return useInfiniteQuery({
-    queryKey: ["shopListings", "my", "infinite", params],
+    queryKey: SHOP_LISTING_QUERY_KEYS.infiniteMyList(params),
     queryFn: ({ pageParam }) =>
       getMyShopListings({
         ...params,
