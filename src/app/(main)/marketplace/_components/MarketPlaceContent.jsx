@@ -4,7 +4,7 @@ import { PrimaryButton } from "@/common/components";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -12,6 +12,7 @@ export default function MarketPlaceContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isLogin = false;
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     data: marketItems,
@@ -19,15 +20,16 @@ export default function MarketPlaceContent() {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["marketplace", "items"],
+    //searchParams를 그대로 queryKey에 넣으면 URLSearchParams 값이 내부적으로 저장되어있어서 빈 객체로 나온다
+    queryKey: ["marketplace", "items", searchParams.toString()],
     queryFn: async ({ pageParam }) => {
+      const cpSearchParams = new URLSearchParams(searchParams);
       const url = pageParam
-        ? `http://localhost:3001/shop-listings?cursor=${pageParam}`
-        : `http://localhost:3001/shop-listings`;
+        ? `http://localhost:3001/shop-listings?cursor=${pageParam}&${cpSearchParams}`
+        : `http://localhost:3001/shop-listings?${cpSearchParams}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("마켓리스트 조회 실패");
       const result = await res.json();
-      console.log(result.data);
       return result.data;
     },
     initialPageParam: null,
@@ -47,13 +49,13 @@ export default function MarketPlaceContent() {
     },
   });
 
-  const cardClick = (card) => {
-    if (card.status === "SOLD_OUT") return;
+  const cardClick = (item) => {
+    if (item.status === "SOLD_OUT") return;
     if (!isLogin) {
       setIsModalOpen(true);
       return;
     }
-    router.push(`/marketplace/${card.id}`);
+    router.push(`/marketplace/${item.id}`);
   };
 
   return (
