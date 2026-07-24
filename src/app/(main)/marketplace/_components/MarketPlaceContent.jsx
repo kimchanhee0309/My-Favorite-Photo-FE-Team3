@@ -71,6 +71,10 @@ export default function MarketPlaceContent() {
     );
   }
 
+  if (items.length === 0) {
+    return <p className="flex justify-center">해당하는 데이터가 없습니다</p>;
+  }
+
   return (
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mt-5 md:mb-27.5 md:gap-5 lg:mt-15 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       <ConfirmModal
