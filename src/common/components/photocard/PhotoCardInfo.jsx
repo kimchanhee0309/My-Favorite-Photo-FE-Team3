@@ -13,7 +13,9 @@ export default function PhotoCardInfo({
       <div
         className={`border-b border-gray-400 ${style.divider} ${style.dividerRow}`}>
         <div className="flex gap-2.5">
-          <p className={`${style.labelLight} ${gradeColor[grade]}`}>{grade}</p>
+          <p className={`${style.labelLight} ${gradeColor[grade]}`}>
+            {grade === "SUPER_RARE" ? "SUPER RARE" : grade}
+          </p>
           <p className={`text-gray-400 ${style.labelRegular}`}>|</p>
           <p className={`text-gray-300 ${style.labelRegular}`}>
             {genreText[genre]}
