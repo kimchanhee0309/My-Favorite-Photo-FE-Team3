@@ -1,19 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { PrimaryButton, SearchInput, Dropdown } from "@/common/components";
 import Grade from "@/features/photocard/components/Grade";
 import Title from "@/common/components/title/Title";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
-import { useRouter } from "next/navigation";
+
+const GRADE_MAP = {
+  COMMON: "COMMON",
+  RARE: "RARE",
+  "SUPER RARE": "SUPER_RARE",
+  LEGENDARY: "LEGENDARY",
+};
+
+const GENRE_MAP = {
+  "풍경 사진": "LANDSCAPE",
+  "인물 사진": "PORTRAIT",
+  "여행 사진": "TRAVEL",
+  "동물 사진": "ANIMAL",
+  "사물 사진": "OBJECT",
+  기타: "ETC",
+};
+
+const REVERSE_GRADE_MAP = Object.fromEntries(
+  Object.entries(GRADE_MAP).map(([k, v]) => [v, k]),
+);
+
+const REVERSE_GENRE_MAP = Object.fromEntries(
+  Object.entries(GENRE_MAP).map(([k, v]) => [v, k]),
+);
 
 export default function GalleryHeader() {
-  const [search, setSearch] = useState("");
-  const [grade, setGrade] = useState("");
-  const [genre, setGenre] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const initialSearch = searchParams.get("search") || "";
+
+  const [searchValue, setSearchValue] = useState(initialSearch);
+
+  const currentGradeParam = searchParams.get("grade") || "";
+  const currentGenreParam = searchParams.get("genre") || "";
+
+  const grade = REVERSE_GRADE_MAP[currentGradeParam] || "";
+  const genre = REVERSE_GENRE_MAP[currentGenreParam] || "";
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  const updateQuery = (key, value) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchValue !== initialSearch) {
+        updateQuery("search", searchValue);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchValue]);
+
+  useEffect(() => {
+    setSearchValue(initialSearch);
+  }, [initialSearch]);
+
+  const handleToggleQuery = (key, newValue, currentValue) => {
+    if (currentValue === newValue) {
+      updateQuery(key, "");
+    } else {
+      updateQuery(key, newValue);
+    }
+  };
 
   const filterOptionsData = {
     grade: [
@@ -23,11 +88,11 @@ export default function GalleryHeader() {
       { name: "LEGENDARY", count: 5 },
     ],
     genre: [
-      { name: "풍경", count: 8 },
-      { name: "인물", count: 14 },
-      { name: "여행", count: 3 },
-      { name: "동물", count: 2 },
-      { name: "사물", count: 4 },
+      { name: "풍경 사진", count: 8 },
+      { name: "인물 사진", count: 14 },
+      { name: "여행 사진", count: 3 },
+      { name: "동물 사진", count: 2 },
+      { name: "사물 사진", count: 4 },
     ],
   };
 
@@ -36,12 +101,25 @@ export default function GalleryHeader() {
     0,
   );
 
-  const handleFilterApply = (tabName, selectedList) => {
-    const selectedValue = selectedList[0] || "";
+  const handleFilterApply = (selectedOptions) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (tabName === "grade") setGrade(selectedValue);
-    if (tabName === "genre") setGenre(selectedValue);
+    const selectedGrade = selectedOptions.grade?.[0] || "";
+    if (selectedGrade) {
+      params.set("grade", selectedGrade);
+    } else {
+      params.delete("grade");
+    }
 
+    const selectedGenreName = selectedOptions.genre?.[0] || "";
+    const apiGenre = GENRE_MAP[selectedGenreName] || "";
+    if (apiGenre) {
+      params.set("genre", apiGenre);
+    } else {
+      params.delete("genre");
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
     setIsBottomSheetOpen(false);
   };
 
@@ -106,8 +184,8 @@ export default function GalleryHeader() {
           <div className="w-full md:w-auto">
             <SearchInput
               placeholder="검색"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               className="!w-full md:!w-[200px] lg:!w-[320px]"
             />
           </div>
@@ -119,15 +197,34 @@ export default function GalleryHeader() {
               variant="text"
               placeholder="등급"
               value={grade}
-              onChange={(selected) => setGrade(selected)}
+              onChange={(selected) =>
+                handleToggleQuery(
+                  "grade",
+                  GRADE_MAP[selected],
+                  currentGradeParam,
+                )
+              }
             />
             <Dropdown
               label="장르"
-              options={["풍경", "인물", "여행", "동물", "사물"]}
+              options={[
+                "풍경 사진",
+                "인물 사진",
+                "여행 사진",
+                "동물 사진",
+                "사물 사진",
+                "기타",
+              ]}
               variant="text"
               placeholder="장르"
               value={genre}
-              onChange={(selected) => setGenre(selected)}
+              onChange={(selected) =>
+                handleToggleQuery(
+                  "genre",
+                  GENRE_MAP[selected],
+                  currentGenreParam,
+                )
+              }
             />
           </div>
         </div>
