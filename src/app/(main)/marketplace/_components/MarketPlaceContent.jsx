@@ -3,79 +3,78 @@
 import { PrimaryButton } from "@/common/components";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-const dummyOnSaleData = {
-  imageUrl: "/default.png",
-  title: "테스트 제목",
-  grade: "COMMON",
-  genre: "LANDSCAPE",
-  description: "설명",
-  pricePerUnit: 4,
-  remainingQuantity: 3,
-  quantity: 5,
-  status: "ON_SALE",
-};
-
-const dummySoldOutData = {
-  imageUrl: "/default.png",
-  title: "테스트 제목",
-  grade: "COMMON",
-  genre: "LANDSCAPE",
-  description: "설명",
-  pricePerUnit: 4,
-  remainingQuantity: 0,
-  quantity: 5,
-  status: "SOLD_OUT",
-};
-
-const onSaleCards = Array.from({ length: 15 }, (_, i) => ({
-  ...dummyOnSaleData,
-  id: `onsale-${i}`,
-}));
-
-const soldOutCards = Array.from({ length: 15 }, (_, i) => ({
-  ...dummySoldOutData,
-  id: `soldout-${i}`,
-}));
-
 export default function MarketPlaceContent() {
-  const [visibleCount, setVisibleCount] = useState(15);
-  const [dummyCardData, setDummyCardData] = useState([
-    ...onSaleCards,
-    ...soldOutCards,
-  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const hasNextpage = visibleCount < dummyCardData.length;
   const isLogin = false;
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const {
+    data: marketItems,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError,
+    isPending,
+    error,
+  } = useInfiniteQuery({
+    //searchParams를 그대로 queryKey에 넣으면 URLSearchParams 값이 내부적으로 저장되어있어서 빈 객체로 나온다
+    queryKey: ["marketplace", "items", searchParams.toString()],
+    queryFn: async ({ pageParam }) => {
+      const url = pageParam
+        ? `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?cursor=${pageParam}&${searchParams}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?${searchParams}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("마켓리스트 조회 실패");
+      const result = await res.json();
+      return result.data;
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
+    },
+  });
+
+  const items = marketItems?.pages.flatMap((page) => page.items) ?? [];
 
   const { ref } = useInView({
     threshold: 0.5,
     onChange: (inView) => {
-      if (inView && hasNextpage) {
-        setVisibleCount((prev) => prev + 15);
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
       }
     },
   });
 
-  const cardClick = (card) => {
-    if (card.status === "SOLD_OUT") return;
+  const cardClick = (item) => {
+    if (item.status === "SOLD_OUT") return;
     if (!isLogin) {
       setIsModalOpen(true);
       return;
     }
-    router.push(`/marketplace/${card.id}`);
+    router.push(`/marketplace/${item.id}`);
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDummyCardData(
-      [...onSaleCards, ...soldOutCards].sort(() => Math.random() - 0.5),
+  if (isError) {
+    return <p className="text-red flex justify-center">{error.message}</p>;
+  }
+
+  if (isPending) {
+    return (
+      <p className="flex justify-center">마켓플레이스 데이터 불러오는 중...</p>
     );
-  }, []);
+  }
+
+  if (items.length === 0) {
+    return <p className="flex justify-center">해당하는 데이터가 없습니다</p>;
+  }
+
   return (
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mt-5 md:mb-27.5 md:gap-5 lg:mt-15 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       <ConfirmModal
@@ -92,28 +91,34 @@ export default function MarketPlaceContent() {
         }
         confirmLabel="확인"
       />
-      {dummyCardData.slice(0, visibleCount).map((card, idx, arr) => {
-        const isLastItem = arr.length - 1 === idx;
-        return isLastItem ? (
+      {items.map((item, index) => {
+        const isLastItem = index === items.length - 1;
+        return (
           <div
-            ref={ref}
-            key={card.id}
-            onClick={() => cardClick(card)}
-            className={`${card.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
-            <OriginCard {...card} />
-          </div>
-        ) : (
-          <div
-            key={card.id}
-            onClick={() => cardClick(card)}
-            className={`${card.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
-            <OriginCard {...card} />
+            key={item.id}
+            ref={isLastItem ? ref : undefined}
+            onClick={() => cardClick(item)}
+            className={`${item.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
+            <OriginCard
+              {...item}
+              title={item.ownership.photocard.name}
+              genre={item.ownership.photocard.genre}
+              description={item.ownership.photocard.description}
+              grade={item.ownership.photocard.grade}
+              imageUrl={item.ownership.photocard.imageUrl}
+            />
           </div>
         );
       })}
+      {isFetchingNextPage && (
+        <div className="col-span-full flex animate-spin justify-center">
+          <Image src="/spinner.svg" width={50} height={50} alt="" />
+        </div>
+      )}
       <PrimaryButton
+        thickness="thin"
         size="S"
-        className="fixed inset-x-0 bottom-3.75 z-10 mx-auto w-86 py-4.25 md:hidden">
+        className="fixed inset-x-0 bottom-3.75 z-10 mx-auto h-[55px] w-[345px] md:hidden">
         나의 포토카드 판매하기
       </PrimaryButton>
     </div>
