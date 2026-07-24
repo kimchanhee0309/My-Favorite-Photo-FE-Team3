@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   Title,
@@ -46,11 +46,11 @@ export default function MarketplaceHeader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const search = searchParams.get("search") || "";
+  const initialSearch = searchParams.get("search") || "";
 
-  const rawGrade = searchParams.get("grade") || "";
-  const currentGradeParam = rawGrade.replace(/[\s+]+/g, "_");
+  const [searchValue, setSearchValue] = useState(initialSearch);
 
+  const currentGradeParam = searchParams.get("grade") || "";
   const currentGenreParam = searchParams.get("genre") || "";
   const currentStatusParam = searchParams.get("status") || "";
   const currentSortParam = searchParams.get("sort") || "price_asc";
@@ -70,6 +70,20 @@ export default function MarketplaceHeader() {
     }
     router.push(`${pathname}?${params.toString()}`);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchValue !== initialSearch) {
+        updateQuery("search", searchValue);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchValue]);
+
+  useEffect(() => {
+    setSearchValue(initialSearch);
+  }, [initialSearch]);
 
   const handleToggleQuery = (key, newValue, currentValue) => {
     if (currentValue === newValue) {
@@ -153,8 +167,8 @@ export default function MarketplaceHeader() {
           <div className="w-full">
             <SearchInput
               placeholder="검색"
-              value={search}
-              onChange={(e) => updateQuery("search", e.target.value)}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               className="!w-full md:!w-[200px] lg:!w-[320px]"
             />
           </div>
