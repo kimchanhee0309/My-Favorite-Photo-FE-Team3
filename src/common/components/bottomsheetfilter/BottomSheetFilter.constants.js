@@ -14,7 +14,12 @@ export const statusText = {
   SOLD_OUT: "품절",
 };
 
+export const gradeText = {
+  SUPER_RARE: "SUPER RARE",
+};
+
 export const optionTextMap = {
+  grade: gradeText,
   genre: genreText,
   status: statusText,
 };
