@@ -4,6 +4,7 @@ import { PrimaryButton } from "@/common/components";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -21,6 +22,7 @@ export default function MarketPlaceContent() {
     isFetchingNextPage,
     isError,
     isPending,
+    error,
   } = useInfiniteQuery({
     //searchParams를 그대로 queryKey에 넣으면 URLSearchParams 값이 내부적으로 저장되어있어서 빈 객체로 나온다
     queryKey: ["marketplace", "items", searchParams.toString()],
@@ -59,6 +61,16 @@ export default function MarketPlaceContent() {
     router.push(`/marketplace/${item.id}`);
   };
 
+  if (isError) {
+    return <p className="text-red flex justify-center">{error.message}</p>;
+  }
+
+  if (isPending) {
+    return (
+      <p className="flex justify-center">마켓플레이스 데이터 불러오는 중...</p>
+    );
+  }
+
   return (
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mt-5 md:mb-27.5 md:gap-5 lg:mt-15 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       <ConfirmModal
@@ -91,6 +103,11 @@ export default function MarketPlaceContent() {
           />
         </div>
       ))}
+      {isFetchingNextPage && (
+        <div className="col-span-full flex animate-spin justify-center">
+          <Image src="/spinner.svg" width={50} height={50} alt="" />
+        </div>
+      )}
       <PrimaryButton
         size="S"
         className="fixed inset-x-0 bottom-3.75 z-10 mx-auto w-86 py-4.25 md:hidden">
