@@ -7,8 +7,9 @@ import { AuthProvider } from "./AuthProvider";
 export default function AppProviders({ children }) {
   return (
     <QueryProvider>
-      <ModalProvider>{children}</ModalProvider>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <ModalProvider>{children}</ModalProvider>
+      </AuthProvider>
     </QueryProvider>
   );
 }
