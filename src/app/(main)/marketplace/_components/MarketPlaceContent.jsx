@@ -113,8 +113,9 @@ export default function MarketPlaceContent() {
         </div>
       )}
       <PrimaryButton
+        thickness="thin"
         size="S"
-        className="fixed inset-x-0 bottom-3.75 z-10 mx-auto w-86 py-4.25 md:hidden">
+        className="fixed inset-x-0 bottom-3.75 z-10 mx-auto h-[55px] w-[345px] md:hidden">
         나의 포토카드 판매하기
       </PrimaryButton>
     </div>
