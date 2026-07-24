@@ -91,22 +91,25 @@ export default function MarketPlaceContent() {
         }
         confirmLabel="확인"
       />
-      {items.map((item) => (
-        <div
-          key={item.id}
-          ref={ref}
-          onClick={() => cardClick(item)}
-          className={`${item.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
-          <OriginCard
-            {...item}
-            title={item.ownership.photocard.name}
-            genre={item.ownership.photocard.genre}
-            description={item.ownership.photocard.description}
-            grade={item.ownership.photocard.grade}
-            imageUrl={item.ownership.photocard.imageUrl}
-          />
-        </div>
-      ))}
+      {items.map((item, index) => {
+        const isLastItem = index === items.length - 1;
+        return (
+          <div
+            key={item.id}
+            ref={isLastItem ? ref : undefined}
+            onClick={() => cardClick(item)}
+            className={`${item.status === "SOLD_OUT" ? "cursor-not-allowed" : "cursor-pointer"}`}>
+            <OriginCard
+              {...item}
+              title={item.ownership.photocard.name}
+              genre={item.ownership.photocard.genre}
+              description={item.ownership.photocard.description}
+              grade={item.ownership.photocard.grade}
+              imageUrl={item.ownership.photocard.imageUrl}
+            />
+          </div>
+        );
+      })}
       {isFetchingNextPage && (
         <div className="col-span-full flex animate-spin justify-center">
           <Image src="/spinner.svg" width={50} height={50} alt="" />
