@@ -20,7 +20,13 @@ export default function PhotoCardImage({
           {saleTypeText[saleType]}
         </div>
       )}
-      <Image src={imageUrl} fill alt="포토카드" className="object-cover" />
+      <Image
+        src={imageUrl}
+        fill
+        sizes="(max-width: 768px) 50vw, 33vw"
+        alt="포토카드"
+        className="object-cover"
+      />
     </div>
   );
 }
