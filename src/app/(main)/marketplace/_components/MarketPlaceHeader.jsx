@@ -10,6 +10,13 @@ import {
 } from "@/common/components";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
 
+const GRADE_MAP = {
+  COMMON: "COMMON",
+  RARE: "RARE",
+  "SUPER RARE": "SUPER_RARE", // 화면용 이름 : URL/API용 이름
+  LEGENDARY: "LEGENDARY",
+};
+
 const GENRE_MAP = {
   "풍경 사진": "LANDSCAPE",
   "인물 사진": "PORTRAIT",
@@ -30,6 +37,10 @@ const STATUS_MAP = {
   판매중: "ON_SALE",
   품절: "SOLD_OUT",
 };
+
+const REVERSE_GRADE_MAP = Object.fromEntries(
+  Object.entries(GRADE_MAP).map(([k, v]) => [v, k]),
+);
 
 const REVERSE_GENRE_MAP = Object.fromEntries(
   Object.entries(GENRE_MAP).map(([k, v]) => [v, k]),
@@ -55,6 +66,7 @@ export default function MarketplaceHeader() {
   const currentStatusParam = searchParams.get("status") || "";
   const currentSortParam = searchParams.get("sort") || "price_asc";
 
+  const grade = REVERSE_GRADE_MAP[currentGradeParam] || "";
   const genre = REVERSE_GENRE_MAP[currentGenreParam] || "";
   const status = REVERSE_STATUS_MAP[currentStatusParam] || "";
   const sortBy = REVERSE_SORT_MAP[currentSortParam] || "낮은 가격순";
@@ -195,12 +207,16 @@ export default function MarketplaceHeader() {
             <div className="hidden items-center gap-[30px] md:ml-[30px] md:flex lg:ml-[60px] lg:gap-[45px]">
               <Dropdown
                 label="등급"
-                options={["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"]}
+                options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
                 variant="text"
                 placeholder="등급"
-                value={currentGradeParam}
+                value={grade}
                 onChange={(selected) =>
-                  handleToggleQuery("grade", selected, currentGradeParam)
+                  handleToggleQuery(
+                    "grade",
+                    GRADE_MAP[selected],
+                    currentGradeParam,
+                  )
                 }
               />
               <Dropdown
