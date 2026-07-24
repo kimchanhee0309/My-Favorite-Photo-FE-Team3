@@ -71,7 +71,6 @@ export default function MarketplaceHeader() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  // 4. 동일한 값 재클릭 시 토글(초기화) 처리 함수
   const handleToggleQuery = (key, newValue, currentValue) => {
     if (currentValue === newValue) {
       updateQuery(key, "");
