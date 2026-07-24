@@ -19,14 +19,15 @@ export default function MarketPlaceContent() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isError,
+    isPending,
   } = useInfiniteQuery({
     //searchParams를 그대로 queryKey에 넣으면 URLSearchParams 값이 내부적으로 저장되어있어서 빈 객체로 나온다
     queryKey: ["marketplace", "items", searchParams.toString()],
     queryFn: async ({ pageParam }) => {
-      const cpSearchParams = new URLSearchParams(searchParams);
       const url = pageParam
-        ? `http://localhost:3001/shop-listings?cursor=${pageParam}&${cpSearchParams}`
-        : `http://localhost:3001/shop-listings?${cpSearchParams}`;
+        ? `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?cursor=${pageParam}&${searchParams}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?${searchParams}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("마켓리스트 조회 실패");
       const result = await res.json();
