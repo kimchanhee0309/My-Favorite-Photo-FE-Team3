@@ -1,6 +1,5 @@
 "use client";
 
-import { PrimaryButton } from "@/common/components";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
+import MobileSellButton from "./MobileSellButton";
 
 export default function MarketPlaceContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,17 +62,30 @@ export default function MarketPlaceContent() {
   };
 
   if (isError) {
-    return <p className="text-red flex justify-center">{error.message}</p>;
+    return (
+      <>
+        <p className="text-red flex justify-center">{error.message}</p>
+        <MobileSellButton />
+      </>
+    );
   }
 
   if (isPending) {
     return (
-      <p className="flex justify-center">마켓플레이스 데이터 불러오는 중...</p>
+      <>
+        <p className="flex justify-center">마켓플레이스 데이터 불러오는 중...</p>
+        <MobileSellButton />
+      </>
     );
   }
 
   if (items.length === 0) {
-    return <p className="flex justify-center">해당하는 데이터가 없습니다</p>;
+    return (
+      <>
+        <p className="flex justify-center">해당하는 데이터가 없습니다</p>
+        <MobileSellButton />
+      </>
+    );
   }
 
   return (
@@ -115,12 +128,7 @@ export default function MarketPlaceContent() {
           <Image src="/spinner.svg" width={50} height={50} alt="" />
         </div>
       )}
-      <PrimaryButton
-        thickness="thin"
-        size="S"
-        className="fixed inset-x-0 bottom-3.75 z-10 mx-auto h-[55px] w-[345px] md:hidden">
-        나의 포토카드 판매하기
-      </PrimaryButton>
+      <MobileSellButton />
     </div>
   );
 }
