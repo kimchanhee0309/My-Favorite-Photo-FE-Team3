@@ -9,6 +9,7 @@ import {
   Dropdown,
 } from "@/common/components";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
+import SellPhotocardModal from "@/features/shopListing/components/SellPhotocardModal";
 
 const GRADE_MAP = {
   COMMON: "COMMON",
@@ -72,6 +73,7 @@ export default function MarketplaceHeader() {
   const sortBy = REVERSE_SORT_MAP[currentSortParam] || "낮은 가격순";
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
 
   const updateQuery = (key, value) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -166,6 +168,7 @@ export default function MarketplaceHeader() {
             <PrimaryButton
               thickness="thin"
               size={{ base: "S", md: "M", lg: "L" }}
+              onClick={() => setIsSellModalOpen(true)}
               className="h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px]">
               나의 포토카드 판매하기
             </PrimaryButton>
@@ -276,6 +279,11 @@ export default function MarketplaceHeader() {
           />
         </div>
       </div>
+
+      <SellPhotocardModal
+        isOpen={isSellModalOpen}
+        onClose={() => setIsSellModalOpen(false)}
+      />
     </div>
   );
 }
