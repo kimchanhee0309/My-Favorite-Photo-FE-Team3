@@ -30,7 +30,7 @@ const GENRE_MAP = {
 const SORT_MAP = {
   "낮은 가격순": "price_asc",
   "높은 가격순": "price_desc",
-  최신순: "newest",
+  최신순: "latest",
   오래된순: "oldest",
 };
 
