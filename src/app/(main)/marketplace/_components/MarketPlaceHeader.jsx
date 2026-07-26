@@ -126,7 +126,7 @@ export default function MarketplaceHeader() {
     grade: [
       { name: "COMMON", count: filterCounts?.grade?.COMMON ?? 0 },
       { name: "RARE", count: filterCounts?.grade?.RARE ?? 0 },
-      { name: "SUPER_RARE", count: filterCounts?.grade?.SUPER_RARE ?? 0 }, // 👈 바텀시트가 인식하는 식별자
+      { name: "SUPER_RARE", count: filterCounts?.grade?.SUPER_RARE ?? 0 },
       { name: "LEGENDARY", count: filterCounts?.grade?.LEGENDARY ?? 0 },
     ],
     genre: Object.keys(GENRE_MAP).map((uiName) => ({
