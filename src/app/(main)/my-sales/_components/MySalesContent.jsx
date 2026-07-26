@@ -2,98 +2,92 @@
 
 import SaleCard from "@/common/components/photocard/SaleCard";
 import SoldOutCard from "@/common/components/photocard/SoldOutCard";
-import { useEffect, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 
-const dummyOnSaleData = {
-  imageUrl: "/default.png",
-  title: "테스트 제목",
-  grade: "COMMON",
-  genre: "LANDSCAPE",
-  description: "설명",
-  pricePerUnit: 4,
-  remainingQuantity: 3,
-  status: "ON_SALE",
-  saleType: "SALE",
-};
-
-const dummyExchangeData = {
-  imageUrl: "/default.png",
-  title: "테스트 제목",
-  grade: "COMMON",
-  genre: "LANDSCAPE",
-  description: "설명",
-  pricePerUnit: 4,
-  remainingQuantity: 3,
-  status: "ON_SALE",
-  saleType: "EXCHANGE",
-};
-
-const dummySoldOutData = {
-  imageUrl: "/default.png",
-  title: "테스트 제목",
-  grade: "COMMON",
-  genre: "LANDSCAPE",
-  description: "설명",
-  pricePerUnit: 4,
-  remainingQuantity: 0,
-  status: "SOLD_OUT",
-};
-
-const onSaleCards = Array.from({ length: 10 }, (_, i) => ({
-  ...dummyOnSaleData,
-  id: `onsale-${i}`,
-}));
-
-const exchangeCards = Array.from({ length: 10 }, (_, i) => ({
-  ...dummyExchangeData,
-  id: `exchange-${i}`,
-}));
-
-const soldOutCards = Array.from({ length: 10 }, (_, i) => ({
-  ...dummySoldOutData,
-  id: `soldout-${i}`,
-}));
-
 export default function MySalesContent() {
-  const [visibleCount, setVisibleCount] = useState(15);
-  const [dummyCardData, setDummyCardData] = useState([
-    ...onSaleCards,
-    ...soldOutCards,
-    ...exchangeCards,
-  ]);
-  const hasNextpage = visibleCount < dummyCardData.length;
+  const searchParams = useSearchParams();
 
+  const {
+    data: mysaleItems,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError,
+    isPending,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["mysale", "items", searchParams.toString()],
+    queryFn: async ({ pageParam }) => {
+      const url = pageParam
+        ? `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/me?cursor=${pageParam}&${searchParams}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/me?${searchParams}`;
+      const res = await fetch(url, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("나의 판매 포토카드 조회 실패");
+      const result = await res.json();
+      return result.data;
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
+    },
+  });
+
+  const items = mysaleItems?.pages.flatMap((page) => page.items) ?? [];
   const { ref } = useInView({
     threshold: 0.5,
     onChange: (inView) => {
-      if (inView && hasNextpage) {
-        setVisibleCount((prev) => prev + 15);
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
       }
     },
   });
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDummyCardData(
-      [...onSaleCards, ...soldOutCards, ...exchangeCards].sort(
-        () => Math.random() - 0.5,
-      ),
+  if (isError) {
+    return <p className="text-red flex justify-center">{error.message}</p>;
+  }
+
+  if (isPending) {
+    return (
+      <p className="flex justify-center">
+        나의 판매 포토카드 데이터 불러오는 중...
+      </p>
     );
-  }, []);
+  }
+
+  if (items.length === 0) {
+    return <p className="flex justify-center">해당하는 데이터가 없습니다</p>;
+  }
+
   return (
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mb-27.5 md:gap-5 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
-      {dummyCardData.slice(0, visibleCount).map((card, idx, arr) => {
-        const isLastItem = arr.length - 1 === idx;
-        const Cards = card.status === "ON_SALE" ? SaleCard : SoldOutCard;
-        return isLastItem ? (
-          <div ref={ref} key={card.id}>
-            <Cards {...card} />
+      {items.map((item, index) => {
+        const isLastItem = index === items.length - 1;
+        const Card = item.status === "ON_SALE" ? SaleCard : SoldOutCard;
+        return (
+          <div key={item.id} ref={isLastItem ? ref : undefined}>
+            <Card
+              remainingQuantity={item.remainingQuantity}
+              saleType={item.saleType}
+              title={item.ownership.photocard.name}
+              genre={item.ownership.photocard.genre}
+              grade={item.ownership.photocard.grade}
+              imageUrl={item.ownership.photocard.imageUrl}
+              pricePerUnit={item.pricePerUnit}
+              description={item.ownership.photocard.description}
+            />
           </div>
-        ) : (
-          <Cards key={card.id} {...card} />
         );
       })}
+      {isFetchingNextPage && (
+        <div className="col-span-full flex animate-spin justify-center">
+          <Image src="/spinner.svg" width={50} height={50} alt="" />
+        </div>
+      )}
     </div>
   );
 }
