@@ -63,7 +63,7 @@ export default function PointSelectionModalContent({
             key={box.id}
             box={box}
             isFaded={selectedBoxId !== null && selectedBoxId !== box.id}
-            isSubmitting={isSubmitting}
+            disabled={isSubmitting || !canClaim}
             onClick={() => handleBoxClick(box.id)}
           />
         ))}
@@ -75,7 +75,7 @@ export default function PointSelectionModalContent({
             thickness="thin"
             size={{ base: "S", md: "M", lg: "L" }}
             onClick={handleConfirm}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !canClaim}
             className="typo-16-bold h-[55px] w-75 md:h-[55px] md:w-110 lg:h-15 lg:w-130">
             {isSubmitting ? "뽑는 중..." : "선택완료"}
           </PrimaryButton>

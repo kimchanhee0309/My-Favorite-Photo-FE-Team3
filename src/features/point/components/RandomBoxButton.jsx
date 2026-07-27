@@ -1,15 +1,10 @@
 import Image from "next/image";
 
-export default function RandomBoxButton({
-  box,
-  isFaded,
-  isSubmitting,
-  onClick,
-}) {
+export default function RandomBoxButton({ box, isFaded, disabled, onClick }) {
   return (
     <button
       type="button"
-      disabled={isSubmitting}
+      disabled={disabled}
       onClick={onClick}
       className="flex h-[75.869px] w-[97.871px] shrink-0 cursor-pointer items-center justify-center transition-all duration-300 md:h-[127.111px] md:w-[164.672px] lg:h-[190.667px] lg:w-[245.96px]">
       <Image
