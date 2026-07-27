@@ -78,7 +78,7 @@ export default function Gnb({}) {
       />
 
       <DesktopGnb
-        currentState={currentState}
+        isLoggedIn={isLoggedIn}
         user={user}
         menuItems={MENU_ITEMS}
         hasUnreadNotification={hasUnreadNotification}
