@@ -9,7 +9,7 @@ export default function PhotoCardInfo({
 }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <p className={style.title}>{title}</p>
+      <p className={`${style.title} truncate`}>{title}</p>
       <div
         className={`border-b border-gray-400 ${style.divider} ${style.dividerRow}`}>
         <div className="flex gap-2.5">
