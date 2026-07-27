@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
 import ListingHero from "./_components/ListingHero";
 import ExchangeWishSection from "./_components/ExchangeWishSection";
 import ExchangeOfferSection from "./_components/ExchangeOfferSection";
@@ -9,12 +10,18 @@ import ExchangePhotocardModal from "@/features/exchange/components/ExchangePhoto
 import EditListingModal from "@/features/shopListing/components/EditListingModal";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import {
+  useShopListing,
+  useShopListingExchanges,
   usePurchaseShopListing,
   useDeleteShopListing,
 } from "@/features/shopListing/shopListing.queries";
+import {
+  mapShopListingToCard,
+  mapExchangeToOffer,
+} from "@/features/shopListing/shopListing.mapper";
 
 export default function MarketplaceDetailPage() {
-  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
+  /*  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
   const isOwner = false;
   const { shopListingId } = useParams();
   const router = useRouter();
@@ -99,7 +106,7 @@ export default function MarketplaceDetailPage() {
           setIsPurchaseConfirmOpen(false);
           router.push(buildPurchaseResultUrl("error"));
         },
-      }
+      },
     );
   };
 
@@ -111,6 +118,49 @@ export default function MarketplaceDetailPage() {
       },
     });
   };
+  */
+
+  const { shopListingId } = useParams();
+  const router = useRouter();
+  const { user, isLoggedIn } = useAuth();
+
+  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
+
+  const {
+    data: listingResponse,
+    isLoading,
+    isError,
+    error,
+  } = useShopListing(shopListingId);
+
+  const listingRaw = listingResponse?.data;
+
+  const listing = useMemo(() => {
+    if (!listingRaw) return null;
+    return mapShopListingToCard(listingRaw);
+  }, [listingRaw]);
+
+  const isOwner = Boolean(user && listingRaw?.userId === user.id);
+
+  const { data: exchangeResponse } = useShopListingExchanges(shopListingId, {
+    enabled: isLoggedIn && isOwner,
+  });
+
+  const exchangeOffers = useMemo(() => {
+    const rawOffers =
+      exchangeResponse?.data?.items ?? listingRaw?.exchanges ?? [];
+    return rawOffers.map(mapExchangeToOffer);
+  }, [exchangeResponse, listingRaw]);
+
+  const { mutate: purchaseShopListing, isPending: isPurchasePending } =
+    usePurchaseShopListing(shopListingId);
+
+  const { mutate: deleteShopListing, isPending: isDelistPending } =
+    useDeleteShopListing();
+
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError) return <p>{error.message}</p>;
+  if (!listing) return <p>판매 포토카드를 찾을 수 없습니다.</p>;
 
   return (
     <div className="layout-container flex flex-col py-10">
@@ -172,7 +222,8 @@ export default function MarketplaceDetailPage() {
             <span className="whitespace-nowrap">
               [{listing.grade} | {listing.name}]
             </span>
-            <br className="lg:hidden" /> {purchaseQuantity}장을 구매하시겠습니까?
+            <br className="lg:hidden" /> {purchaseQuantity}장을
+            구매하시겠습니까?
           </>
         }
         confirmLabel="구매하기"

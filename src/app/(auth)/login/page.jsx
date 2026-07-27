@@ -29,7 +29,7 @@ export default function LoginPage() {
           </span>
           <Link
             href="/signup"
-            className="text-main typo-14-regular lg:typo-16-regular underline underline-offset-4 transition-opacity hover:opacity-90">
+            className="!text-main typo-14-regular lg:typo-16-regular underline underline-offset-4 transition-opacity hover:opacity-90">
             회원가입하기
           </Link>
         </div>

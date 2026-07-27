@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import {
   Title,
   PrimaryButton,
@@ -14,7 +15,7 @@ import SellPhotocardModal from "@/features/shopListing/components/SellPhotocardM
 const GRADE_MAP = {
   COMMON: "COMMON",
   RARE: "RARE",
-  "SUPER RARE": "SUPER_RARE", // 화면용 이름 : URL/API용 이름
+  "SUPER RARE": "SUPER_RARE",
   LEGENDARY: "LEGENDARY",
 };
 
@@ -30,7 +31,7 @@ const GENRE_MAP = {
 const SORT_MAP = {
   "낮은 가격순": "price_asc",
   "높은 가격순": "price_desc",
-  최신순: "newest",
+  최신순: "latest",
   오래된순: "oldest",
 };
 
@@ -57,6 +58,20 @@ export default function MarketplaceHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const { data: filterCounts } = useQuery({
+    queryKey: ["shopListingFilterCounts"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/count`,
+      );
+      if (!response.ok) {
+        throw new Error("필터 데이터를 불러오지 못했습니다.");
+      }
+      const result = await response.json();
+      return result.data;
+    },
+  });
 
   const initialSearch = searchParams.get("search") || "";
 
@@ -109,22 +124,19 @@ export default function MarketplaceHeader() {
 
   const filterOptionsData = {
     grade: [
-      { name: "COMMON", count: 12 },
-      { name: "RARE", count: 5 },
-      { name: "SUPER_RARE", count: 2 },
-      { name: "LEGENDARY", count: 1 },
+      { name: "COMMON", count: filterCounts?.grade?.COMMON ?? 0 },
+      { name: "RARE", count: filterCounts?.grade?.RARE ?? 0 },
+      { name: "SUPER_RARE", count: filterCounts?.grade?.SUPER_RARE ?? 0 },
+      { name: "LEGENDARY", count: filterCounts?.grade?.LEGENDARY ?? 0 },
     ],
-    genre: [
-      { name: "풍경 사진", count: 8 },
-      { name: "인물 사진", count: 14 },
-      { name: "여행 사진", count: 3 },
-      { name: "동물 사진", count: 2 },
-      { name: "사물 사진", count: 4 },
-    ],
-    status: [
-      { name: "판매중", count: 18 },
-      { name: "품절", count: 5 },
-    ],
+    genre: Object.keys(GENRE_MAP).map((uiName) => ({
+      name: uiName,
+      count: filterCounts?.genre?.[GENRE_MAP[uiName]] ?? 0,
+    })),
+    status: Object.keys(STATUS_MAP).map((uiName) => ({
+      name: uiName,
+      count: filterCounts?.status?.[STATUS_MAP[uiName]] ?? 0,
+    })),
   };
 
   const handleFilterApply = (selectedOptions) => {
@@ -132,13 +144,14 @@ export default function MarketplaceHeader() {
 
     const selectedGrade = selectedOptions.grade?.[0] || "";
     if (selectedGrade) {
-      params.set("grade", selectedGrade);
+      const apiGrade = GRADE_MAP[selectedGrade] || selectedGrade;
+      params.set("grade", apiGrade);
     } else {
       params.delete("grade");
     }
 
     const selectedGenreName = selectedOptions.genre?.[0] || "";
-    const apiGenre = GENRE_MAP[selectedGenreName] || "";
+    const apiGenre = GENRE_MAP[selectedGenreName] || selectedGenreName;
     if (apiGenre) {
       params.set("genre", apiGenre);
     } else {
@@ -146,7 +159,7 @@ export default function MarketplaceHeader() {
     }
 
     const selectedStatusName = selectedOptions.status?.[0] || "";
-    const apiStatus = STATUS_MAP[selectedStatusName] || "";
+    const apiStatus = STATUS_MAP[selectedStatusName] || selectedStatusName;
     if (apiStatus) {
       params.set("status", apiStatus);
     } else {

@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Input from "@/common/components/input/Input";
 import PrimaryButton from "@/common/components/button/PrimaryButton";
+import { signupApi } from "@/features/auth/auth.api";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -20,50 +22,63 @@ export default function SignupForm() {
     passwordConfirm: "",
   });
 
+  const router = useRouter();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    let errorMsg = "";
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
 
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      errorMsg =
-        value && !emailRegex.test(value)
-          ? "올바른 이메일 형식이 아닙니다."
-          : "";
-    } else if (name === "password") {
-      errorMsg = value && value.length < 8 ? "8자 이상 입력해 주세요." : "";
-
-      if (formData.passwordConfirm && value !== formData.passwordConfirm) {
-        setErrors((prev) => ({
-          ...prev,
-          passwordConfirm: "비밀번호가 일치하지 않습니다.",
-        }));
-      } else {
-        setErrors((prev) => ({ ...prev, passwordConfirm: "" }));
+      if (name === "email") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        newErrors.email =
+          value && !emailRegex.test(value)
+            ? "올바른 이메일 형식이 아닙니다."
+            : "";
+      } else if (name === "nickname") {
+        newErrors.nickname =
+          value && value.length < 2 ? "닉네임은 2자 이상 입력해 주세요." : "";
+      } else if (name === "password") {
+        newErrors.password =
+          value && value.length < 8 ? "8자 이상 입력해 주세요." : "";
+        if (formData.passwordConfirm) {
+          newErrors.passwordConfirm =
+            value !== formData.passwordConfirm
+              ? "비밀번호가 일치하지 않습니다."
+              : "";
+        }
+      } else if (name === "passwordConfirm") {
+        newErrors.passwordConfirm =
+          value && value !== formData.password
+            ? "비밀번호가 일치하지 않습니다."
+            : "";
       }
-    } else if (name === "passwordConfirm") {
-      errorMsg =
-        value && value !== formData.password
-          ? "비밀번호가 일치하지 않습니다."
-          : "";
-    }
 
-    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
+      return newErrors;
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("회원가입 제출 데이터:", formData);
+    try {
+      await signupApi(formData);
+      alert("회원가입이 완료되었습니다. 로그인해 주세요.");
+      router.push("/login");
+    } catch (error) {
+      alert(error.message || "회원가입 중 오류가 발생했습니다.");
+    }
   };
 
   const isValid =
     formData.email &&
-    formData.nickname &&
+    formData.nickname.length >= 2 &&
     formData.password.length >= 8 &&
     formData.password === formData.passwordConfirm &&
     !errors.email &&
+    !errors.nickname &&
     !errors.password &&
     !errors.passwordConfirm;
 
@@ -100,6 +115,7 @@ export default function SignupForm() {
             placeholder="닉네임을 입력해 주세요"
             value={formData.nickname}
             onChange={handleChange}
+            error={errors.nickname || undefined}
           />
         </div>
 
@@ -144,11 +160,7 @@ export default function SignupForm() {
           disabled={!isValid}
           thickness="thin"
           size={{ base: "S", md: "M", lg: "L" }}
-          className={`h-[55px] w-full lg:h-[60px] ${
-            !isValid
-              ? "!bg-main !border-main cursor-not-allowed !text-black"
-              : "hover:opacity-90"
-          }`}>
+          className={`h-[55px] w-full lg:h-[60px] ${!isValid ? "!bg-main !border-main cursor-not-allowed !text-black" : "hover:opacity-90"}`}>
           가입하기
         </PrimaryButton>
 

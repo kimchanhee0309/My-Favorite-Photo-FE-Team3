@@ -2,11 +2,17 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Input from "@/common/components/input/Input";
+import { useAuth } from "@/providers/AuthProvider";
+import { loginApi } from "@/features/auth/auth.api";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
+
+  const router = useRouter();
+  const { refetchMe } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,9 +30,15 @@ export default function LoginForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("로그인 제출 데이터:", formData);
+    try {
+      await loginApi(formData);
+      await refetchMe();
+      router.push("/");
+    } catch (error) {
+      alert(error.message || "로그인에 실패했습니다.");
+    }
   };
 
   const isValid = formData.email && formData.password && !errors.email;
