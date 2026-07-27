@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Input from "@/common/components/input/Input";
 import SelectInput from "@/common/components/input/SelectInput";
 import Textarea from "@/common/components/input/Textarea";
@@ -9,6 +10,7 @@ import PrimaryButton from "@/common/components/button/PrimaryButton";
 import Title from "@/common/components/title/Title";
 
 export default function CreatePhotoCardPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     grade: "",
@@ -51,7 +53,14 @@ export default function CreatePhotoCardPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValid) return;
-    console.log("제출 데이터:", formData);
+
+    //실제 포토카드 생성 API 붙으면 여기서 mutate 호출 후 성공/실패에 따라 status 분기
+    const query = new URLSearchParams({
+      status: "success",
+      grade: formData.grade,
+      name: formData.name,
+    });
+    router.push(`/gallery/create-result?${query.toString()}`);
   };
 
   return (
@@ -77,7 +86,7 @@ export default function CreatePhotoCardPage() {
         <SelectInput
           label="등급"
           placeholder="등급을 선택해 주세요"
-          options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
+          options={["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"]}
           value={formData.grade}
           onChange={(val) => handleChange("grade", val)}
         />
@@ -94,7 +103,7 @@ export default function CreatePhotoCardPage() {
           label="가격"
           type="text"
           placeholder="가격을 입력해 주세요"
-          value={formData.price ? `${formData.price}P` : ""}
+          value={formData.price ? `${formData.price}` : ""}
           onChange={handlePriceChange}
         />
 

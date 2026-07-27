@@ -2,14 +2,14 @@
 
 import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-/* import 추가 필요(auth.api에서 ... 작업 완료되면 추가하겠습니다.) */
+import { getMeApi } from "@/features/auth/auth.api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["auth", "me"],
-    /* queryFn: 이곳에 위에 import하는 거 추가하기 */
+    queryFn: getMeApi,
     retry: false,
   });
 
