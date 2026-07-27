@@ -7,6 +7,7 @@ import usePointTimer from "../usePointTimer.js";
 import { claimRandomBox } from "../point.api.js";
 import PointCooldownNotice from "./PointCooldownNotice.jsx";
 import RandomBoxButton from "./RandomBoxButton.jsx";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function PointSelectionModalContent({
   onNext,
@@ -16,6 +17,7 @@ export default function PointSelectionModalContent({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { canClaim, leftTimeFormatted } = usePointTimer(lastBoxClaimedAt);
+  const queryClient = useQueryClient();
 
   function handleBoxClick(id) {
     if (!canClaim) return;
@@ -28,6 +30,18 @@ export default function PointSelectionModalContent({
     setIsSubmitting(true);
     try {
       const data = await claimRandomBox();
+
+      queryClient.setQueryData(["auth", "me"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            points: data.totalPoints,
+            lastBoxClaimedAt: data.lastBoxClaimedAt,
+          },
+        };
+      });
 
       onNext?.({
         acquiredPoint: data.acquiredPoint,
