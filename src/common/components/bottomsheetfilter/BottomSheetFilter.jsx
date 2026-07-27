@@ -102,34 +102,36 @@ export default function BottomSheetFilter({
             ))}
           </ul>
           <ul className="flex flex-1 flex-col overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:bg-transparent">
-            {filterOptions[selectedTab].map((item) => {
-              const isSelected = selectedOptions[selectedTab].includes(
-                item.name,
-              );
-              const selectedTextClass = isSelected
-                ? "text-white"
-                : "text-gray-400";
+            {filterOptions[selectedTab]
+              .filter((item) => item.count > 0)
+              .map((item) => {
+                const isSelected = selectedOptions[selectedTab].includes(
+                  item.name,
+                );
+                const selectedTextClass = isSelected
+                  ? "text-white"
+                  : "text-gray-400";
 
-              return (
-                <li key={item.name}>
-                  <button
-                    className={`flex w-full justify-between px-8 py-4 ${isSelected && "bg-gray-500"}`}
-                    onClick={() => toggleOption(item.name)}>
-                    <span
-                      className={`typo-14-regular ${
-                        selectedTab === "grade"
-                          ? gradeColor[item.name]
-                          : selectedTextClass
-                      }`}>
-                      {optionTextMap[selectedTab]?.[item.name] ?? item.name}
-                    </span>
-                    <span className={`typo-14-regular ${selectedTextClass}`}>
-                      {item.count}개
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+                return (
+                  <li key={item.name}>
+                    <button
+                      className={`flex w-full justify-between px-8 py-4 ${isSelected && "bg-gray-500"}`}
+                      onClick={() => toggleOption(item.name)}>
+                      <span
+                        className={`typo-14-regular ${
+                          selectedTab === "grade"
+                            ? gradeColor[item.name]
+                            : selectedTextClass
+                        }`}>
+                        {optionTextMap[selectedTab]?.[item.name] ?? item.name}
+                      </span>
+                      <span className={`typo-14-regular ${selectedTextClass}`}>
+                        {item.count}개
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
           <footer className="mt-auto mb-6 flex w-full justify-between gap-3 px-3">
             <button
