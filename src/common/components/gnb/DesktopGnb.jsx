@@ -8,7 +8,7 @@ import NotificationList from "@/features/notification/components/NotificationLis
 import { useState } from "react";
 
 export default function DesktopGnb({
-  currentState,
+  isLoggedIn,
   user,
   menuItems,
   hasUnreadNotification,
@@ -35,7 +35,7 @@ export default function DesktopGnb({
           </div>
 
           <div className="flex items-center">
-            {currentState === "login" ? (
+            {isLoggedIn ? (
               <div className="flex items-center justify-center gap-7.5">
                 <div className="flex items-center gap-7.5">
                   <div className="typo-14-bold text-gray-200">
