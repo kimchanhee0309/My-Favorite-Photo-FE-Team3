@@ -45,13 +45,9 @@ export default function BottomSheetFilter({
     const hasSelection = Object.values(selectedOptions).some(
       (list) => list.length > 0,
     );
+
     if (!hasSelection) {
-      return Object.values(filterOptions).reduce((acc, cur) => {
-        const innerSum = cur.reduce((innerAcc, innercur) => {
-          return innerAcc + innercur.count;
-        }, 0);
-        return acc + innerSum;
-      }, 0);
+      return filterOptions.grade.reduce((acc, item) => acc + item.count, 0);
     }
 
     return Object.keys(filterOptions).reduce((acc, tab) => {
