@@ -9,6 +9,7 @@ import {
   optionTextMap,
   tabText,
   TAB_ORDER,
+  TAB_RESET_TARGET,
 } from "./BottomSheetFilter.constants";
 import { gradeColor } from "../photocard/PhotoCard.constants";
 
@@ -28,7 +29,15 @@ export default function BottomSheetFilter({
     setSelectedOptions((prev) => {
       const currentList = prev[selectedTab];
       const nextList = currentList.includes(itemName) ? [] : [itemName];
-      return { ...prev, [selectedTab]: nextList };
+
+      const next = { ...prev, [selectedTab]: nextList };
+
+      const tabToReset = TAB_RESET_TARGET[selectedTab];
+      if (tabToReset && nextList.length > 0) {
+        next[tabToReset] = [];
+      }
+
+      return next;
     });
   };
 
