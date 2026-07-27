@@ -27,19 +27,24 @@ export default function ExchangeOfferForm({ shopListingId, card, onCancel }) {
   const isMobile = useIsMobile();
   const router = useRouter();
 
-  const { mutate: createExchangeOffer, isPending } = useCreateExchangeOffer(shopListingId);
+  const { mutate: createExchangeOffer, isPending } =
+    useCreateExchangeOffer(shopListingId);
 
   const handleSubmit = () => {
     createExchangeOffer(
-      { photocardId: card.id, offeredQuantity: 1, message },
+      { photocardId: card.photocardId, offeredQuantity: 1, message },
       {
         onSuccess: () => {
-          router.push(`/marketplace/${shopListingId}/exchange-result?status=success`);
+          router.push(
+            `/marketplace/${shopListingId}/exchange-result?status=success`,
+          );
         },
         onError: () => {
-          router.push(`/marketplace/${shopListingId}/exchange-result?status=error`);
+          router.push(
+            `/marketplace/${shopListingId}/exchange-result?status=error`,
+          );
         },
-      }
+      },
     );
   };
 
@@ -49,7 +54,7 @@ export default function ExchangeOfferForm({ shopListingId, card, onCancel }) {
         <p className="hidden font-['BaskinRobbins'] text-gray-300 md:block md:text-[16px] md:font-normal lg:text-[24px]">
           포토카드 교환하기
         </p>
-        <h2 className="font-['BaskinRobbins'] text-[24px] leading-normal font-bold border-b-2 border-gray-100 pb-[10px] text-white md:text-[40px] md:font-normal md:tracking-[-1.2px] lg:text-[40px] lg:font-bold lg:tracking-normal">
+        <h2 className="border-b-2 border-gray-100 pb-[10px] font-['BaskinRobbins'] text-[24px] leading-normal font-bold text-white md:text-[40px] md:font-normal md:tracking-[-1.2px] lg:text-[40px] lg:font-bold lg:tracking-normal">
           {card.title}
         </h2>
       </div>
@@ -80,8 +85,7 @@ export default function ExchangeOfferForm({ shopListingId, card, onCancel }) {
               thickness="thin"
               size={{ base: "S", md: "M", lg: "L" }}
               onClick={onCancel}
-              className="h-[55px] flex-1 lg:h-[60px]"
-            >
+              className="h-[55px] flex-1 lg:h-[60px]">
               취소하기
             </SecondaryButton>
             <PrimaryButton
@@ -89,8 +93,7 @@ export default function ExchangeOfferForm({ shopListingId, card, onCancel }) {
               size={{ base: "S", md: "M", lg: "L" }}
               onClick={handleSubmit}
               disabled={isPending}
-              className="h-[55px] flex-1 lg:h-[60px]"
-            >
+              className="h-[55px] flex-1 lg:h-[60px]">
               교환하기
             </PrimaryButton>
           </div>
