@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { PrimaryButton, SearchInput, Dropdown } from "@/common/components";
 import Grade from "@/features/photocard/components/Grade";
 import Title from "@/common/components/title/Title";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
+import { useAuth } from "@/providers/AuthProvider";
 
 const GRADE_MAP = {
   COMMON: "COMMON",
@@ -35,6 +37,25 @@ export default function GalleryHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { user } = useAuth();
+
+  const { data: galleryCounts } = useQuery({
+    queryKey: ["myGalleryFilterCounts"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/ownerships/me/count`,
+        {
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("마이갤러리 데이터를 불러오지 못했습니다.");
+      }
+      const result = await response.json();
+      return result.data;
+    },
+  });
 
   const initialSearch = searchParams.get("search") || "";
 
@@ -45,6 +66,8 @@ export default function GalleryHeader() {
 
   const grade = REVERSE_GRADE_MAP[currentGradeParam] || "";
   const genre = REVERSE_GENRE_MAP[currentGenreParam] || "";
+
+  const nickname = user?.nickname || "문치";
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -82,37 +105,34 @@ export default function GalleryHeader() {
 
   const filterOptionsData = {
     grade: [
-      { name: "COMMON", count: 20 },
-      { name: "RARE", count: 8 },
-      { name: "SUPER_RARE", count: 3 },
-      { name: "LEGENDARY", count: 5 },
+      { name: "COMMON", count: galleryCounts?.grade?.COMMON ?? 0 },
+      { name: "RARE", count: galleryCounts?.grade?.RARE ?? 0 },
+      { name: "SUPER_RARE", count: galleryCounts?.grade?.SUPER_RARE ?? 0 },
+      { name: "LEGENDARY", count: galleryCounts?.grade?.LEGENDARY ?? 0 },
     ],
-    genre: [
-      { name: "풍경 사진", count: 8 },
-      { name: "인물 사진", count: 14 },
-      { name: "여행 사진", count: 3 },
-      { name: "동물 사진", count: 2 },
-      { name: "사물 사진", count: 4 },
-    ],
+    genre: Object.keys(GENRE_MAP).map((uiName) => ({
+      name: uiName,
+      count: galleryCounts?.genre?.[GENRE_MAP[uiName]] ?? 0,
+    })),
   };
 
-  const totalCards = filterOptionsData.grade.reduce(
-    (sum, item) => sum + item.count,
-    0,
-  );
+  const totalCards =
+    galleryCounts?.total ??
+    filterOptionsData.grade.reduce((sum, item) => sum + item.count, 0);
 
   const handleFilterApply = (selectedOptions) => {
     const params = new URLSearchParams(searchParams.toString());
 
     const selectedGrade = selectedOptions.grade?.[0] || "";
     if (selectedGrade) {
-      params.set("grade", selectedGrade);
+      const apiGrade = GRADE_MAP[selectedGrade] || selectedGrade;
+      params.set("grade", apiGrade);
     } else {
       params.delete("grade");
     }
 
     const selectedGenreName = selectedOptions.genre?.[0] || "";
-    const apiGenre = GENRE_MAP[selectedGenreName] || "";
+    const apiGenre = GENRE_MAP[selectedGenreName] || selectedGenreName;
     if (apiGenre) {
       params.set("genre", apiGenre);
     } else {
@@ -145,7 +165,7 @@ export default function GalleryHeader() {
 
       <div className="mx-auto mb-[15px] w-full max-w-[1480px] md:mb-5 lg:mb-10">
         <h2 className="mb-[15px] flex items-center gap-[5px] text-[14px] font-medium text-gray-200 md:mb-5 md:text-[20px] lg:mb-5 lg:gap-[10px] lg:text-[24px]">
-          문치님이 보유한 포토카드
+          {nickname}님이 보유한 포토카드
           <span className="text-[12px] font-normal text-gray-300 md:text-[18px] lg:text-[20px]">
             ({totalCards}장)
           </span>
