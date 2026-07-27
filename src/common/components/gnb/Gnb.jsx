@@ -55,7 +55,6 @@ export default function Gnb({}) {
       ? "login"
       : "logout";
 
-  //TODO: 로그아웃 API 연동
   const handleLogout = async () => {
     try {
       await logoutApi();
