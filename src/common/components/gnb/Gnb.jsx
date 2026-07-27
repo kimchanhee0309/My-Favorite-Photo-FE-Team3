@@ -9,12 +9,14 @@ import DesktopGnb from "./DesktopGnb";
 import MobileMenuDrawer from "./MobileMenuDrawer";
 import { TITLE_MAP, MENU_ITEMS, SECONDARY_PREFIX_PATHS } from "./constants";
 import { DUMMY_NOTIFICATIONS } from "@/features/notification/constants.js";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Gnb({}) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { user, isLoggedIn, refetchMe } = useAuth();
+  const { user, isLoggedIn } = useAuth();
+  const queryClient = useQueryClient();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   //TODO: 알림 기능 구현 후 백엔드 연동시 임시 상태 및 더미데이터 삭제
@@ -58,12 +60,14 @@ export default function Gnb({}) {
   const handleLogout = async () => {
     try {
       await logoutApi();
-      await refetchMe();
-      setIsMobileMenuOpen(false);
-      router.push("/");
     } catch (error) {
       console.error(error);
       alert("로그아웃에 실패했습니다.");
+    } finally {
+      queryClient.setQueryData(["auth", "me"], null);
+
+      setIsMobileMenuOpen(false);
+      router.push("/");
     }
   };
 
