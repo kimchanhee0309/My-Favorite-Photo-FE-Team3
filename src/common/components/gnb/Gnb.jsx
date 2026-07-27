@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/providers/AuthProvider";
+import { logoutApi } from "@/features/auth/auth.api";
 import MobileGnb from "./MobileGnb";
 import DesktopGnb from "./DesktopGnb";
 import MobileMenuDrawer from "./MobileMenuDrawer";
@@ -11,6 +13,8 @@ import { DUMMY_NOTIFICATIONS } from "@/features/notification/constants.js";
 export default function Gnb({}) {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { user, isLoggedIn, refetchMe } = useAuth();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   //TODO: 알림 기능 구현 후 백엔드 연동시 임시 상태 및 더미데이터 삭제
@@ -45,21 +49,23 @@ export default function Gnb({}) {
   const isSecondary = checkIsSecondary();
   const pageTitle = getPageTitle();
 
-  // TODO: 임시 유저 인증 상태 - 로그인
-  const isLoggedIn = true;
-
   const currentState = isSecondary
     ? "secondary"
     : isLoggedIn
       ? "login"
       : "logout";
 
-  //TODO: 유저 정보 API 연동 후 더미 데이터 삭제
-  const user = { nickname: "문치", points: 1540 };
-
   //TODO: 로그아웃 API 연동
-  const handleLogout = () => {
-    setIsMobileMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+      await refetchMe();
+      setIsMobileMenuOpen(false);
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      alert("로그아웃에 실패했습니다.");
+    }
   };
 
   return (
