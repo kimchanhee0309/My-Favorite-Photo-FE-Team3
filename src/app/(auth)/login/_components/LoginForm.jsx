@@ -30,7 +30,7 @@ export default function LoginForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await loginApi(formData);

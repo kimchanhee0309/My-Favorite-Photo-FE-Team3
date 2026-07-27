@@ -60,8 +60,7 @@ export default function SignupForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { passwordConfirm, ...signupData } = formData;
-      await signupApi(signupData);
+      await signupApi(formData);
 
       alert("회원가입이 완료되었습니다. 로그인해 주세요.");
       router.push("/login");
