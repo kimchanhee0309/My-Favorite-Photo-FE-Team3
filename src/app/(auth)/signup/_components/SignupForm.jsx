@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Input from "@/common/components/input/Input";
 import PrimaryButton from "@/common/components/button/PrimaryButton";
+import { signupApi } from "@/features/auth/auth.api";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -19,6 +21,8 @@ export default function SignupForm() {
     password: "",
     passwordConfirm: "",
   });
+
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,9 +57,17 @@ export default function SignupForm() {
     setErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("회원가입 제출 데이터:", formData);
+    try {
+      const { passwordConfirm, ...signupData } = formData;
+      await signupApi(signupData);
+
+      alert("회원가입이 완료되었습니다. 로그인해 주세요.");
+      router.push("/login");
+    } catch (error) {
+      alert(error.message || "회원가입 중 오류가 발생했습니다.");
+    }
   };
 
   const isValid =
