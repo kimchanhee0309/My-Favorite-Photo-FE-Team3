@@ -21,68 +21,47 @@ import {
 } from "@/features/shopListing/shopListing.mapper";
 
 export default function MarketplaceDetailPage() {
-  /*  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
-  const isOwner = false;
   const { shopListingId } = useParams();
   const router = useRouter();
+  const { user, isLoggedIn } = useAuth();
+
+  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
   const [isExchangeModalOpen, setIsExchangeModalOpen] = useState(false);
   const [isPurchaseConfirmOpen, setIsPurchaseConfirmOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDelistConfirmOpen, setIsDelistConfirmOpen] = useState(false);
 
+  const {
+    data: listingResponse,
+    isLoading,
+    isError,
+    error,
+  } = useShopListing(shopListingId);
+
+  const listingRaw = listingResponse?.data;
+
+  const listing = useMemo(() => {
+    if (!listingRaw) return null;
+    return mapShopListingToCard(listingRaw);
+  }, [listingRaw]);
+
+  const isOwner = Boolean(user && listingRaw?.userId === user.id);
+
+  const { data: exchangeResponse } = useShopListingExchanges(shopListingId, {
+    enabled: isLoggedIn && isOwner,
+  });
+
+  const exchangeOffers = useMemo(() => {
+    const rawOffers =
+      exchangeResponse?.data?.items ?? listingRaw?.exchanges ?? [];
+    return rawOffers.map(mapExchangeToOffer);
+  }, [exchangeResponse, listingRaw]);
+
   const { mutate: purchaseShopListing, isPending: isPurchasePending } =
     usePurchaseShopListing(shopListingId);
+
   const { mutate: deleteShopListing, isPending: isDelistPending } =
     useDeleteShopListing();
-
-  const listing = {
-    name: "인디쵸",
-    imageUrl: "/cho.jpeg",
-    grade: "LEGENDARY",
-    genre: "PORTRAIT",
-    nickname: "문치",
-    description: "인디언 cho-zzang 입니다.",
-    pricePerUnit: 4000,
-    remainingQuantity: 2,
-    quantity: 7,
-    wishGrade: "RARE",
-    wishGenre: "PORTRAIT",
-    wishDescription: "아름다운 사람으로 부탁합니다.",
-  };
-
-  const [exchangeOffers, setExchangeOffers] = useState([
-    {
-      id: 1,
-      imageUrl: "/cho.jpeg",
-      name: "스페인 여행",
-      grade: "COMMON",
-      genre: "TRAVEL",
-      minPrice: 700,
-      nickname: isOwner ? "nickname" : "proposer",
-      message:
-        "스페인 여행 사진도 좋은데.. 우리집 앞마당 포토카드와 교환하고 싶습니다!",
-    },
-    {
-      id: 2,
-      imageUrl: "/cho.jpeg",
-      name: "How Far I'll Go",
-      grade: "SUPER_RARE",
-      genre: "LANDSCAPE",
-      minPrice: 400,
-      nickname: isOwner ? "nickname" : "proposer",
-      message: "여름 바다 풍경 사진과 교환하실래요?",
-    },
-    {
-      id: 3,
-      imageUrl: "/cho.jpeg",
-      name: "겨울 왕국",
-      grade: "RARE",
-      genre: "LANDSCAPE",
-      minPrice: 500,
-      nickname: isOwner ? "nickname" : "proposer",
-      message: "눈 오는 풍경 사진이랑 교환하고 싶어요!",
-    },
-  ]);
 
   const buildPurchaseResultUrl = (status) => {
     const query = new URLSearchParams({
@@ -118,45 +97,6 @@ export default function MarketplaceDetailPage() {
       },
     });
   };
-  */
-
-  const { shopListingId } = useParams();
-  const router = useRouter();
-  const { user, isLoggedIn } = useAuth();
-
-  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
-
-  const {
-    data: listingResponse,
-    isLoading,
-    isError,
-    error,
-  } = useShopListing(shopListingId);
-
-  const listingRaw = listingResponse?.data;
-
-  const listing = useMemo(() => {
-    if (!listingRaw) return null;
-    return mapShopListingToCard(listingRaw);
-  }, [listingRaw]);
-
-  const isOwner = Boolean(user && listingRaw?.userId === user.id);
-
-  const { data: exchangeResponse } = useShopListingExchanges(shopListingId, {
-    enabled: isLoggedIn && isOwner,
-  });
-
-  const exchangeOffers = useMemo(() => {
-    const rawOffers =
-      exchangeResponse?.data?.items ?? listingRaw?.exchanges ?? [];
-    return rawOffers.map(mapExchangeToOffer);
-  }, [exchangeResponse, listingRaw]);
-
-  const { mutate: purchaseShopListing, isPending: isPurchasePending } =
-    usePurchaseShopListing(shopListingId);
-
-  const { mutate: deleteShopListing, isPending: isDelistPending } =
-    useDeleteShopListing();
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (isError) return <p>{error.message}</p>;
@@ -198,15 +138,6 @@ export default function MarketplaceDetailPage() {
         shopListingId={shopListingId}
         offers={exchangeOffers}
         isOwner={isOwner}
-        onAccept={(id) =>
-          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
-        }
-        onReject={(id) =>
-          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
-        }
-        onCancel={(id) =>
-          setExchangeOffers((prev) => prev.filter((o) => o.id !== id))
-        }
       />
 
       <ExchangePhotocardModal
