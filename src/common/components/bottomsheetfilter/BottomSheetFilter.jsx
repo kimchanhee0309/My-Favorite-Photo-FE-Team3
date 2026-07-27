@@ -42,21 +42,14 @@ export default function BottomSheetFilter({
   };
 
   const getSelectedCount = () => {
-    const hasSelection = Object.values(selectedOptions).some(
-      (list) => list.length > 0,
-    );
+    const currentTabSelection = selectedOptions[selectedTab];
 
-    if (!hasSelection) {
+    if (!currentTabSelection.length) {
       return filterOptions.grade.reduce((acc, item) => acc + item.count, 0);
     }
 
-    return Object.keys(filterOptions).reduce((acc, tab) => {
-      const tabSum = filterOptions[tab].reduce((innerAcc, item) => {
-        return selectedOptions[tab]?.includes(item.name)
-          ? innerAcc + item.count
-          : innerAcc;
-      }, 0);
-      return acc + tabSum;
+    return filterOptions[selectedTab].reduce((acc, item) => {
+      return currentTabSelection.includes(item.name) ? acc + item.count : acc;
     }, 0);
   };
 
