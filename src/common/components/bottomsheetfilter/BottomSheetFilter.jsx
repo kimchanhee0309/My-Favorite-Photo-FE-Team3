@@ -9,6 +9,7 @@ import {
   optionTextMap,
   tabText,
   TAB_ORDER,
+  TAB_RESET_TARGET,
 } from "./BottomSheetFilter.constants";
 import { gradeColor } from "../photocard/PhotoCard.constants";
 
@@ -28,30 +29,27 @@ export default function BottomSheetFilter({
     setSelectedOptions((prev) => {
       const currentList = prev[selectedTab];
       const nextList = currentList.includes(itemName) ? [] : [itemName];
-      return { ...prev, [selectedTab]: nextList };
+
+      const next = { ...prev, [selectedTab]: nextList };
+
+      const tabToReset = TAB_RESET_TARGET[selectedTab];
+      if (tabToReset && nextList.length > 0) {
+        next[tabToReset] = [];
+      }
+
+      return next;
     });
   };
 
   const getSelectedCount = () => {
-    const hasSelection = Object.values(selectedOptions).some(
-      (list) => list.length > 0,
-    );
-    if (!hasSelection) {
-      return Object.values(filterOptions).reduce((acc, cur) => {
-        const innerSum = cur.reduce((innerAcc, innercur) => {
-          return innerAcc + innercur.count;
-        }, 0);
-        return acc + innerSum;
-      }, 0);
+    const currentTabSelection = selectedOptions[selectedTab];
+
+    if (!currentTabSelection.length) {
+      return filterOptions.grade.reduce((acc, item) => acc + item.count, 0);
     }
 
-    return Object.keys(filterOptions).reduce((acc, tab) => {
-      const tabSum = filterOptions[tab].reduce((innerAcc, item) => {
-        return selectedOptions[tab]?.includes(item.name)
-          ? innerAcc + item.count
-          : innerAcc;
-      }, 0);
-      return acc + tabSum;
+    return filterOptions[selectedTab].reduce((acc, item) => {
+      return currentTabSelection.includes(item.name) ? acc + item.count : acc;
     }, 0);
   };
 
@@ -78,12 +76,12 @@ export default function BottomSheetFilter({
               <Image src="/close.svg" width={13} height={13} alt="" />
             </button>
           </header>
-          <ul className="flex gap-6 px-6">
+          <ul className="flex [scrollbar-width:none] gap-6 overflow-x-auto px-6 whitespace-nowrap [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {orderedTabs.map((tabName) => (
               <li key={tabName}>
                 {selectedTab !== tabName ? (
                   <button
-                    className="typo-14-regular px-4 py-4 text-gray-400"
+                    className="typo-14-regular px-4 py-4 whitespace-nowrap text-gray-400"
                     onClick={() => setSelectedTab(tabName)}>
                     {tabText[tabName]}{" "}
                     {selectedOptions[tabName].length
@@ -92,7 +90,7 @@ export default function BottomSheetFilter({
                   </button>
                 ) : (
                   <button
-                    className="border-b border-white px-4 py-4 text-[14px] font-medium text-white"
+                    className="border-b border-white px-4 py-4 text-[14px] font-medium whitespace-nowrap text-white"
                     onClick={() => setSelectedTab(tabName)}>
                     {tabText[tabName]}{" "}
                     {selectedOptions[tabName].length
@@ -104,34 +102,36 @@ export default function BottomSheetFilter({
             ))}
           </ul>
           <ul className="flex flex-1 flex-col overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:bg-transparent">
-            {filterOptions[selectedTab].map((item) => {
-              const isSelected = selectedOptions[selectedTab].includes(
-                item.name,
-              );
-              const selectedTextClass = isSelected
-                ? "text-white"
-                : "text-gray-400";
+            {filterOptions[selectedTab]
+              .filter((item) => item.count > 0)
+              .map((item) => {
+                const isSelected = selectedOptions[selectedTab].includes(
+                  item.name,
+                );
+                const selectedTextClass = isSelected
+                  ? "text-white"
+                  : "text-gray-400";
 
-              return (
-                <li key={item.name}>
-                  <button
-                    className={`flex w-full justify-between px-8 py-4 ${isSelected && "bg-gray-500"}`}
-                    onClick={() => toggleOption(item.name)}>
-                    <span
-                      className={`typo-14-regular ${
-                        selectedTab === "grade"
-                          ? gradeColor[item.name]
-                          : selectedTextClass
-                      }`}>
-                      {optionTextMap[selectedTab]?.[item.name] ?? item.name}
-                    </span>
-                    <span className={`typo-14-regular ${selectedTextClass}`}>
-                      {item.count}개
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+                return (
+                  <li key={item.name}>
+                    <button
+                      className={`flex w-full justify-between px-8 py-4 ${isSelected && "bg-gray-500"}`}
+                      onClick={() => toggleOption(item.name)}>
+                      <span
+                        className={`typo-14-regular ${
+                          selectedTab === "grade"
+                            ? gradeColor[item.name]
+                            : selectedTextClass
+                        }`}>
+                        {optionTextMap[selectedTab]?.[item.name] ?? item.name}
+                      </span>
+                      <span className={`typo-14-regular ${selectedTextClass}`}>
+                        {item.count}개
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
           <footer className="mt-auto mb-6 flex w-full justify-between gap-3 px-3">
             <button
