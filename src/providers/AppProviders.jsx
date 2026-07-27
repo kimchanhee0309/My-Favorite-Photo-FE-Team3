@@ -6,11 +6,7 @@ import { AuthProvider, useAuth } from "./AuthProvider";
 import { RandomBoxModalProvider } from "./RandomBoxModalProvider";
 
 function RandomBoxModalProviderWithAuth({ children }) {
-  const { user, isLoggedIn, isLoading } = useAuth();
-
-  if (isLoading) {
-    return children;
-  }
+  const { user, isLoggedIn } = useAuth();
 
   return (
     <RandomBoxModalProvider userId={isLoggedIn ? user.id : undefined}>
