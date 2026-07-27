@@ -5,3 +5,5 @@ export const RANDOM_BOXES = [
 ];
 
 export const ONEHOUR_IN_MS = 60 * 60 * 1000;
+
+export const STORAGE_KEY_PREFIX = "randomBoxDismissedAt";
