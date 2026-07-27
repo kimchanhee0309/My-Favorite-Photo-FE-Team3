@@ -3,7 +3,11 @@
 import { useState } from "react";
 import ExchangeCard from "@/features/shopListing/components/ExchangeCard";
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
-import { useAcceptExchange, useRejectExchange } from "@/features/exchange/exchange.queries";
+import {
+  useAcceptExchange,
+  useRejectExchange,
+  useCancelExchange,
+} from "@/features/exchange/exchange.queries";
 
 export default function ExchangeOfferSection({
   shopListingId,
@@ -17,13 +21,22 @@ export default function ExchangeOfferSection({
   const [rejectTarget, setRejectTarget] = useState(null);
   const [acceptTarget, setAcceptTarget] = useState(null);
 
-  const { mutate: acceptExchange, isPending: isAcceptPending } = useAcceptExchange(shopListingId);
-  const { mutate: rejectExchange, isPending: isRejectPending } = useRejectExchange(shopListingId);
+  const { mutate: acceptExchange, isPending: isAcceptPending } =
+    useAcceptExchange(shopListingId);
+  const { mutate: rejectExchange, isPending: isRejectPending } =
+    useRejectExchange(shopListingId);
+  const { mutate: cancelExchange, isPending: isCancelPending } =
+    useCancelExchange(shopListingId);
 
   const handleConfirmCancel = () => {
     if (!cancelTarget) return;
-    onCancel(cancelTarget.id);
-    setCancelTarget(null);
+
+    cancelExchange(cancelTarget.id, {
+      onSuccess: () => {
+        onCancel?.(cancelTarget.id);
+        setCancelTarget(null);
+      },
+    });
   };
 
   const handleConfirmReject = () => {
@@ -84,6 +97,7 @@ export default function ExchangeOfferSection({
         isOpen={!!cancelTarget}
         onClose={() => setCancelTarget(null)}
         onConfirm={handleConfirmCancel}
+        isPending={isCancelPending}
       />
 
       <ConfirmModal

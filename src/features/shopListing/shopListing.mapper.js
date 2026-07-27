@@ -5,7 +5,7 @@ export function mapShopListingToCard(item) {
     id: item.id,
 
     photocardId: photocard?.id,
-    ownershipId: item.ownership,
+    ownershipId: item.ownershipId,
     userId: item.userId,
 
     title: photocard?.name ?? "",
