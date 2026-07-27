@@ -4,10 +4,6 @@ const PUBLIC_PATHS = ["/", "/marketplace"];
 const AUTH_PATHS = ["/login", "/signup"];
 
 export function proxy(request) {
-  //TODO 중간 시연을 위해 임시 proxy 비활성화
-  return NextResponse.next();
-
-  //TODO middleware로 함수명 변경 필요
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("accessToken")?.value;
   const isAuthenticated = !!token;
