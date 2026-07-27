@@ -8,10 +8,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import MobileSellButton from "./MobileSellButton";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function MarketPlaceContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isLogin = false;
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -54,7 +55,7 @@ export default function MarketPlaceContent() {
 
   const cardClick = (item) => {
     if (item.status === "SOLD_OUT") return;
-    if (!isLogin) {
+    if (!isLoggedIn) {
       setIsModalOpen(true);
       return;
     }
@@ -73,7 +74,9 @@ export default function MarketPlaceContent() {
   if (isPending) {
     return (
       <>
-        <p className="flex justify-center">마켓플레이스 데이터 불러오는 중...</p>
+        <p className="flex justify-center">
+          마켓플레이스 데이터 불러오는 중...
+        </p>
         <MobileSellButton />
       </>
     );
