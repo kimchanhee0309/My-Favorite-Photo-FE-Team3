@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getMyOwnerships,
   getMyOwnershipsCount,
@@ -10,6 +10,7 @@ export const OWNERSHIP_QUERY_KEYS = {
   myList: (params) => ["ownerships", "me", params],
   myCount: ["ownerships", "me", "count"],
   detail: (ownershipId) => ["ownerships", "detail", ownershipId],
+  infiniteMyList: (params) => ["ownerships", "me", "infinite", params],
 };
 
 export function useMyOwnerships(params = {}) {
@@ -31,5 +32,18 @@ export function useOwnership(ownershipId) {
     queryKey: OWNERSHIP_QUERY_KEYS.detail(ownershipId),
     queryFn: () => getOwnership(ownershipId),
     enabled: Boolean(ownershipId),
+  });
+}
+
+export function useInfiniteOwnerships(params = {}) {
+  return useInfiniteQuery({
+    queryKey: OWNERSHIP_QUERY_KEYS.infiniteMyList(params),
+    queryFn: ({ pageParam }) =>
+      getMyOwnerships({
+        ...params,
+        cursor: pageParam,
+      }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.data?.nextCursor ?? undefined,
   });
 }
