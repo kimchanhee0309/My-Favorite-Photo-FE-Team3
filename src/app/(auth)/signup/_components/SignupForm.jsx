@@ -72,6 +72,11 @@ export default function SignupForm() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    window.location.href = `${baseUrl}/auth/google`;
+  };
+
   const isValid =
     formData.email &&
     formData.nickname.length >= 2 &&
@@ -166,7 +171,7 @@ export default function SignupForm() {
 
         <button
           type="button"
-          onClick={() => (window.location.href = "https://google.com")}
+          onClick={handleGoogleLogin}
           className="typo-16-regular lg:typo-18-regular flex h-[55px] w-full cursor-pointer items-center justify-center gap-3 rounded-sm border border-gray-300 bg-white text-black transition-colors hover:bg-gray-100 lg:h-[60px]">
           <Image
             src="/Frame.png"
