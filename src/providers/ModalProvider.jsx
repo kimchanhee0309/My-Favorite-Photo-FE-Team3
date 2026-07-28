@@ -8,15 +8,19 @@ const ModalContext = createContext(null);
 export function ModalProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+  const [onCloseCallback, setOnCloseCallback] = useState(null);
 
-  const openModal = (content) => {
+  const openModal = (content, onClose) => {
     setModalContent(content);
+    setOnCloseCallback(() => onClose ?? null);
     setIsOpen(true);
   };
 
   const closeModal = () => {
+    onCloseCallback?.();
     setIsOpen(false);
     setModalContent(null);
+    setOnCloseCallback(null);
   };
 
   const contextValue = {

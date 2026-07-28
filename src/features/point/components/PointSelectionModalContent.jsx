@@ -1,26 +1,59 @@
 "use client";
 
-import Image from "next/image";
 import { RANDOM_BOXES } from "../constants.js";
 import { PrimaryButton } from "@/common/components/index.js";
 import { useState } from "react";
+import usePointTimer from "../usePointTimer.js";
+import { claimRandomBox } from "../point.api.js";
+import PointCooldownNotice from "./PointCooldownNotice.jsx";
+import RandomBoxButton from "./RandomBoxButton.jsx";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function PointSelectionModalContent({ onNext }) {
+export default function PointSelectionModalContent({
+  onNext,
+  lastBoxClaimedAt,
+}) {
   const [selectedBoxId, setSelectedBoxId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleBoxClick = (id) => {
+  const { canClaim, leftTimeFormatted } = usePointTimer(lastBoxClaimedAt);
+  const queryClient = useQueryClient();
+
+  function handleBoxClick(id) {
+    if (!canClaim) return;
     setSelectedBoxId(id);
-  };
+  }
 
-  const handleConfirm = () => {
-    if (!selectedBoxId) return;
+  async function handleConfirm() {
+    if (!canClaim || !selectedBoxId || isSubmitting) return;
 
-    //TODO: 더미데이터 및 임시 확률 로직 제거
-    const dummyPoints = [100, 200, 500, 1000, 3000];
-    const randomPoint =
-      dummyPoints[Math.floor(Math.random() * dummyPoints.length)];
-    onNext?.(randomPoint);
-  };
+    setIsSubmitting(true);
+    try {
+      const data = await claimRandomBox();
+
+      queryClient.setQueryData(["auth", "me"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            points: data.totalPoints,
+            lastBoxClaimedAt: data.lastBoxClaimedAt,
+          },
+        };
+      });
+
+      onNext?.({
+        acquiredPoint: data.acquiredPoint,
+        totalPoints: data.totalPoints,
+        lastBoxClaimedAt: data.lastBoxClaimedAt,
+      });
+    } catch (error) {
+      alert(error.message || "포인트 상자를 열 수 없습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className="m-auto mx-5 mt-[18px] mb-9 flex flex-col items-center justify-center gap-10 lg:mx-21 lg:gap-19">
@@ -32,32 +65,22 @@ export default function PointSelectionModalContent({ onNext }) {
           1시간마다 돌아오는 기회!
           <br /> 랜덤 상자 뽑기를 통해 포인트를 획득하세요!
         </span>
-        <div className="typo-14-regular lg:typo-16-regular flex h-[45px] w-[139px] flex-col justify-center gap-[5px] text-center whitespace-nowrap lg:h-auto lg:w-full lg:flex-row lg:gap-2.5">
-          <span className="text-gray-300">다음 기회까지 남은 시간</span>
-          <span className="text-main">59분 59초</span>
-        </div>
+        <PointCooldownNotice
+          leftTimeFormatted={leftTimeFormatted}
+          className="typo-14-regular lg:typo-16-regular flex h-[45px] w-[139px] flex-col justify-center gap-[5px] text-center whitespace-nowrap lg:h-auto lg:w-full lg:flex-row lg:gap-2.5"
+        />
       </section>
-      <section className="mt-5 flex h-[78.787px] w-[315px] items-start justify-center gap-[15.114px] md:h-33 md:w-[530px] md:items-center md:gap-[25.431px] lg:h-49.5 lg:w-[835.66px] lg:items-center lg:justify-center lg:gap-15">
-        {RANDOM_BOXES.map((box) => {
-          const isFaded = selectedBoxId !== null && selectedBoxId !== box.id;
 
-          return (
-            <button
-              type="button"
-              key={box.id}
-              onClick={() => handleBoxClick(box.id)}
-              className={`flex h-[75.869px] w-[97.871px] shrink-0 cursor-pointer items-center justify-center transition-all duration-300 md:h-[127.111px] md:w-[164.672px] lg:h-[190.667px] lg:w-[245.96px]`}>
-              <Image
-                src={box.src}
-                alt={box.alt}
-                width={246}
-                height={190}
-                quality={100}
-                className={`h-auto w-24.5 object-contain transition-all duration-300 md:w-[165px] lg:w-61.5 ${!isFaded ? "cursor-pointer hover:-translate-y-1 hover:scale-110" : ""} ${isFaded ? "scale-95 opacity-30 brightness-50" : "opacity-100"} `}
-              />
-            </button>
-          );
-        })}
+      <section className="mt-5 flex h-[78.787px] w-[315px] items-start justify-center gap-[15.114px] md:h-33 md:w-[530px] md:items-center md:gap-[25.431px] lg:h-49.5 lg:w-[835.66px] lg:items-center lg:justify-center lg:gap-15">
+        {RANDOM_BOXES.map((box) => (
+          <RandomBoxButton
+            key={box.id}
+            box={box}
+            isFaded={selectedBoxId !== null && selectedBoxId !== box.id}
+            disabled={isSubmitting || !canClaim}
+            onClick={() => handleBoxClick(box.id)}
+          />
+        ))}
       </section>
 
       {selectedBoxId !== null && (
@@ -66,8 +89,9 @@ export default function PointSelectionModalContent({ onNext }) {
             thickness="thin"
             size={{ base: "S", md: "M", lg: "L" }}
             onClick={handleConfirm}
+            disabled={isSubmitting || !canClaim}
             className="typo-16-bold h-[55px] w-75 md:h-[55px] md:w-110 lg:h-15 lg:w-130">
-            선택완료
+            {isSubmitting ? "뽑는 중..." : "선택완료"}
           </PrimaryButton>
         </div>
       )}
