@@ -8,6 +8,11 @@ import Textarea from "@/common/components/input/Textarea";
 import ImageUpload from "@/common/components/input/ImageUpload";
 import PrimaryButton from "@/common/components/button/PrimaryButton";
 import Title from "@/common/components/title/Title";
+import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
+import { useCreatePhotocard } from "@/features/photocard/photocard.queries";
+import { uploadImageToCloudinary } from "@/common/api/cloudinary";
+
+const GENRE_LABEL_OPTIONS = Object.values(genreLabelMap);
 
 export default function CreatePhotoCardPage() {
   const router = useRouter();
@@ -20,9 +25,19 @@ export default function CreatePhotoCardPage() {
     description: "",
     image: null,
   });
+  const [isUploading, setIsUploading] = useState(false);
+
+  const { mutate: createPhotocard, isPending } = useCreatePhotocard();
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleGenreChange = (label) => {
+    const code = Object.entries(genreLabelMap).find(
+      ([, value]) => value === label,
+    )?.[0];
+    handleChange("genre", code ?? "");
   };
 
   const handlePriceChange = (e) => {
@@ -50,17 +65,43 @@ export default function CreatePhotoCardPage() {
     formData.description &&
     formData.image;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!isValid) return;
-
-    //실제 포토카드 생성 API 붙으면 여기서 mutate 호출 후 성공/실패에 따라 status 분기
+  const buildResultUrl = (status) => {
     const query = new URLSearchParams({
-      status: "success",
+      status,
       grade: formData.grade,
       name: formData.name,
     });
-    router.push(`/gallery/create-result?${query.toString()}`);
+    return `/gallery/create-result?${query.toString()}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isValid || isUploading || isPending) return;
+
+    try {
+      setIsUploading(true);
+      const imageUrl = await uploadImageToCloudinary(formData.image);
+      setIsUploading(false);
+
+      createPhotocard(
+        {
+          name: formData.name,
+          description: formData.description,
+          imageUrl,
+          genre: formData.genre,
+          grade: formData.grade,
+          minPrice: formData.price,
+          totalQuantity: formData.supply,
+        },
+        {
+          onSuccess: () => router.push(buildResultUrl("success")),
+          onError: () => router.push(buildResultUrl("error")),
+        },
+      );
+    } catch {
+      setIsUploading(false);
+      router.push(buildResultUrl("error"));
+    }
   };
 
   return (
@@ -94,9 +135,9 @@ export default function CreatePhotoCardPage() {
         <SelectInput
           label="장르"
           placeholder="장르를 선택해 주세요"
-          options={["풍경", "인물", "사물", "기타"]}
-          value={formData.genre}
-          onChange={(val) => handleChange("genre", val)}
+          options={GENRE_LABEL_OPTIONS}
+          value={formData.genre ? genreLabelMap[formData.genre] : ""}
+          onChange={handleGenreChange}
         />
 
         <Input
@@ -132,7 +173,7 @@ export default function CreatePhotoCardPage() {
         <PrimaryButton
           type="submit"
           thickness="thin"
-          disabled={!isValid}
+          disabled={!isValid || isUploading || isPending}
           className="!typo-18-bold mt-5 h-[55px] w-[345px] md:w-[440px] lg:h-[60px] lg:w-[520px]">
           생성하기
         </PrimaryButton>
