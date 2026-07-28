@@ -84,7 +84,7 @@ export default function MySalesHeader() {
   const saleType = REVERSE_SALE_TYPE_MAP[currentSaleTypeParam] || "";
   const status = REVERSE_STATUS_MAP[currentStatusParam] || "";
 
-  const nickname = user?.nickname || "문치";
+  const nickname = user?.nickname || "";
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const updateQuery = (key, value) => {
@@ -193,7 +193,7 @@ export default function MySalesHeader() {
 
       <div className="mx-auto mb-[15px] w-full max-w-[1480px] md:mb-5 lg:mb-10">
         <h2 className="mb-[15px] flex items-center gap-[5px] text-[14px] font-medium text-gray-200 md:mb-5 md:text-[20px] lg:mb-5 lg:gap-[10px] lg:text-[24px]">
-          {nickname}님이 보유한 포토카드
+          {nickname}님이 판매등록한 포토카드
           <span className="text-[12px] font-normal text-gray-300 md:text-[18px] lg:text-[20px]">
             ({totalCards}장)
           </span>
@@ -224,7 +224,6 @@ export default function MySalesHeader() {
             <BottomSheetFilter
               isOpen={isBottomSheetOpen}
               filterOptions={filterOptionsData}
-              totalCount={totalCards}
               onClose={() => setIsBottomSheetOpen(false)}
               onFilter={handleFilterApply}
             />
