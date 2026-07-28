@@ -1,11 +1,11 @@
 "use client";
 
 import MyCard from "@/common/components/photocard/MyCard";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 import MobileCreateButton from "./MobileCreateButton";
+import { useInfiniteOwnerships } from "@/features/ownership/ownership.queries";
 
 export default function GalleryContent() {
   const searchParams = useSearchParams();
@@ -18,26 +18,9 @@ export default function GalleryContent() {
     isError,
     isPending,
     error,
-  } = useInfiniteQuery({
-    queryKey: ["gallery", "items", searchParams.toString()],
-    queryFn: async ({ pageParam }) => {
-      const url = pageParam
-        ? `${process.env.NEXT_PUBLIC_API_URL}/ownerships/me?cursor=${pageParam}&${searchParams}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/ownerships/me?${searchParams}`;
-      const res = await fetch(url, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("마이갤러리 조회 실패");
-      const result = await res.json();
-      return result.data;
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
-    },
-  });
+  } = useInfiniteOwnerships(Object.fromEntries(searchParams));
 
-  const items = galleryItems?.pages.flatMap((page) => page.items) ?? [];
+  const items = galleryItems?.pages.flatMap((page) => page.data.items) ?? [];
   const { ref } = useInView({
     threshold: 0.5,
     onChange: (inView) => {
