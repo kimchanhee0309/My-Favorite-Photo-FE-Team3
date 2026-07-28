@@ -4,14 +4,18 @@ import { ModalProvider } from "./ModalProvider";
 import QueryProvider from "./QueryProvider";
 import { AuthProvider, useAuth } from "./AuthProvider";
 import { RandomBoxModalProvider } from "./RandomBoxModalProvider";
+import { NotificationProvider } from "./NotificationProvider";
 
-function RandomBoxModalProviderWithAuth({ children }) {
+function AuthDependentProviders({ children }) {
   const { user, isLoggedIn } = useAuth();
+  const userId = isLoggedIn ? user?.id : undefined;
 
   return (
-    <RandomBoxModalProvider userId={isLoggedIn ? user.id : undefined}>
-      {children}
-    </RandomBoxModalProvider>
+    <NotificationProvider userId={userId}>
+      <RandomBoxModalProvider userId={userId}>
+        {children}
+      </RandomBoxModalProvider>
+    </NotificationProvider>
   );
 }
 
@@ -20,9 +24,7 @@ export default function AppProviders({ children }) {
     <QueryProvider>
       <AuthProvider>
         <ModalProvider>
-          <RandomBoxModalProviderWithAuth>
-            {children}
-          </RandomBoxModalProviderWithAuth>
+          <AuthDependentProviders>{children}</AuthDependentProviders>
         </ModalProvider>
       </AuthProvider>
     </QueryProvider>
