@@ -9,6 +9,11 @@ export const tabText = {
 
 export const TAB_ORDER = ["grade", "genre", "saleType", "status"];
 
+export const TAB_RESET_TARGET = {
+  saleType: "status",
+  status: "saleType",
+};
+
 export const statusText = {
   ON_SALE: "판매중",
   SOLD_OUT: "품절",
