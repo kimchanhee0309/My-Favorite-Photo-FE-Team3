@@ -2,13 +2,13 @@
 
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import MobileSellButton from "./MobileSellButton";
 import { useAuth } from "@/providers/AuthProvider";
+import { useInfiniteShopListings } from "@/features/shopListing/shopListing.queries";
 
 export default function MarketPlaceContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,25 +24,9 @@ export default function MarketPlaceContent() {
     isError,
     isPending,
     error,
-  } = useInfiniteQuery({
-    //searchParams를 그대로 queryKey에 넣으면 URLSearchParams 값이 내부적으로 저장되어있어서 빈 객체로 나온다
-    queryKey: ["marketplace", "items", searchParams.toString()],
-    queryFn: async ({ pageParam }) => {
-      const url = pageParam
-        ? `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?cursor=${pageParam}&${searchParams}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/shop-listings?${searchParams}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("마켓리스트 조회 실패");
-      const result = await res.json();
-      return result.data;
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
-    },
-  });
+  } = useInfiniteShopListings(Object.fromEntries(searchParams));
 
-  const items = marketItems?.pages.flatMap((page) => page.items) ?? [];
+  const items = marketItems?.pages.flatMap((page) => page.data.items) ?? [];
 
   const { ref } = useInView({
     threshold: 0.5,
