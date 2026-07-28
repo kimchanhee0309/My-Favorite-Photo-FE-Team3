@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { HamburgerIcon, BackIcon, BellIcon } from "./Icons";
+import { HamburgerIcon, BackIcon, BellIcon, GiftIcon } from "./Icons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import MobileNotificationOverlay from "@/features/notification/components/MobileNotificationOverlay";
 
@@ -11,6 +11,7 @@ export default function MobileGnb({
   pageTitle,
   hasUnreadNotification,
   onMenuOpen,
+  onOpenPointModal,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -62,16 +63,26 @@ export default function MobileGnb({
 
                 <div className="absolute right-5 flex h-full items-center">
                   {currentState === "login" ? (
-                    <button
-                      onClick={handleOpenNotification}
-                      className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
-                      aria-label="알림 확인"
-                      type="button">
-                      <BellIcon />
-                      {hasUnreadNotification && (
-                        <span className="bg-red absolute top-0 right-0 h-2 w-2 rounded-full" />
-                      )}
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={onOpenPointModal}
+                        className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
+                        aria-label="포인트 상자 열기"
+                        type="button">
+                        <GiftIcon />
+                      </button>
+
+                      <button
+                        onClick={handleOpenNotification}
+                        className="relative flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
+                        aria-label="알림 확인"
+                        type="button">
+                        <BellIcon />
+                        {hasUnreadNotification && (
+                          <span className="bg-red absolute top-0 right-0 h-2 w-2 rounded-full" />
+                        )}
+                      </button>
+                    </div>
                   ) : (
                     <Link
                       href="/login"

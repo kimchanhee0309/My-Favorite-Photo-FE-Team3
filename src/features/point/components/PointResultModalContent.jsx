@@ -1,6 +1,12 @@
-import Image from "next/image";
+"use client";
 
-export default function PointResultModalContent({ point }) {
+import Image from "next/image";
+import usePointTimer from "../usePointTimer.js";
+import PointCooldownNotice from "./PointCooldownNotice.jsx";
+
+export default function PointResultModalContent({ point, lastBoxClaimedAt }) {
+  const { leftTimeFormatted } = usePointTimer(lastBoxClaimedAt);
+
   return (
     <div className="m-auto mx-[38px] mt-[15px] mb-[42px] flex flex-col items-center justify-center text-center md:mx-[43px] md:mt-[23px] md:mb-[78px] lg:mt-[18px]">
       <h1 className="typo-brand-30-regular lg:typo-brand-46 text-main md:typo-brand-36-regular">
@@ -19,10 +25,10 @@ export default function PointResultModalContent({ point }) {
       <div className="typo-24-bold md:typo-28-bold lg:typo-32-bold mb-[27px] text-white md:mb-5">
         <span className="text-main">{point?.toLocaleString()}P</span> 획득!
       </div>
-      <div className="typo-16-regular flex h-11 w-[158px] flex-col justify-center gap-1.5 text-center whitespace-nowrap md:h-auto md:w-full md:flex-row md:gap-[10px]">
-        <span className="text-gray-300">다음 기회까지 남은 시간</span>
-        <span className="text-main">59분 59초</span>
-      </div>
+      <PointCooldownNotice
+        leftTimeFormatted={leftTimeFormatted}
+        className="typo-16-regular flex h-11 w-[158px] flex-col justify-center gap-1.5 text-center whitespace-nowrap md:h-auto md:w-full md:flex-row md:gap-[10px]"
+      />
     </div>
   );
 }

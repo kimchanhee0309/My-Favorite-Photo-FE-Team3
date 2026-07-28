@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { BellIcon } from "./Icons";
+import { BellIcon, GiftIcon } from "./Icons";
 import DesktopUserMenu from "./DesktopUserMenu";
 import NotificationList from "@/features/notification/components/NotificationList";
 import { useState } from "react";
@@ -13,6 +13,7 @@ export default function DesktopGnb({
   menuItems,
   hasUnreadNotification,
   onLogout,
+  onOpenPointModal,
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -38,9 +39,18 @@ export default function DesktopGnb({
             {isLoggedIn ? (
               <div className="flex items-center justify-center gap-7.5">
                 <div className="flex items-center gap-7.5">
-                  <div className="typo-14-bold text-gray-200">
-                    {user.points.toLocaleString()}P
-                  </div>
+                  <button
+                    type="button"
+                    onClick={onOpenPointModal}
+                    className="group flex cursor-pointer items-center gap-1.5 transition-opacity hover:opacity-85"
+                    aria-label="포인트 상자 열기">
+                    <div className="relative flex h-5.5 w-5.5 items-center justify-center text-white">
+                      <GiftIcon />
+                    </div>
+                    <span className="typo-14-bold text-white">
+                      {user.points.toLocaleString()} P
+                    </span>
+                  </button>
 
                   <div className="relative flex items-center">
                     <button
