@@ -7,7 +7,7 @@ import { getMeApi } from "@/features/auth/auth.api";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: getMeApi,
     retry: false,
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     isLoggedIn: Boolean(user),
-    isLoading,
+    isPending,
     isError,
     refetchMe: refetch,
   };
