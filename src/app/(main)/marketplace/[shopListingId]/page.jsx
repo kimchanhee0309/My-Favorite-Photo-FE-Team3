@@ -48,13 +48,15 @@ export default function MarketplaceDetailPage() {
   const isOwner = Boolean(user && listingRaw?.userId === user.id);
 
   const { data: exchangeResponse } = useShopListingExchanges(shopListingId, {
-    enabled: isLoggedIn && isOwner,
+    enabled: isLoggedIn,
   });
 
   const exchangeOffers = useMemo(() => {
     const rawOffers =
       exchangeResponse?.data?.items ?? listingRaw?.exchanges ?? [];
-    return rawOffers.map(mapExchangeToOffer);
+    return rawOffers
+      .filter((exchange) => exchange.status === "PENDING")
+      .map(mapExchangeToOffer);
   }, [exchangeResponse, listingRaw]);
 
   const { mutate: purchaseShopListing, isPending: isPurchasePending } =
