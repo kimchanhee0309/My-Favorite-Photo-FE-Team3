@@ -11,6 +11,8 @@ import {
 } from "@/common/components";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
 import SellPhotocardModal from "@/features/shopListing/components/SellPhotocardModal";
+import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
+import { useAuth } from "@/providers/AuthProvider";
 
 const GRADE_MAP = {
   COMMON: "COMMON",
@@ -58,6 +60,8 @@ export default function MarketplaceHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: filterCounts } = useQuery({
     queryKey: ["shopListingFilterCounts"],
@@ -66,7 +70,7 @@ export default function MarketplaceHeader() {
         `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/count`,
       );
       if (!response.ok) {
-        throw new Error("필터 데이터를 불러오지 못했습니다.");
+        throw new Error("마켓플레이스 데이터를 불러오지 못했습니다.");
       }
       const result = await response.json();
       return result.data;
@@ -97,7 +101,7 @@ export default function MarketplaceHeader() {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -114,12 +118,28 @@ export default function MarketplaceHeader() {
     setSearchValue(initialSearch);
   }, [initialSearch]);
 
-  const handleToggleQuery = (key, newValue, currentValue) => {
-    if (currentValue === newValue) {
-      updateQuery(key, "");
+  // "전체" 선택 시 파라미터 삭제 및 router.replace 일괄 처리
+  const handleDropdownChange = (key, selectedOption) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (selectedOption === "전체") {
+      params.delete(key);
     } else {
-      updateQuery(key, newValue);
+      const mapObj = {
+        grade: GRADE_MAP,
+        genre: GENRE_MAP,
+        status: STATUS_MAP,
+      }[key];
+
+      const apiValue = mapObj?.[selectedOption] || selectedOption;
+      if (apiValue) {
+        params.set(key, apiValue);
+      } else {
+        params.delete(key);
+      }
     }
+
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   const filterOptionsData = {
@@ -166,7 +186,7 @@ export default function MarketplaceHeader() {
       params.delete("status");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
     setIsBottomSheetOpen(false);
   };
 
@@ -181,7 +201,10 @@ export default function MarketplaceHeader() {
             <PrimaryButton
               thickness="thin"
               size={{ base: "S", md: "M", lg: "L" }}
-              onClick={() => setIsSellModalOpen(true)}
+              onClick={() => {
+                if (!user) return setIsModalOpen(true);
+                return setIsSellModalOpen(true);
+              }}
               className="h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px]">
               나의 포토카드 판매하기
             </PrimaryButton>
@@ -189,6 +212,21 @@ export default function MarketplaceHeader() {
           마켓플레이스
         </Title>
       </div>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => router.push("/login")}
+        title="로그인이 필요합니다"
+        message={
+          <>
+            로그인 하시겠습니까?
+            <br />
+            다양한 서비스를 편리하게 이용하실 수 있습니다.
+          </>
+        }
+        confirmLabel="확인"
+      />
 
       <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         <div className="flex w-full flex-col gap-4 md:w-auto md:flex-row md:items-center md:gap-0">
@@ -223,21 +261,16 @@ export default function MarketplaceHeader() {
             <div className="hidden items-center gap-[30px] md:ml-[30px] md:flex lg:ml-[60px] lg:gap-[45px]">
               <Dropdown
                 label="등급"
-                options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
+                options={["전체", "COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
                 variant="text"
                 placeholder="등급"
                 value={grade}
-                onChange={(selected) =>
-                  handleToggleQuery(
-                    "grade",
-                    GRADE_MAP[selected],
-                    currentGradeParam,
-                  )
-                }
+                onChange={(selected) => handleDropdownChange("grade", selected)}
               />
               <Dropdown
                 label="장르"
                 options={[
+                  "전체",
                   "풍경 사진",
                   "인물 사진",
                   "여행 사진",
@@ -248,26 +281,16 @@ export default function MarketplaceHeader() {
                 variant="text"
                 placeholder="장르"
                 value={genre}
-                onChange={(selected) =>
-                  handleToggleQuery(
-                    "genre",
-                    GENRE_MAP[selected],
-                    currentGenreParam,
-                  )
-                }
+                onChange={(selected) => handleDropdownChange("genre", selected)}
               />
               <Dropdown
                 label="매진여부"
-                options={["판매중", "품절"]}
+                options={["전체", "판매중", "품절"]}
                 variant="text"
                 placeholder="매진여부"
                 value={status}
                 onChange={(selected) =>
-                  handleToggleQuery(
-                    "status",
-                    STATUS_MAP[selected],
-                    currentStatusParam,
-                  )
+                  handleDropdownChange("status", selected)
                 }
               />
             </div>
