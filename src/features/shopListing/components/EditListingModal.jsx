@@ -19,7 +19,6 @@ export default function EditListingModal({
   onClose,
   onSuccess,
 }) {
-  const [saleQuantity, setSaleQuantity] = useState(listing.remainingQuantity);
   const [pricePerUnit, setPricePerUnit] = useState(listing.pricePerUnit);
   const [wishGrade, setWishGrade] = useState(listing.wishGrade);
   const [wishGenre, setWishGenre] = useState(listing.wishGenre);
@@ -71,23 +70,23 @@ export default function EditListingModal({
   );
 
   return (
-<CustomModal
-  isOpen={isOpen}
-  onClose={onClose}
-  width={1160}
-  contentMaxWidth={920}
-  mobileVariant="fullscreen"
-  title="수정하기"
->
-  <div className="flex h-full flex-col gap-5">
-    <p className="hidden font-['BaskinRobbins'] text-[16px] font-normal tracking-[-0.48px] text-gray-300 md:block lg:text-[24px] lg:tracking-[-0.72px]">
-      수정하기
-    </p>
-    <div className="flex flex-col gap-2.5">
-      <h2 className="typo-24-bold md:typo-32-bold lg:typo-40-bold border-b-2 border-gray-100 pb-[10px] text-white">
-        {listing.name}
-      </h2>
-    </div>
+    <CustomModal
+      isOpen={isOpen}
+      onClose={onClose}
+      width={1160}
+      contentMaxWidth={920}
+      mobileVariant="fullscreen"
+      title="수정하기"
+    >
+      <div className="flex h-full flex-col gap-5">
+        <p className="hidden font-['BaskinRobbins'] text-[16px] font-normal tracking-[-0.48px] text-gray-300 md:block lg:text-[24px] lg:tracking-[-0.72px]">
+          수정하기
+        </p>
+        <div className="flex flex-col gap-2.5">
+          <h2 className="typo-24-bold md:typo-32-bold lg:typo-40-bold border-b-2 border-gray-100 pb-[10px] text-white">
+            {listing.name}
+          </h2>
+        </div>
         <div className="flex flex-col gap-[19px] md:flex-row md:gap-[20px] lg:gap-[40px]">
           <div className="relative h-[259px] w-[345px] shrink-0 overflow-hidden rounded-xs md:h-[257px] md:w-[342px] lg:h-[330px] lg:w-[440px]">
             <Image
@@ -102,9 +101,9 @@ export default function EditListingModal({
             grade={listing.grade}
             genre={listing.genre}
             nickname={listing.nickname}
-            quantity={saleQuantity}
+            quantity={listing.remainingQuantity}
             maxQuantity={listing.quantity}
-            onQuantityChange={setSaleQuantity}
+            readOnly
             price={pricePerUnit}
             onPriceChange={setPricePerUnit}
           />

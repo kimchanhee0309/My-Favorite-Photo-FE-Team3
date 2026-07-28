@@ -12,6 +12,7 @@ export default function SaleInfoColumn({
   onQuantityChange,
   price,
   onPriceChange,
+  readOnly = false,
   className = "",
 }) {
   return (
@@ -32,12 +33,18 @@ export default function SaleInfoColumn({
             총 판매 수량
           </span>
           <div className="flex items-center gap-[15px] lg:gap-[20px]">
-            <Stepper
-              value={quantity}
-              min={1}
-              max={maxQuantity}
-              onChange={onQuantityChange}
-            />
+            {readOnly ? (
+              <span className="typo-18-bold lg:typo-20-bold text-white">
+                {quantity}
+              </span>
+            ) : (
+              <Stepper
+                value={quantity}
+                min={1}
+                max={maxQuantity}
+                onChange={onQuantityChange}
+              />
+            )}
             <div className="flex flex-col items-start">
               <span className="typo-18-bold lg:typo-20-bold text-white">
                 /{maxQuantity}
