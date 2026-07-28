@@ -6,6 +6,7 @@ import { BellIcon, GiftIcon } from "./Icons";
 import DesktopUserMenu from "./DesktopUserMenu";
 import NotificationList from "@/features/notification/components/NotificationList";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function DesktopGnb({
   isLoggedIn,
@@ -16,6 +17,7 @@ export default function DesktopGnb({
   onOpenPointModal,
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 z-40 hidden h-20 w-full bg-black text-gray-200 select-none md:block md:h-17.5 lg:h-20">
@@ -72,9 +74,13 @@ export default function DesktopGnb({
                         />
                         <div className="absolute top-6 right-0 z-50 overflow-hidden">
                           <NotificationList
+                            variant="desktop"
                             onItemClick={(item) => {
-                              setIsDropdownOpen(false);
-                              console.log("선택된 알림:", item);
+                              if (item?.targetId) {
+                                router.push(`/marketplace/${item.targetId}`);
+                              } else {
+                                setIsNotificationOpen(false);
+                              }
                             }}
                           />
                         </div>
