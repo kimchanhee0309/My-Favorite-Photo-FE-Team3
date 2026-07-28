@@ -118,7 +118,6 @@ export default function MarketplaceHeader() {
     setSearchValue(initialSearch);
   }, [initialSearch]);
 
-  // "전체" 선택 시 파라미터 삭제 및 router.replace 일괄 처리
   const handleDropdownChange = (key, selectedOption) => {
     const params = new URLSearchParams(searchParams.toString());
 
