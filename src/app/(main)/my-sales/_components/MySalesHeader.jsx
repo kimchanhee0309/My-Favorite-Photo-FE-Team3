@@ -94,7 +94,7 @@ export default function MySalesHeader() {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -111,12 +111,34 @@ export default function MySalesHeader() {
     setSearchValue(initialSearch);
   }, [initialSearch]);
 
-  const handleToggleQuery = (key, newValue, currentValue) => {
-    if (currentValue === newValue) {
-      updateQuery(key, "");
+  const handleDropdownChange = (key, selectedOption) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (selectedOption === "전체") {
+      params.delete(key);
     } else {
-      updateQuery(key, newValue);
+      const mapObj = {
+        grade: GRADE_MAP,
+        genre: GENRE_MAP,
+        saleType: SALE_TYPE_MAP,
+        status: STATUS_MAP,
+      }[key];
+
+      const apiValue = mapObj?.[selectedOption] || selectedOption;
+      if (apiValue) {
+        params.set(key, apiValue);
+      } else {
+        params.delete(key);
+      }
     }
+
+    if (key === "saleType") {
+      params.delete("status");
+    } else if (key === "status") {
+      params.delete("saleType");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   const filterOptionsData = {
@@ -179,7 +201,7 @@ export default function MySalesHeader() {
       params.delete("status");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
     setIsBottomSheetOpen(false);
   };
 
@@ -241,21 +263,16 @@ export default function MySalesHeader() {
           <div className="hidden items-center md:ml-[30px] md:flex md:gap-[25px] lg:ml-[60px] lg:gap-[45px]">
             <Dropdown
               label="등급"
-              options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
+              options={["전체", "COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
               variant="text"
               placeholder="등급"
               value={grade}
-              onChange={(selected) =>
-                handleToggleQuery(
-                  "grade",
-                  GRADE_MAP[selected],
-                  currentGradeParam,
-                )
-              }
+              onChange={(selected) => handleDropdownChange("grade", selected)}
             />
             <Dropdown
               label="장르"
               options={[
+                "전체",
                 "풍경 사진",
                 "인물 사진",
                 "여행 사진",
@@ -266,41 +283,25 @@ export default function MySalesHeader() {
               variant="text"
               placeholder="장르"
               value={genre}
-              onChange={(selected) =>
-                handleToggleQuery(
-                  "genre",
-                  GENRE_MAP[selected],
-                  currentGenreParam,
-                )
-              }
+              onChange={(selected) => handleDropdownChange("genre", selected)}
             />
             <Dropdown
               label="판매방법"
-              options={["판매", "교환"]}
+              options={["전체", "판매", "교환"]}
               variant="text"
               placeholder="판매방법"
               value={saleType}
               onChange={(selected) =>
-                handleToggleQuery(
-                  "saleType",
-                  SALE_TYPE_MAP[selected],
-                  currentSaleTypeParam,
-                )
+                handleDropdownChange("saleType", selected)
               }
             />
             <Dropdown
               label="매진여부"
-              options={["판매중", "품절"]}
+              options={["전체", "판매중", "품절"]}
               variant="text"
               placeholder="매진여부"
               value={status}
-              onChange={(selected) =>
-                handleToggleQuery(
-                  "status",
-                  STATUS_MAP[selected],
-                  currentStatusParam,
-                )
-              }
+              onChange={(selected) => handleDropdownChange("status", selected)}
             />
           </div>
         </div>
