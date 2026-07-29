@@ -29,6 +29,7 @@ export default function PhotoCardImage({
         className="object-cover"
         priority={priority}
         fetchPriority={priority ? "high" : "auto"}
+        quality={60}
       />
     </div>
   );
