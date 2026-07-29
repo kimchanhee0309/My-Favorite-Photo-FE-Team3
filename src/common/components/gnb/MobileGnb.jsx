@@ -39,13 +39,15 @@ export default function MobileGnb({
           {(currentState === "login" || currentState === "logout") &&
             !isNotificationOpen && (
               <>
-                <button
-                  onClick={onMenuOpen}
-                  className="absolute left-5 flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
-                  aria-label="메뉴 열기"
-                  type="button">
-                  <HamburgerIcon />
-                </button>
+                {currentState === "login" && (
+                  <button
+                    onClick={onMenuOpen}
+                    className="absolute left-5 flex h-5.5 w-5.5 cursor-pointer items-center justify-center"
+                    aria-label="메뉴 열기"
+                    type="button">
+                    <HamburgerIcon />
+                  </button>
+                )}
 
                 <div className="mx-auto block">
                   <Link href="/" className="flex items-center justify-center">
