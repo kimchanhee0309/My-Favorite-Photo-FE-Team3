@@ -18,7 +18,6 @@ export function createExchangeOffer(shopListingId, data) {
     method: "POST",
     body: JSON.stringify({
       photocardId: data.photocardId,
-      offeredQuantity: Number(data.offeredQuantity || 1),
       message: data.message,
     }),
   });

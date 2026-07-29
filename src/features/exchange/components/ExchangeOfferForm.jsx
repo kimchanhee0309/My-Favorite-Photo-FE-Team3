@@ -32,14 +32,21 @@ export default function ExchangeOfferForm({ shopListingId, card, onCancel }) {
 
   const handleSubmit = () => {
     createExchangeOffer(
-      { photocardId: card.photocardId, offeredQuantity: 1, message },
+      {
+        shopListingId,
+        data: {
+          photocardId: card.photocardId,
+          message,
+        },
+      },
       {
         onSuccess: () => {
           router.push(
             `/marketplace/${shopListingId}/exchange-result?status=success`,
           );
         },
-        onError: () => {
+        onError: (error) => {
+          console.error(error);
           router.push(
             `/marketplace/${shopListingId}/exchange-result?status=error`,
           );
