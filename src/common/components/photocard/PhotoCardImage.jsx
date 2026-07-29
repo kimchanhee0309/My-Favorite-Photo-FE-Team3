@@ -6,6 +6,7 @@ export default function PhotoCardImage({
   status,
   saleType,
   style = cardStyle,
+  priority = false,
 }) {
   return (
     <div className={style.image}>
@@ -26,6 +27,8 @@ export default function PhotoCardImage({
         sizes="(max-width: 768px) 50vw, 33vw"
         alt="포토카드"
         className="object-cover"
+        priority={priority}
+        fetchPriority={priority ? "high" : "auto"}
       />
     </div>
   );
