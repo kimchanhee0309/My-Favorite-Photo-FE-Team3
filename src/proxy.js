@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 const PUBLIC_PATHS = ["/", "/marketplace"];
 const AUTH_PATHS = ["/login", "/signup"];
 
-export function proxy(/*request*/) {
-  /* const { pathname } = request.nextUrl;
+export function proxy(request) {
+  const { pathname } = request.nextUrl;
   const token = request.cookies.get("accessToken")?.value;
   const isAuthenticated = !!token;
 
@@ -17,7 +17,7 @@ export function proxy(/*request*/) {
 
   if (!isPublicPath && !isAuthPath && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
-  }*/
+  }
 
   return NextResponse.next();
 }
