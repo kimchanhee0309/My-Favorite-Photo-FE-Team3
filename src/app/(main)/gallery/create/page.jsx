@@ -127,7 +127,7 @@ export default function CreatePhotoCardPage() {
         <SelectInput
           label="등급"
           placeholder="등급을 선택해 주세요"
-          options={["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"]}
+          options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
           value={formData.grade}
           onChange={(val) => handleChange("grade", val)}
         />
