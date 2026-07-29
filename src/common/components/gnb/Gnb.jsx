@@ -8,9 +8,9 @@ import MobileGnb from "./MobileGnb";
 import DesktopGnb from "./DesktopGnb";
 import MobileMenuDrawer from "./MobileMenuDrawer";
 import { TITLE_MAP, MENU_ITEMS, SECONDARY_PREFIX_PATHS } from "./constants";
-import { DUMMY_NOTIFICATIONS } from "@/features/notification/constants.js";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRandomBoxModal } from "@/providers/RandomBoxModalProvider";
+import { useNotification } from "@/providers/NotificationProvider";
 
 export default function Gnb({}) {
   const router = useRouter();
@@ -20,10 +20,7 @@ export default function Gnb({}) {
   const queryClient = useQueryClient();
   const { openModal } = useRandomBoxModal();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  //TODO: 알림 기능 구현 후 백엔드 연동시 임시 상태 및 더미데이터 삭제
-  const hasUnreadNotification = DUMMY_NOTIFICATIONS.some(
-    (noti) => !noti.isRead,
-  );
+  const { hasUnread } = useNotification();
 
   const checkIsSecondary = () => {
     if (TITLE_MAP[pathname]) return true;
@@ -77,7 +74,7 @@ export default function Gnb({}) {
       <MobileGnb
         currentState={currentState}
         pageTitle={pageTitle}
-        hasUnreadNotification={hasUnreadNotification}
+        hasUnreadNotification={hasUnread}
         onMenuOpen={() => setIsMobileMenuOpen(true)}
         onBack={() => router.back()}
         onOpenPointModal={openModal}
@@ -87,7 +84,7 @@ export default function Gnb({}) {
         isLoggedIn={isLoggedIn}
         user={user}
         menuItems={MENU_ITEMS}
-        hasUnreadNotification={hasUnreadNotification}
+        hasUnreadNotification={hasUnread}
         onLogout={handleLogout}
         onOpenPointModal={openModal}
       />

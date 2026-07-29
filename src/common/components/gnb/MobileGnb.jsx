@@ -79,7 +79,7 @@ export default function MobileGnb({
                         type="button">
                         <BellIcon />
                         {hasUnreadNotification && (
-                          <span className="bg-red absolute top-0 right-0 h-2 w-2 rounded-full" />
+                          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
                         )}
                       </button>
                     </div>

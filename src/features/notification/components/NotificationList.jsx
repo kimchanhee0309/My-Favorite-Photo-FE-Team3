@@ -1,24 +1,30 @@
-import { DUMMY_NOTIFICATIONS } from "@/features/notification/constants.js";
+"use client";
+
+import { useNotification } from "@/providers/NotificationProvider";
+import { formatNotificationDate } from "@/common/utils/date";
 
 export default function NotificationList({ onItemClick, variant = "desktop" }) {
-  const notificationItems = DUMMY_NOTIFICATIONS;
+  const { notifications, handleRead } = useNotification();
   const isMobile = variant === "mobile";
 
   return (
     <div
-      className={`flex flex-col overflow-hidden bg-black md:bg-gray-500 ${
+      className={`flex scrollbar-none flex-col overflow-hidden bg-black md:bg-gray-500 ${
         isMobile ? "h-full w-full rounded-none" : "h-[535px] w-75 rounded-xs"
       }`}>
-      {notificationItems.length === 0 ? (
+      {notifications.length === 0 ? (
         <div className="typo-14-light flex flex-1 items-center justify-center py-12 text-gray-300">
           새로운 알림이 없습니다.
         </div>
       ) : (
         <ul className="flex min-h-0 flex-1 scrollbar-none flex-col overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {notificationItems.map((item) => (
+          {notifications.map((item) => (
             <li
               key={item.id}
-              onClick={() => onItemClick?.(item.targetUrl)}
+              onClick={() => {
+                handleRead(item.id);
+                onItemClick?.(item);
+              }}
               className={`flex w-full shrink-0 cursor-pointer flex-col items-start justify-center rounded-t-xs border-b border-gray-400 p-5 transition-colors ${
                 item.isRead ? "" : "bg-white/5"
               }`}>
@@ -28,7 +34,9 @@ export default function NotificationList({ onItemClick, variant = "desktop" }) {
                   className={`typo-14-light text-left ${isMobile ? "" : "line-clamp-2"} ${item.isRead ? "text-gray-300" : "text-white"}`}>
                   {item.message}
                 </p>
-                <span className="typo-12-light text-gray-300">{item.time}</span>
+                <span className="typo-12-light text-gray-300">
+                  {formatNotificationDate(item.createdAt || item.time)}
+                </span>
               </div>
             </li>
           ))}
