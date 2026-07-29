@@ -2,7 +2,7 @@
 
 import SaleCard from "@/common/components/photocard/SaleCard";
 import SoldOutCard from "@/common/components/photocard/SoldOutCard";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteMyShopListings } from "@/features/shopListing/shopListing.queries";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
@@ -11,33 +11,16 @@ export default function MySalesContent() {
   const searchParams = useSearchParams();
 
   const {
-    data: mysaleItems,
+    data: marketItems,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
     isError,
     isPending,
     error,
-  } = useInfiniteQuery({
-    queryKey: ["mysale", "items", searchParams.toString()],
-    queryFn: async ({ pageParam }) => {
-      const url = pageParam
-        ? `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/me?cursor=${pageParam}&${searchParams}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/shop-listings/me?${searchParams}`;
-      const res = await fetch(url, {
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("나의 판매 포토카드 조회 실패");
-      const result = await res.json();
-      return result.data;
-    },
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
-    },
-  });
+  } = useInfiniteMyShopListings(Object.fromEntries(searchParams));
 
-  const items = mysaleItems?.pages.flatMap((page) => page.items) ?? [];
+  const items = marketItems?.pages.flatMap((page) => page.data.items) ?? [];
   const { ref } = useInView({
     threshold: 0.5,
     onChange: (inView) => {
