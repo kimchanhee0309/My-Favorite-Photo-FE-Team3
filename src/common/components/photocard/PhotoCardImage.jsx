@@ -24,7 +24,7 @@ export default function PhotoCardImage({
       <Image
         src={imageUrl}
         fill
-        sizes="(max-width: 768px) 50vw, 33vw"
+        sizes="(max-width: 743px) 150px, (max-width: 1479px) 300px, 360px"
         alt="포토카드"
         className="object-cover"
         priority={priority}
