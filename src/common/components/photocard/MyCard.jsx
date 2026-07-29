@@ -12,13 +12,14 @@ export default function MyCard({
   minPrice,
   quantity,
   size,
+  priority,
 }) {
   const style = size === "S" ? sizeStyle : cardStyle;
 
   return (
     <div
       className={`rounded-0.5 flex flex-col border border-gray-400 bg-gray-500 ${style.container}`}>
-      <PhotoCardImage imageUrl={imageUrl} style={style} />
+      <PhotoCardImage imageUrl={imageUrl} style={style} priority={priority} />
 
       <div className="flex flex-col gap-2.5">
         <PhotoCardInfo
