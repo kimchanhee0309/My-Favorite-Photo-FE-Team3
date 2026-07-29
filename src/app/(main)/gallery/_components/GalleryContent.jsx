@@ -61,6 +61,8 @@ export default function GalleryContent() {
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mb-27.5 md:gap-5 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       {items.map((item, index) => {
         const isLastItem = index === items.length - 1;
+        const isPriority = index < 6;
+
         return (
           <div key={item.id} ref={isLastItem ? ref : undefined}>
             <MyCard
@@ -71,6 +73,7 @@ export default function GalleryContent() {
               grade={item.photocard.grade}
               imageUrl={item.photocard.imageUrl}
               minPrice={item.photocard.minPrice}
+              priority={isPriority}
             />
           </div>
         );
