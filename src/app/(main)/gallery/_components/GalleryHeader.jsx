@@ -67,7 +67,7 @@ export default function GalleryHeader() {
   const grade = REVERSE_GRADE_MAP[currentGradeParam] || "";
   const genre = REVERSE_GENRE_MAP[currentGenreParam] || "";
 
-  const nickname = user?.nickname || "문치";
+  const nickname = user?.nickname || "";
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -78,7 +78,7 @@ export default function GalleryHeader() {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -95,12 +95,26 @@ export default function GalleryHeader() {
     setSearchValue(initialSearch);
   }, [initialSearch]);
 
-  const handleToggleQuery = (key, newValue, currentValue) => {
-    if (currentValue === newValue) {
-      updateQuery(key, "");
+  const handleDropdownChange = (key, selectedOption) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (selectedOption === "전체") {
+      params.delete(key);
     } else {
-      updateQuery(key, newValue);
+      const mapObj = {
+        grade: GRADE_MAP,
+        genre: GENRE_MAP,
+      }[key];
+
+      const apiValue = mapObj?.[selectedOption] || selectedOption;
+      if (apiValue) {
+        params.set(key, apiValue);
+      } else {
+        params.delete(key);
+      }
     }
+
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   const filterOptionsData = {
@@ -139,7 +153,7 @@ export default function GalleryHeader() {
       params.delete("genre");
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
     setIsBottomSheetOpen(false);
   };
 
@@ -213,21 +227,16 @@ export default function GalleryHeader() {
           <div className="hidden items-center md:ml-[30px] md:flex md:gap-[25px] lg:ml-[60px] lg:gap-[45px]">
             <Dropdown
               label="등급"
-              options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
+              options={["전체", "COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
               variant="text"
               placeholder="등급"
               value={grade}
-              onChange={(selected) =>
-                handleToggleQuery(
-                  "grade",
-                  GRADE_MAP[selected],
-                  currentGradeParam,
-                )
-              }
+              onChange={(selected) => handleDropdownChange("grade", selected)}
             />
             <Dropdown
               label="장르"
               options={[
+                "전체",
                 "풍경 사진",
                 "인물 사진",
                 "여행 사진",
@@ -238,13 +247,7 @@ export default function GalleryHeader() {
               variant="text"
               placeholder="장르"
               value={genre}
-              onChange={(selected) =>
-                handleToggleQuery(
-                  "genre",
-                  GENRE_MAP[selected],
-                  currentGenreParam,
-                )
-              }
+              onChange={(selected) => handleDropdownChange("genre", selected)}
             />
           </div>
         </div>
