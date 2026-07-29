@@ -1,4 +1,4 @@
-const BASE_URL = "/api";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function apiClient(path, options = {}) {
   const isFormData = options.body instanceof FormData;
