@@ -13,11 +13,12 @@ export default function OriginCard({
   remainingQuantity,
   quantity,
   status,
+  priority,
 }) {
   return (
     <div
       className={`rounded-0.5 flex flex-col border border-gray-400 bg-gray-500 ${cardStyle.container}`}>
-      <PhotoCardImage imageUrl={imageUrl} status={status} />
+      <PhotoCardImage imageUrl={imageUrl} status={status} priority={priority} />
 
       <div className="flex flex-col gap-2.5">
         <PhotoCardInfo

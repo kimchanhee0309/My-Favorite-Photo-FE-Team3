@@ -50,6 +50,7 @@ export default function MySalesContent() {
     <div className="grid grid-cols-[repeat(2,max-content)] justify-center gap-1.25 md:mb-27.5 md:gap-5 lg:mb-35 lg:grid-cols-[repeat(3,max-content)] lg:gap-20">
       {items.map((item, index) => {
         const isLastItem = index === items.length - 1;
+        const isPriority = index < 6;
         const Card = item.status === "ON_SALE" ? SaleCard : SoldOutCard;
         return (
           <div key={item.id} ref={isLastItem ? ref : undefined}>
@@ -62,6 +63,7 @@ export default function MySalesContent() {
               imageUrl={item.ownership.photocard.imageUrl}
               pricePerUnit={item.pricePerUnit}
               description={item.ownership.photocard.description}
+              priority={isPriority}
             />
           </div>
         );

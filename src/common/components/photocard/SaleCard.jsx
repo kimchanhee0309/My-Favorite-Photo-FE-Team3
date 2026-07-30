@@ -12,11 +12,16 @@ export default function SaleCard({
   pricePerUnit,
   remainingQuantity,
   saleType,
+  priority,
 }) {
   return (
     <div
-      className={`flex flex-col border border-gray-400 rounded-0.5 bg-gray-500 ${cardStyle.container}`}>
-      <PhotoCardImage imageUrl={imageUrl} saleType={saleType} />
+      className={`rounded-0.5 flex flex-col border border-gray-400 bg-gray-500 ${cardStyle.container}`}>
+      <PhotoCardImage
+        imageUrl={imageUrl}
+        saleType={saleType}
+        priority={priority}
+      />
 
       <div className="flex flex-col gap-2.5">
         <PhotoCardInfo
