@@ -84,12 +84,12 @@ export default function MarketplaceHeader() {
   const currentGradeParam = searchParams.get("grade") || "";
   const currentGenreParam = searchParams.get("genre") || "";
   const currentStatusParam = searchParams.get("status") || "";
-  const currentSortParam = searchParams.get("sort") || "price_asc";
+  const currentSortParam = searchParams.get("sort") || "latest";
 
   const grade = REVERSE_GRADE_MAP[currentGradeParam] || "";
   const genre = REVERSE_GENRE_MAP[currentGenreParam] || "";
   const status = REVERSE_STATUS_MAP[currentStatusParam] || "";
-  const sortBy = REVERSE_SORT_MAP[currentSortParam] || "낮은 가격순";
+  const sortBy = REVERSE_SORT_MAP[currentSortParam] || "최신순";
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
@@ -296,8 +296,8 @@ export default function MarketplaceHeader() {
 
             <div className="md:hidden">
               <Dropdown
-                label="낮은 가격순"
-                options={["낮은 가격순", "높은 가격순"]}
+                label="최신순"
+                options={["최신순", "오래된순", "낮은 가격순", "높은 가격순"]}
                 value={sortBy}
                 onChange={(selected) => updateQuery("sort", SORT_MAP[selected])}
               />
@@ -307,8 +307,8 @@ export default function MarketplaceHeader() {
 
         <div className="hidden md:flex md:items-center">
           <Dropdown
-            label="낮은 가격순"
-            options={["낮은 가격순", "높은 가격순"]}
+            label="최신순"
+            options={["최신순", "오래된순", "낮은 가격순", "높은 가격순"]}
             value={sortBy}
             onChange={(selected) => updateQuery("sort", SORT_MAP[selected])}
           />
