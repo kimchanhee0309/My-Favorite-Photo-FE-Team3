@@ -8,7 +8,7 @@ export default function MyCard({
   title,
   grade,
   genre,
-  description,
+  nickname,
   minPrice,
   quantity,
   size,
@@ -26,7 +26,7 @@ export default function MyCard({
           title={title}
           grade={grade}
           genre={genre}
-          description={description}
+          nickname={nickname}
           style={style}
         />
         <div className="flex justify-between">

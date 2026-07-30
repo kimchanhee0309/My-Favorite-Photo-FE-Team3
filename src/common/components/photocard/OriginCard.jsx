@@ -8,7 +8,7 @@ export default function OriginCard({
   title,
   grade,
   genre,
-  description,
+  nickname,
   pricePerUnit,
   remainingQuantity,
   quantity,
@@ -25,7 +25,7 @@ export default function OriginCard({
           title={title}
           grade={grade}
           genre={genre}
-          description={description}
+          nickname={nickname}
         />
         <div className="flex justify-between">
           <p className={`${cardStyle.labelLight} text-gray-300`}>가격</p>
