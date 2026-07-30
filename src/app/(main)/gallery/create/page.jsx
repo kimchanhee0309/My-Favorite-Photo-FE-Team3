@@ -12,7 +12,15 @@ import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
 import { useCreatePhotocard } from "@/features/photocard/photocard.queries";
 import { uploadImageToCloudinary } from "@/common/api/cloudinary";
 
+const gradeLabelMap = {
+  COMMON: "COMMON",
+  RARE: "RARE",
+  SUPER_RARE: "SUPER RARE",
+  LEGENDARY: "LEGENDARY",
+};
+
 const GENRE_LABEL_OPTIONS = Object.values(genreLabelMap);
+const GRADE_LABEL_OPTIONS = Object.values(gradeLabelMap);
 
 export default function CreatePhotoCardPage() {
   const router = useRouter();
@@ -31,6 +39,13 @@ export default function CreatePhotoCardPage() {
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleGradeChange = (label) => {
+    const code = Object.entries(gradeLabelMap).find(
+      ([, value]) => value === label,
+    )?.[0];
+    handleChange("grade", code ?? "");
   };
 
   const handleGenreChange = (label) => {
@@ -127,9 +142,9 @@ export default function CreatePhotoCardPage() {
         <SelectInput
           label="등급"
           placeholder="등급을 선택해 주세요"
-          options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
-          value={formData.grade}
-          onChange={(val) => handleChange("grade", val)}
+          options={GRADE_LABEL_OPTIONS}
+          value={formData.grade ? gradeLabelMap[formData.grade] : ""}
+          onChange={handleGradeChange}
         />
 
         <SelectInput
