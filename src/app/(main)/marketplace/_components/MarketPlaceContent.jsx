@@ -2,7 +2,7 @@
 
 import ConfirmModal from "@/common/components/confirmmodal/ConfirmModal";
 import OriginCard from "@/common/components/photocard/OriginCard";
-import Image from "next/image";
+import Spinner from "@/common/components/spinner/Spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -58,9 +58,9 @@ export default function MarketPlaceContent() {
   if (isPending) {
     return (
       <>
-        <p className="flex justify-center">
-          마켓플레이스 데이터 불러오는 중...
-        </p>
+        <div className="flex justify-center py-20">
+          <Spinner />
+        </div>
         <MobileSellButton />
       </>
     );
@@ -112,11 +112,7 @@ export default function MarketPlaceContent() {
           </div>
         );
       })}
-      {isFetchingNextPage && (
-        <div className="col-span-full flex animate-spin justify-center">
-          <Image src="/spinner.svg" width={50} height={50} alt="" />
-        </div>
-      )}
+      {isFetchingNextPage && <Spinner className="col-span-full" />}
       <MobileSellButton />
     </div>
   );

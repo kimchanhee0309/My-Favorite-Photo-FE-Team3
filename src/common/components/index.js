@@ -10,3 +10,4 @@ export { default as Textarea } from "./input/Textarea";
 export { default as ImageUpload } from "./input/ImageUpload";
 export { default as BottomSheetFilter } from "./bottomsheetfilter/BottomSheetFilter";
 export { default as Title } from "./title/Title";
+export { default as Spinner } from "./spinner/Spinner";
