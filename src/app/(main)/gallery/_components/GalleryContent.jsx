@@ -1,7 +1,7 @@
 "use client";
 
 import MyCard from "@/common/components/photocard/MyCard";
-import Image from "next/image";
+import Spinner from "@/common/components/spinner/Spinner";
 import { useSearchParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 import MobileCreateButton from "./MobileCreateButton";
@@ -42,7 +42,9 @@ export default function GalleryContent() {
   if (isPending) {
     return (
       <>
-        <p className="flex justify-center">마이갤러리 데이터 불러오는 중...</p>
+        <div className="flex justify-center py-20">
+          <Spinner />
+        </div>
         <MobileCreateButton />
       </>
     );
@@ -78,11 +80,7 @@ export default function GalleryContent() {
           </div>
         );
       })}
-      {isFetchingNextPage && (
-        <div className="col-span-full flex animate-spin justify-center">
-          <Image src="/spinner.svg" width={50} height={50} alt="" />
-        </div>
-      )}
+      {isFetchingNextPage && <Spinner className="col-span-full" />}
       <MobileCreateButton />
     </div>
   );

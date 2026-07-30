@@ -3,7 +3,7 @@
 import SaleCard from "@/common/components/photocard/SaleCard";
 import SoldOutCard from "@/common/components/photocard/SoldOutCard";
 import { useInfiniteMyShopListings } from "@/features/shopListing/shopListing.queries";
-import Image from "next/image";
+import Spinner from "@/common/components/spinner/Spinner";
 import { useSearchParams } from "next/navigation";
 import { useInView } from "react-intersection-observer";
 
@@ -36,9 +36,9 @@ export default function MySalesContent() {
 
   if (isPending) {
     return (
-      <p className="flex justify-center">
-        나의 판매 포토카드 데이터 불러오는 중...
-      </p>
+      <div className="flex justify-center py-20">
+        <Spinner />
+      </div>
     );
   }
 
@@ -68,11 +68,7 @@ export default function MySalesContent() {
           </div>
         );
       })}
-      {isFetchingNextPage && (
-        <div className="col-span-full flex animate-spin justify-center">
-          <Image src="/spinner.svg" width={50} height={50} alt="" />
-        </div>
-      )}
+      {isFetchingNextPage && <Spinner className="col-span-full" />}
     </div>
   );
 }
