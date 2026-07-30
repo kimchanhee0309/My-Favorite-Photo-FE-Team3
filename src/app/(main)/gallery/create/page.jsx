@@ -9,8 +9,12 @@ import ImageUpload from "@/common/components/input/ImageUpload";
 import PrimaryButton from "@/common/components/button/PrimaryButton";
 import Title from "@/common/components/title/Title";
 import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
-import { useCreatePhotocard } from "@/features/photocard/photocard.queries";
 import { uploadImageToCloudinary } from "@/common/api/cloudinary";
+
+import {
+  useCreatePhotocard,
+  useMyPhotocards,
+} from "@/features/photocard/photocard.queries";
 
 const gradeLabelMap = {
   COMMON: "COMMON",
@@ -36,6 +40,20 @@ export default function CreatePhotoCardPage() {
   const [isUploading, setIsUploading] = useState(false);
 
   const { mutate: createPhotocard, isPending } = useCreatePhotocard();
+
+  const { data: myCardsResponse } = useMyPhotocards({ limit: 10 });
+  const myCards = myCardsResponse?.data?.items || [];
+
+  const now = new Date();
+  const createdThisMonthCount = myCards.filter((card) => {
+    const cardDate = new Date(card.createdAt);
+    return (
+      cardDate.getFullYear() === now.getFullYear() &&
+      cardDate.getMonth() === now.getMonth()
+    );
+  }).length;
+
+  const isLimitReached = createdThisMonthCount >= 3;
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -71,6 +89,7 @@ export default function CreatePhotoCardPage() {
       : "";
 
   const isValid =
+    !isLimitReached &&
     formData.name &&
     formData.grade &&
     formData.genre &&
