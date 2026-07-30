@@ -19,7 +19,7 @@ export default function CreateResultContent() {
       }`}
       buttonLabel={isSuccess ? "마이갤러리에서 확인하기" : "마이갤러리로 돌아가기"}
       onButtonClick={() => router.push("/gallery")}
-      onClose={() => router.push("/create")}
+      onClose={() => router.push("/gallery/create")}
     />
   );
 }
