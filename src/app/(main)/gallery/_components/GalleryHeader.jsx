@@ -8,6 +8,7 @@ import Grade from "@/features/photocard/components/Grade";
 import Title from "@/common/components/title/Title";
 import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheetFilter";
 import { useAuth } from "@/providers/AuthProvider";
+import { useGetCreatePhotocardCount } from "@/features/photocard/photocard.queries";
 
 const GRADE_MAP = {
   COMMON: "COMMON",
@@ -56,6 +57,18 @@ export default function GalleryHeader() {
       return result.data;
     },
   });
+
+  const {
+    data: createCardCount,
+    isPending,
+    isError,
+  } = useGetCreatePhotocardCount();
+
+  const isLimitReached =
+    !isPending && !isError && createCardCount?.data?.remaining === 0;
+
+  const currentDate = new Date();
+  const formattedYearMonth = `${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월`;
 
   const initialSearch = searchParams.get("search") || "";
 
@@ -165,13 +178,28 @@ export default function GalleryHeader() {
           variant="responsive"
           isBaskin="true"
           rightElement={
-            <PrimaryButton
-              thickness="thin"
-              size={{ base: "S", md: "M", lg: "L" }}
-              className="h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px]"
-              onClick={() => router.push("/gallery/create")}>
-              포토카드 생성하기
-            </PrimaryButton>
+            <div className="flex items-end gap-3">
+              <span className="text-[14px] text-gray-300">
+                {formattedYearMonth}
+              </span>
+
+              <PrimaryButton
+                thickness="thin"
+                size={{ base: "S", md: "M", lg: "L" }}
+                disabled={isPending || isError || isLimitReached}
+                className={`h-[60px] w-[235px] md:w-[342px] lg:h-[60px] lg:w-[440px] ${
+                  isLimitReached
+                    ? "!cursor-not-allowed !bg-[#5A5A5A] !text-gray-300 opacity-80"
+                    : ""
+                }`}
+                onClick={() => router.push("/gallery/create")}>
+                포토카드 생성하기
+                {!isPending &&
+                  !isError &&
+                  createCardCount?.data &&
+                  ` (${createCardCount.data.remaining}/${createCardCount.data.limit})`}
+              </PrimaryButton>
+            </div>
           }>
           마이갤러리
         </Title>
