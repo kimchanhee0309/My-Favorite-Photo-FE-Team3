@@ -62,7 +62,7 @@ export default function MySalesContent() {
               grade={item.ownership.photocard.grade}
               imageUrl={item.ownership.photocard.imageUrl}
               pricePerUnit={item.pricePerUnit}
-              description={item.ownership.photocard.description}
+              nickname={item.user.nickname}
               priority={isPriority}
             />
           </div>
