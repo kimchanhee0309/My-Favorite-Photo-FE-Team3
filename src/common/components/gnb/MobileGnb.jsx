@@ -50,7 +50,9 @@ export default function MobileGnb({
                 )}
 
                 <div className="mx-auto block">
-                  <Link href="/" className="flex items-center justify-center">
+                  <Link
+                    href={currentState === "login" ? "/marketplace" : "/"}
+                    className="flex items-center justify-center">
                     <Image
                       src="/logo.png"
                       alt="최애의 포토 로고"

@@ -24,7 +24,9 @@ export default function DesktopGnb({
       <div className="relative h-full">
         <div className="absolute flex items-center justify-between md:top-5.75 md:right-10 md:left-10 lg:top-6.75 lg:right-55 lg:left-55">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center justify-center">
+            <Link
+              href={isLoggedIn ? "/marketplace" : "/"}
+              className="flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="최애의 포토 로고"
