@@ -36,3 +36,7 @@ export function getMyPhotocards(params = {}) {
 export function getPhotocard(photocardId) {
   return apiClient(`/photocards/${photocardId}`);
 }
+
+export function getMyPhotocardCreateCount() {
+  return apiClient("/photocards/me/createCount");
+}
