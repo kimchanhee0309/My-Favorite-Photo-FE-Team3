@@ -43,6 +43,7 @@ export default function Title({
   isBaskin = false,
   rightElement,
   className = "",
+  titleClassName = "",
   children,
   ...props
 }) {
@@ -63,7 +64,7 @@ export default function Title({
   return (
     <div className={`${borderClass} ${className}`} {...props}>
       <div className="flex items-center justify-between w-full gap-5">
-        <h2 className={`text-white m-0 leading-none ${fontClass}`}>
+        <h2 className={`text-white m-0 leading-none ${fontClass} ${titleClassName}`}>
           {children}
         </h2>
 
