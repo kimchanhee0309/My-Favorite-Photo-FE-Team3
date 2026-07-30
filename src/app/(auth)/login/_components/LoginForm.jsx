@@ -35,7 +35,7 @@ export default function LoginForm() {
     try {
       await loginApi(formData);
       await refetchMe();
-      router.push("/");
+      router.push("/marketplace");
     } catch (error) {
       alert(error.message || "로그인에 실패했습니다.");
     }

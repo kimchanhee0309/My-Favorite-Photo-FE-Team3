@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Input from "@/common/components/input/Input";
 import PrimaryButton from "@/common/components/button/PrimaryButton";
-import { signupApi } from "@/features/auth/auth.api";
+import { signupApi, loginApi } from "@/features/auth/auth.api";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,8 @@ export default function SignupForm() {
   });
 
   const router = useRouter();
+
+  const { refetchMe } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,8 +68,12 @@ export default function SignupForm() {
     e.preventDefault();
     try {
       await signupApi(formData);
-      alert("회원가입이 완료되었습니다. 로그인해 주세요.");
-      router.push("/login");
+
+      await loginApi({ email: formData.email, password: formData.password });
+
+      await refetchMe();
+
+      router.push("/marketplace");
     } catch (error) {
       alert(error.message || "회원가입 중 오류가 발생했습니다.");
     }
