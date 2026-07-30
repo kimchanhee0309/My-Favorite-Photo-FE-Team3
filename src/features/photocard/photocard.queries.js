@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createPhotocard,
+  getMyPhotocardCreateCount,
   getMyPhotocards,
   getPhotocard,
 } from "./photocard.api";
@@ -35,5 +36,12 @@ export function usePhotocard(photocardId) {
     queryKey: PHOTOCARD_QUERY_KEYS.detail(photocardId),
     queryFn: () => getPhotocard(photocardId),
     enabled: Boolean(photocardId),
+  });
+}
+
+export function useGetCreatePhotocardCount() {
+  return useQuery({
+    queryKey: PHOTOCARD_QUERY_KEYS.all,
+    queryFn: () => getMyPhotocardCreateCount(),
   });
 }
