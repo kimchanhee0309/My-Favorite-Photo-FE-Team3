@@ -9,6 +9,7 @@ import BottomSheetFilter from "@/common/components/bottomsheetfilter/BottomSheet
 import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
 import { useMyOwnerships } from "@/features/ownership/ownership.queries";
 import { mapOwnershipToCard } from "@/features/ownership/ownership.mapper";
+import { toApiGrade, toDisplayGrade } from "@/common/utils/grade";
 
 const GRADE_OPTIONS = ["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"];
 const GENRE_OPTIONS = Object.keys(genreLabelMap);
@@ -83,10 +84,10 @@ export default function SellCardPicker({ onSelectCard }) {
         />
         <Dropdown
           variant="text"
-          options={GRADE_OPTIONS}
-          value={gradeFilter[0] ?? null}
+          options={GRADE_OPTIONS.map(toDisplayGrade)}
+          value={gradeFilter[0] ? toDisplayGrade(gradeFilter[0]) : null}
           placeholder="등급"
-          onChange={(v) => setGradeFilter(v ? [v] : [])}
+          onChange={(v) => setGradeFilter(v ? [toApiGrade(v)] : [])}
           className="ml-[25px] lg:ml-[60px]"
         />
         <Dropdown

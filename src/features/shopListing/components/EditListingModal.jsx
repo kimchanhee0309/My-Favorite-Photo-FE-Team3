@@ -8,8 +8,8 @@ import { PrimaryButton, SecondaryButton, Textarea } from "@/common/components";
 import SelectInput from "@/common/components/input/SelectInput";
 import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
 import { useUpdateShopListing } from "@/features/shopListing/shopListing.queries";
+import { GRADE_OPTIONS, toApiGrade, toDisplayGrade } from "@/common/utils/grade";
 
-const GRADE_OPTIONS = ["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"];
 const GENRE_LABEL_OPTIONS = Object.values(genreLabelMap);
 
 export default function EditListingModal({
@@ -20,7 +20,7 @@ export default function EditListingModal({
   onSuccess,
 }) {
   const [pricePerUnit, setPricePerUnit] = useState(listing.pricePerUnit);
-  const [wishGrade, setWishGrade] = useState(listing.wishGrade);
+  const [wishGrade, setWishGrade] = useState(toDisplayGrade(listing.wishGrade));
   const [wishGenre, setWishGenre] = useState(listing.wishGenre);
   const [wishDescription, setWishDescription] = useState(
     listing.wishDescription,
@@ -38,7 +38,12 @@ export default function EditListingModal({
 
   const handleSubmit = () => {
     updateShopListing(
-      { pricePerUnit, wishGrade, wishGenre, wishDescription },
+      {
+        pricePerUnit,
+        wishGrade: toApiGrade(wishGrade),
+        wishGenre,
+        wishDescription,
+      },
       {
         onSuccess: () => {
           onSuccess?.();

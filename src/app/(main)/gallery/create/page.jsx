@@ -14,6 +14,7 @@ import {
   useMyPhotocards,
 } from "@/features/photocard/photocard.queries";
 import { uploadImageToCloudinary } from "@/common/api/cloudinary";
+import { GRADE_OPTIONS, toApiGrade } from "@/common/utils/grade";
 import Image from "next/image";
 
 const GENRE_LABEL_OPTIONS = Object.values(genreLabelMap);
@@ -125,7 +126,7 @@ export default function CreatePhotoCardPage() {
           description: formData.description,
           imageUrl,
           genre: formData.genre,
-          grade: formData.grade,
+          grade: toApiGrade(formData.grade),
           minPrice: formData.price,
           totalQuantity: formData.supply,
         },
@@ -191,7 +192,7 @@ export default function CreatePhotoCardPage() {
         <SelectInput
           label="등급"
           placeholder="등급을 선택해 주세요"
-          options={["COMMON", "RARE", "SUPER RARE", "LEGENDARY"]}
+          options={GRADE_OPTIONS}
           value={formData.grade}
           onChange={(val) => handleChange("grade", val)}
         />
