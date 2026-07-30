@@ -8,11 +8,14 @@ import { PrimaryButton, SecondaryButton, Textarea } from "@/common/components";
 import SelectInput from "@/common/components/input/SelectInput";
 import { genreLabelMap } from "@/features/photocard/components/genreLabelMap";
 import { useCreateShopListing } from "@/features/shopListing/shopListing.queries";
+import { useAuth } from "@/providers/AuthProvider";
 
 const GRADE_OPTIONS = ["COMMON", "RARE", "SUPER_RARE", "LEGENDARY"];
 const GENRE_LABEL_OPTIONS = Object.values(genreLabelMap);
 
+
 export default function SellListingForm({ card, onCancel }) {
+  const { user } = useAuth();
   const router = useRouter();
   const [saleQuantity, setSaleQuantity] = useState(1);
   const [pricePerUnit, setPricePerUnit] = useState("");
@@ -94,7 +97,7 @@ export default function SellListingForm({ card, onCancel }) {
         <SaleInfoColumn
           grade={card.grade}
           genre={card.genre}
-          nickname={card.description}
+          nickname={user?.nickname}
           quantity={saleQuantity}
           maxQuantity={card.quantity}
           onQuantityChange={setSaleQuantity}

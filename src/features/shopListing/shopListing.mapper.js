@@ -49,6 +49,7 @@ export function mapExchangeToOffer(exchange) {
     imageUrl: photocard?.imageUrl ?? "",
     grade: photocard?.grade ?? "",
     genre: photocard?.genre ?? "",
+    minPrice: photocard?.minPrice ?? 0,
 
     proposerId: exchange.proposerId,
     proposerNickname: exchange.proposer?.nickname ?? "",
