@@ -93,6 +93,7 @@ export default function MarketPlaceContent() {
       />
       {items.map((item, index) => {
         const isLastItem = index === items.length - 1;
+        const isPriority = index < 6;
         return (
           <div
             key={item.id}
@@ -106,6 +107,7 @@ export default function MarketPlaceContent() {
               description={item.ownership.photocard.description}
               grade={item.ownership.photocard.grade}
               imageUrl={item.ownership.photocard.imageUrl}
+              priority={isPriority}
             />
           </div>
         );
