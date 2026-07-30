@@ -69,7 +69,7 @@ export default function GalleryContent() {
               quantity={item.quantity}
               title={item.photocard.name}
               genre={item.photocard.genre}
-              description={item.photocard.description}
+              nickname={item.user.nickname}
               grade={item.photocard.grade}
               imageUrl={item.photocard.imageUrl}
               minPrice={item.photocard.minPrice}

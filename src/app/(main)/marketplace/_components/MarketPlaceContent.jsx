@@ -104,10 +104,10 @@ export default function MarketPlaceContent() {
               {...item}
               title={item.ownership.photocard.name}
               genre={item.ownership.photocard.genre}
-              description={item.ownership.photocard.description}
               grade={item.ownership.photocard.grade}
               imageUrl={item.ownership.photocard.imageUrl}
               priority={isPriority}
+              nickname={item.user.nickname}
             />
           </div>
         );

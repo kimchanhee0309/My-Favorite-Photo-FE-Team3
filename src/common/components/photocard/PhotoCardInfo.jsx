@@ -4,7 +4,7 @@ export default function PhotoCardInfo({
   title,
   grade,
   genre,
-  description,
+  nickname,
   style = cardStyle,
 }) {
   return (
@@ -23,7 +23,7 @@ export default function PhotoCardInfo({
         </div>
         <p
           className={`text-white ${style.labelRegular} truncate pl-2 underline decoration-0 underline-offset-2`}>
-          {description}
+          {nickname}
         </p>
       </div>
     </div>
